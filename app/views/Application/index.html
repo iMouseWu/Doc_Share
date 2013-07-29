@@ -1,4 +1,47 @@
-#{extends 'main.html' /}
-#{set title:'Home' /}
+<style type="text/css">
+ #form{
+    position:absolute;
+    left:1000px;
+    top:50px;
+    }
+    #institute{
+    position:absolute;
+    left:0px;
+    top:250px
+    }
+</style>
+<input type="hidden" id="hiddenval">
+<div id="institute">
+<a href="#" onclick="$('#hiddenval').val('理学院');viewRes();">理学院</a>
+</div>
+<div id ="form">
+<form action="@{Application.uploads()}" enctype="multipart/form-data" method="post" id="myForm">
+	<input type="file" name="upfile" id="upfile"> 
+	<input type="text" name="institute">
+	<input type="submit" value="commit">
+</form>
+<div id="mes"></div>
+</div>
+<div id="downmes"></div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#myForm').ajaxForm(function(responseText) {
+			$('#mes').html("上传成功");
+			$('#upfile').val("");
+		});
+	});
 
-#{welcome /}
+			function viewRes() {
+				$.get("@{Application.downloads()}", {
+					fileroute : $("#hiddenval").val()
+				}, function(data, textStatus) {
+					var html = "";
+					$.each(data,function(commentIndex, comment) {
+						html += "<a href='Doc_Share/public/resourse/理学院/' + data[commentIndex].realName>" + data[commentIndex].realName + "</a>"+"<br>"
+					});
+					$("#downmes").html(html);
+				}, "json");
+			}
+</script>
+<script src="./public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="./public/javascripts/jquery.form.min.js"></script>
