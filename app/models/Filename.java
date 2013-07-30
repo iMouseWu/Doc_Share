@@ -1,6 +1,7 @@
 package models;
 
 
+
 import javax.persistence.Entity;
 
 import play.db.jpa.Model;
@@ -8,5 +9,9 @@ import play.db.jpa.Model;
 public class Filename extends Model {
 	public String hashName;
 	public String realName;
+	public String institute;
+	public int downcount;
+	public String uploadname;
+	public String uploaddate;
 
 }

@@ -1,3 +1,5 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
 <style type="text/css">
  #form{
     position:absolute;
@@ -9,10 +11,16 @@
     left:0px;
     top:250px
     }
+    #loginForms{
+    position:absolute;
+    left:1000px;
+    top:200px;
+    }
 </style>
 <input type="hidden" id="hiddenval">
 <div id="institute">
 <a href="#" onclick="$('#hiddenval').val('理学院');viewRes();">理学院</a>
+<a href="#" onclick="$('#hiddenval').val('经贸学院');viewRes();">经贸学院</a>
 </div>
 <div id ="form">
 <form action="@{Application.uploads()}" enctype="multipart/form-data" method="post" id="myForm">
@@ -20,26 +28,72 @@
 	<input type="text" name="institute">
 	<input type="submit" value="commit">
 </form>
+<!-- 显示下载成功信息 -->
 <div id="mes"></div>
 </div>
+<!-- 显示资源信息 -->
 <div id="downmes"></div>
+<!-- 显示推荐信息 -->
+<div id="suggest"></div>
+<!-- 显示登录框 -->
+<div id="login">
+<label id="wronglogin"></label>
+<form action="@{Application.LoginCheck()}" id="loginForms">
+用户名:<input type="text" name="username"><br>
+密码:<input type="password" name="password"><br>
+<input type="submit" value="login">
+</form>
+</div>
 <script type="text/javascript">
+/*异步上传*/
 	$(document).ready(function() {
 		$('#myForm').ajaxForm(function(responseText) {
 			$('#mes').html("上传成功");
 			$('#upfile').val("");
 		});
 	});
-
-			function viewRes() {
-				$.get("@{Application.downloads()}", {
-					fileroute : $("#hiddenval").val()
+	/*登录之前显示热门资源*/
+	$(document).ready(function() {
+		$.get("@{Application.viewMostDown()}"
+				, function(data, textStatus) {
+					var html = "热门资源";
+					$.each(data,function(commentIndex, comment) {
+						html += "<a href="+"@{Application.addCount()}"+"?institute="+data[commentIndex].institute+"&hashName="+data[commentIndex].hashName+">" + data[commentIndex].realName + "</a>"+"<br>"
+					});
+					$('#suggest').html(html);
+				}, "json");
+	});
+	/*学生登录异步提交，并且显示该学生所在学院的热门资源*/
+	$(document).ready(function() {
+		$('#loginForms').ajaxForm({
+			success: showResponse,
+			datatype: 'json'
+		});
+	});
+	
+	function showResponse(responseJson){
+		var html = "";
+		if(responseJson == ""){
+			$('#wronglogin').text("用户名密码错误");
+		}else{
+		$.each(responseJson,function(commentIndex, comment) {
+			alert(responseJson);
+			html += "<a href="+"@{Application.addCount()}"+"?institute="+responseJson[commentIndex].institute+"&hashName="+responseJson[commentIndex].hashName+">" + responseJson[commentIndex].realName + "</a>"+"<br>"		});
+		    alert(html);
+		$('#suggest').html(html);	
+		}
+	}
+	/*显示学院资源*/
+	function viewRes() {
+	   $.get("@{Application.downloads()}", {
+			fileroute : $("#hiddenval").val()
 				}, function(data, textStatus) {
 					var html = "";
 					$.each(data,function(commentIndex, comment) {
-						html += "<a href='Doc_Share/public/resourse/理学院/' + data[commentIndex].realName>" + data[commentIndex].realName + "</a>"+"<br>"
+						//var route = "/public/resourse/" + $("#hiddenval").val() + "/" + data[commentIndex].hashName;
+						html += "<a href="+"@{Application.addCount()}"+"?institute="+$("#hiddenval").val()+"&hashName="+data[commentIndex].hashName+">" + data[commentIndex].realName + "</a>"+"<br>"
 					});
-					$("#downmes").html(html);
+					$('#downmes').html(html);
 				}, "json");
 			}
 </script>
