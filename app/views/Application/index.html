@@ -1,35 +1,66 @@
-#{extends 'main.html' /}
-#{set title:'Home' /}
+#{extends 'main.html' /} #{set title:'Home' /}
 <style type="text/css">
- #form{
-    position:absolute;
-    left:1000px;
-    top:50px;
-    }
-    #institute{
-    position:absolute;
-    left:0px;
-    top:250px
-    }
-    #loginForms{
-    position:absolute;
-    left:1000px;
-    top:200px;
-    }
+#form {
+	position: absolute;
+	left: 1000px;
+	top: 50px;
+}
+
+#institute {
+	position: absolute;
+	left: 0px;
+	top: 250px
+}
+
+#subject {
+	position: absolute;
+	left: 200px;
+	top: 250px
+}
+
+#loginForms {
+	position: absolute;
+	left: 1000px;
+	top: 200px;
+}
+
+#searchForm {
+	position: absolute;
+	left: 800px;
+	top: 250px;
+}
+
+#searchres {
+	position: absolute;
+	left: 800px;
+	top: 300px;
+}
+
+#wronglogin {
+	position: absolute;
+	left: 1000px;
+	top: 180px;
+}
 </style>
+<!-- 隐藏域，用来记录学院 -->
 <input type="hidden" id="hiddenval">
+<!-- 隐藏域，用来记录学院下的小目录 -->
+<input type="hidden" id="hiddenvalsub">
+
 <div id="institute">
-<a href="#" onclick="$('#hiddenval').val('理学院');viewRes();">理学院</a>
-<a href="#" onclick="$('#hiddenval').val('经贸学院');viewRes();">经贸学院</a>
+	<a href="#" onclick="$('#hiddenval').val('理学院');viewSub();">理学院</a> <a
+		href="#" onclick="$('#hiddenval').val('经贸学院');viewSub();">经贸学院</a>
 </div>
-<div id ="form">
-<form action="@{Application.uploads()}" enctype="multipart/form-data" method="post" id="myForm">
-	<input type="file" name="upfile" id="upfile"> 
-	<input type="text" name="institute">
-	<input type="submit" value="commit">
-</form>
-<!-- 显示下载成功信息 -->
-<div id="mes"></div>
+<!-- 上传功能 -->
+<div id="form">
+	<form action="@{Application.uploads()}" enctype="multipart/form-data"
+		method="post" id="myForm">
+		<input type="file" name="upfile" id="upfile"> <input
+			type="text" name="institute"> <input type="text"
+			name="subject"><input type="submit" value="commit">
+	</form>
+	<!-- 显示下载成功信息 -->
+	<div id="mes"></div>
 </div>
 <!-- 显示资源信息 -->
 <div id="downmes"></div>
@@ -37,65 +68,139 @@
 <div id="suggest"></div>
 <!-- 显示登录框 -->
 <div id="login">
-<label id="wronglogin"></label>
-<form action="@{Application.LoginCheck()}" id="loginForms">
-用户名:<input type="text" name="username"><br>
-密码:<input type="password" name="password"><br>
-<input type="submit" value="login">
-</form>
+	<form action="@{Application.LoginCheck()}" id="loginForms">
+		用户名:<input type="text" name="username"><br> 密码:<input
+			type="password" name="password"><br> <input
+			type="submit" value="login">
+	</form>
 </div>
+<!-- 显示搜索栏 -->
+<div>
+	<form id="searchForm" action="@{Application.searchRes()}">
+		<input type="text" name="searchname"><br> <input
+			type="submit" value="搜索">
+	</form>
+</div>
+<!-- 显示搜索结果 -->
+<div id="searchres"></div>
+<!-- 登录错误提示信息 -->
+<label id="wronglogin"></label>
+<!-- 显示对应学院的学科 -->
+<div id="subject"> </div>
 <script type="text/javascript">
-/*异步上传*/
+	/*显示相应学院学科目录*/
+	function viewSub() {
+		$.get("@{Application.searchSub()}",
+						{
+			               institute : $("#hiddenval").val()
+						},
+						function(data, textStatus) {
+							var html = "";
+							$.each(data,function(commentIndex, comment) {
+												html += "<a href='#' onclick=\"$('#hiddenvalsub').val('"+data[commentIndex].subject+"');viewRes();\">"
+														+ data[commentIndex].subject
+														+ "</a><br>";
+											});
+							$('#subject').html(html);
+						}, "json");
+	}
+	/*异步上传*/
 	$(document).ready(function() {
 		$('#myForm').ajaxForm(function(responseText) {
 			$('#mes').html("上传成功");
 			$('#upfile').val("");
 		});
 	});
+	
 	/*登录之前显示热门资源*/
-	$(document).ready(function() {
-		$.get("@{Application.viewMostDown()}"
-				, function(data, textStatus) {
+	$(document).ready(
+			function() {
+				$.get("@{Application.viewMostDown()}", function(data,
+						textStatus) {
 					var html = "热门资源";
-					$.each(data,function(commentIndex, comment) {
-						html += "<a href="+"@{Application.addCount()}"+"?institute="+data[commentIndex].institute+"&hashName="+data[commentIndex].hashName+">" + data[commentIndex].realName + "</a>"+"<br>"
+					$.each(data, function(commentIndex, comment) {
+						/*html += "<a href=" + "@{Application.addCount()}"
+								+ "?institute=" + data[commentIndex].institute
+								+ "&hashName=" + data[commentIndex].hashName
+								+ "&subject=" + data[commentIndex].subject + ">" + data[commentIndex].realName + "</a>"
+								+ "<br>"*/
+								html += "<a href=@{Application.viewDownloads()}?hashName="+data[commentIndex].hashName + ">" 
+										+ data[commentIndex].realName 
+										+ "</a>" 
+										+"<br>";
 					});
 					$('#suggest').html(html);
 				}, "json");
-	});
+			});
+	
 	/*学生登录异步提交，并且显示该学生所在学院的热门资源*/
 	$(document).ready(function() {
 		$('#loginForms').ajaxForm({
-			success: showResponse,
-			datatype: 'json'
+			success : showResponse,
+			datatype : 'json'
 		});
 	});
-	
-	function showResponse(responseJson){
+
+	function showResponse(responseJson) {
 		var html = "";
-		if(responseJson == ""){
+		if (responseJson == null) {
 			$('#wronglogin').text("用户名密码错误");
-		}else{
-		$.each(responseJson,function(commentIndex, comment) {
-			alert(responseJson);
-			html += "<a href="+"@{Application.addCount()}"+"?institute="+responseJson[commentIndex].institute+"&hashName="+responseJson[commentIndex].hashName+">" + responseJson[commentIndex].realName + "</a>"+"<br>"		});
-		    alert(html);
-		$('#suggest').html(html);	
+		} else {
+			$.each(responseJson, function(commentIndex, comment) {
+				html += "<a href=" + "@{Application.addCount()}"
+						+ "?institute=" + responseJson[commentIndex].institute
+						+ "&hashName=" + responseJson[commentIndex].hashName
+						+ "&subject=" + responseJson[commentIndex].subject + ">" + responseJson[commentIndex].realName + "</a>"
+						+ "<br>";
+			});
+			$('#wronglogin').text("");
+			$('#suggest').html(html);
 		}
 	}
-	/*显示学院资源*/
+
+	/*显示学院学科资源*/
 	function viewRes() {
-	   $.get("@{Application.downloads()}", {
-			fileroute : $("#hiddenval").val()
-				}, function(data, textStatus) {
-					var html = "";
-					$.each(data,function(commentIndex, comment) {
-						//var route = "/public/resourse/" + $("#hiddenval").val() + "/" + data[commentIndex].hashName;
-						html += "<a href="+"@{Application.addCount()}"+"?institute="+$("#hiddenval").val()+"&hashName="+data[commentIndex].hashName+">" + data[commentIndex].realName + "</a>"+"<br>"
-					});
-					$('#downmes').html(html);
-				}, "json");
-			}
+		$.get("@{Application.downloads()}", {
+			fileroute : $("#hiddenval").val(),
+			subject : $("#hiddenvalsub").val()
+		}, function(data, textStatus) {
+			var html = "";
+			$.each(data, function(commentIndex, comment) {
+				//var route = "/public/resourse/" + $("#hiddenval").val() + "/" + data[commentIndex].hashName;
+				html += "<a href=" + "@{Application.addCount()}"
+						+ "?institute=" + $("#hiddenval").val() + "&hashName="
+						+ data[commentIndex].hashName + "&subject=" + data[commentIndex].subject + ">"
+						+ data[commentIndex].realName + "</a>" + "<br>"
+			});
+			$('#downmes').html(html);
+		}, "json");
+	}
+	
+	/*异步搜索*/
+	$(document).ready(function() {
+		$('#searchForm').ajaxForm({
+			success : showSearchRes,
+			datatype : 'json'
+		});
+	});
+
+	function showSearchRes(responseJson) {
+		var html = "";
+		if ((typeof (responseJson[0].institute)) == "undefined") {
+			/*
+			*/
+		} else {
+			$.each(responseJson, function(commentIndex, comment) {
+
+				html += "<a href=" + "@{Application.addCount()}"
+						+ "?institute=" + responseJson[commentIndex].institute
+						+ "&hashName=" + responseJson[commentIndex].hashName
+						+ "&subject=" + responseJson[commentIndex].subject + ">" + responseJson[commentIndex].realName + "</a>"
+						+ "<br>";
+			});
+		}
+		$('#searchres').html(html);
+	}
 </script>
 <script src="./public/javascripts/jquery-1.6.4.min.js"></script>
 <script src="./public/javascripts/jquery.form.min.js"></script>

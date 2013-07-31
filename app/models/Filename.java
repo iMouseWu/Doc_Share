@@ -13,5 +13,6 @@ public class Filename extends Model {
 	public int downcount;
 	public String uploadname;
 	public String uploaddate;
+	public String subject;
 
 }
