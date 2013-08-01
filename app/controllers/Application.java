@@ -21,8 +21,8 @@ import models.*;
 
 public class Application extends Controller {
 
-	public static void index() {
-		render();
+	public static void index(String user) {
+		render(user);
 	}
 
 	/* 上传功能 */
@@ -95,15 +95,15 @@ public class Application extends Controller {
 		renderText(listToJson);
 	}
 
-	/* 显示该学生所在学院热门的前10资源 */
+	/* 推荐资源 */
 	public static void viewInsMostDown(String institute) {
-		List<Filename> list = Filename.find(
+		/*List<Filename> list = Filename.find(
 				"institute = ? order by downcount asc", institute).fetch(10);
 		response.contentType = "application/json";
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(list);
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
-		renderText(listToJson);
+		renderText(listToJson);*/
 
 	}
 
@@ -119,8 +119,8 @@ public class Application extends Controller {
 			response.setHeader("Content-Type", "application/json;charset=UTF-8");
 			renderText("");
 		} else {
+			session.put("user", username);
 			String institute = list.get(0).institute;
-			session.put("user", list.get(0).username);
 			viewInsMostDown(institute);
 		}
 	}
@@ -156,10 +156,29 @@ public class Application extends Controller {
 	public static void viewDownloads(String hashName) {
 		List<Filename> list = Filename.find("hashName = ?", hashName).fetch();
 		Filename filename = list.get(0);
-		String downLoadRoute = "?institute="
-				+ filename.institute + "&hashName=" + filename.hashName
-				+ "&subject=" + filename.subject;
-		render(filename,downLoadRoute);
+		String downLoadRoute = "?institute=" + filename.institute
+				+ "&hashName=" + filename.hashName + "&subject="
+				+ filename.subject;
+		render(filename, downLoadRoute);
+	}
 
+	/* 评分系统 */
+	public static void addScore(float score, String hashName) {
+		List<Filename> list = Filename.find("hashName = ?", hashName).fetch();
+		Filename filename = list.get(0);
+		filename.avescore = (filename.avescore * filename.numberval + score)
+				/ (filename.numberval + 1);
+		filename.numberval += 1;
+		filename.save();
+	}
+
+	/*拦截器 */
+	@Before(only = {"addCount"})
+	static void checksession() {
+		if (session.get("user") == null){
+			String user ="请登录";
+			index(user);
+		}
+			
 	}
 }

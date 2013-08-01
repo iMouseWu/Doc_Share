@@ -1,15 +1,33 @@
-#{extends 'main.html' /}
-#{set title:'viewDownloads.html' /}
+#{extends 'main.html' /} #{set title:'viewDownloads.html' /}
 
 <h1>文件名 ${filename.realName}</h1>
 <h1>上传日期${filename.uploaddate}</h1>
 <h1>上传者 ${filename.uploadname}</h1>
-<h1><a href="@{Application.addCount}${downLoadRoute}" onclick="doit();">下载地址</a></h1>
-<div id="comment"></div>
-<script type="text/javascript">
-function doit(){
-	var html = "<input type='text' name='score'>";
-	$('#comment').html(html);
-}
-</script>
+<h1>
+	<a href="@{Application.addCount}${downLoadRoute}" onclick="doit();">下载地址</a>
+</h1>
+<div id="comment">
 
+</div>
+<script type="text/javascript">
+	function doit() {
+		var html = "<form action='@{Application.addScore()}' id='scoreForm'>"
+				+ "<input type='text' name='score'>"
+				+ "<input type='submit' value='提交'>"
+				+ "<input type='hidden' value='${filename.hashName}' name='hashName'>"
+				+ "</form>";
+		$('#comment').html(html);
+		ajaxform();
+	}
+	 function ajaxform() {
+		$('#scoreForm').ajaxForm({
+			success : showResponse,
+			datatype : 'json'
+		});
+	 }
+	function showResponse(){
+		$('#comment').html('谢谢你得评价');
+	}
+</script>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/jquery.form.min.js"></script>

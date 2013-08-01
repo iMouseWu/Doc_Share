@@ -84,7 +84,7 @@
 <!-- 显示搜索结果 -->
 <div id="searchres"></div>
 <!-- 登录错误提示信息 -->
-<label id="wronglogin"></label>
+<label id="wronglogin">${user ?:'guest'}!</label>
 <!-- 显示对应学院的学科 -->
 <div id="subject"> </div>
 <script type="text/javascript">
@@ -147,11 +147,10 @@
 			$('#wronglogin').text("用户名密码错误");
 		} else {
 			$.each(responseJson, function(commentIndex, comment) {
-				html += "<a href=" + "@{Application.addCount()}"
-						+ "?institute=" + responseJson[commentIndex].institute
-						+ "&hashName=" + responseJson[commentIndex].hashName
-						+ "&subject=" + responseJson[commentIndex].subject + ">" + responseJson[commentIndex].realName + "</a>"
-						+ "<br>";
+				html += "<a href=@{Application.viewDownloads()}?hashName="+responseJson[commentIndex].hashName + ">" 
+				+ responseJson[commentIndex].realName 
+				+ "</a>" 
+				+"<br>";
 			});
 			$('#wronglogin').text("");
 			$('#suggest').html(html);
@@ -167,10 +166,10 @@
 			var html = "";
 			$.each(data, function(commentIndex, comment) {
 				//var route = "/public/resourse/" + $("#hiddenval").val() + "/" + data[commentIndex].hashName;
-				html += "<a href=" + "@{Application.addCount()}"
-						+ "?institute=" + $("#hiddenval").val() + "&hashName="
-						+ data[commentIndex].hashName + "&subject=" + data[commentIndex].subject + ">"
-						+ data[commentIndex].realName + "</a>" + "<br>"
+				html += "<a href=@{Application.viewDownloads()}?hashName="+data[commentIndex].hashName + ">" 
+				+ data[commentIndex].realName 
+				+ "</a>" 
+				+"<br>";
 			});
 			$('#downmes').html(html);
 		}, "json");
@@ -191,12 +190,10 @@
 			*/
 		} else {
 			$.each(responseJson, function(commentIndex, comment) {
-
-				html += "<a href=" + "@{Application.addCount()}"
-						+ "?institute=" + responseJson[commentIndex].institute
-						+ "&hashName=" + responseJson[commentIndex].hashName
-						+ "&subject=" + responseJson[commentIndex].subject + ">" + responseJson[commentIndex].realName + "</a>"
-						+ "<br>";
+				html += "<a href=@{Application.viewDownloads()}?hashName="+responseJson[commentIndex].hashName + ">" 
+				+ responseJson[commentIndex].realName 
+				+ "</a>" 
+				+"<br>";
 			});
 		}
 		$('#searchres').html(html);

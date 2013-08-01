@@ -14,5 +14,7 @@ public class Filename extends Model {
 	public String uploadname;
 	public String uploaddate;
 	public String subject;
+	public float avescore;
+	public int numberval;
 
 }
