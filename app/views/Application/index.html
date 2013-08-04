@@ -18,7 +18,7 @@
 	top: 250px
 }
 
-#loginForms {
+#login {
 	position: absolute;
 	left: 1000px;
 	top: 200px;
@@ -40,6 +40,11 @@
 	position: absolute;
 	left: 1000px;
 	top: 180px;
+}
+#suggest{
+    position: absolute;
+	left: 200px;
+	top: 200px;
 }
 </style>
 <!-- 隐藏域，用来记录学院 -->
@@ -154,6 +159,7 @@
 			});
 			$('#wronglogin').text("");
 			$('#suggest').html(html);
+			$('#login').html("欢迎你");
 		}
 	}
 

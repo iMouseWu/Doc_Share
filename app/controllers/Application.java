@@ -15,6 +15,7 @@ import org.hamcrest.core.Is;
 import org.hibernate.mapping.Array;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.org.apache.xpath.internal.operations.And;
 
 import models.*;
@@ -96,14 +97,40 @@ public class Application extends Controller {
 	}
 
 	/* 推荐资源 */
-	public static void viewInsMostDown(String institute) {
-		/*List<Filename> list = Filename.find(
-				"institute = ? order by downcount asc", institute).fetch(10);
-		response.contentType = "application/json";
+	public static void viewInsMostDown() {
+		/*
+		 * List<Filename> list = Filename.find(
+		 * "institute = ? order by downcount asc", institute).fetch(10);
+		 * response.contentType = "application/json"; Gson gson = new Gson();
+		 * String listToJson = gson.toJson(list);
+		 * response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		 * renderText(listToJson);
+		 */
 		Gson gson = new Gson();
-		String listToJson = gson.toJson(list);
+		String info = "[{'classname':'高数'},{'classname':'会计学'}]";
+		List<AllClass> list = gson.fromJson(info,
+				new TypeToken<List<AllClass>>() {
+				}.getType());
+		List<Filename> alllistname = new ArrayList<Filename>();
+		for (AllClass allClass : list) {
+			List<Filename> listname = Filename.find("subject = ?",
+					allClass.classname).fetch();
+			for (Filename a : listname) {
+				alllistname.add(a);
+			}
+		}
+		Assist assit = new Assist();
+		Collections.sort(alllistname, assit);
+		String listToJson = "";
+		if (alllistname.size() > 10) {
+			List returnlist = alllistname.subList(0, 9);
+			listToJson = gson.toJson(returnlist);
+		} else {
+			listToJson = gson.toJson(alllistname);
+		}
+		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
-		renderText(listToJson);*/
+		renderText(listToJson);
 
 	}
 
@@ -112,7 +139,7 @@ public class Application extends Controller {
 		// List<Users> list = Users.find(
 		// "select u from Users u where u.username=:" + username
 		// + " and u.password=:" + password).fetch();
-		List<Users> list = Users.find("username= ? And password=?", username,
+		List<Users> list = Users.find("username= ? And password= ?", username,
 				password).fetch();
 		if (list.size() == 0) {
 			response.contentType = "application/json";
@@ -120,8 +147,8 @@ public class Application extends Controller {
 			renderText("");
 		} else {
 			session.put("user", username);
-			String institute = list.get(0).institute;
-			viewInsMostDown(institute);
+			// String institute = list.get(0).institute;
+			viewInsMostDown();
 		}
 	}
 
@@ -172,13 +199,13 @@ public class Application extends Controller {
 		filename.save();
 	}
 
-	/*拦截器 */
-	@Before(only = {"addCount"})
+	/* 拦截器 ,所有的下载和上传操作必须登录 */
+	@Before(only = { "addCount" })
 	static void checksession() {
-		if (session.get("user") == null){
-			String user ="请登录";
+		if (session.get("user") == null) {
+			String user = "请登录";
 			index(user);
 		}
-			
+
 	}
 }
