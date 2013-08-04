@@ -4,14 +4,14 @@
 <h1>上传日期${filename.uploaddate}</h1>
 <h1>上传者 ${filename.uploadname}</h1>
 <h1>
-	<a href="@{Application.addCount}${downLoadRoute}" onclick="doit();">下载地址</a>
+	<a href="@{DownLoads.addCount}${downLoadRoute}" onclick="doit();">下载地址</a>
 </h1>
 <div id="comment">
 
 </div>
 <script type="text/javascript">
 	function doit() {
-		var html = "<form action='@{Application.addScore()}' id='scoreForm'>"
+		var html = "<form action='@{Evaluate.addScore()}' id='scoreForm'>"
 				+ "<input type='text' name='score'>"
 				+ "<input type='submit' value='提交'>"
 				+ "<input type='hidden' value='${filename.hashName}' name='hashName'>"

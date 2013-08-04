@@ -20,8 +20,9 @@
 
 #login {
 	position: absolute;
-	left: 1000px;
+	left: 800px;
 	top: 200px;
+	width: 300px;
 }
 
 #searchForm {
@@ -43,10 +44,52 @@
 }
 #suggest{
     position: absolute;
-	left: 200px;
+	left: 500px;
 	top: 200px;
+	overflow:auto;
+	height:500px;
+	width:300px;
+}
+#doc_middle{
+    position: absolute;
+	top: 180px;
+	width: 100%;
+	background-color:#e1e8e5;
+	height :280px;
+}
+.doc_resourcedetails{
+    height:35px;
+	width:220px;
+	line-height:35px;
+	text-align:center;
+	background-color:#CFDAD5;
+	font-weight: 10
+}
+#cover_1{
+    position: absolute;
+    left: 783px;
+	top:  180px;
+	width: 20px;
+	background-color:#e1e8e5;
+	height :280px;
+	z-index:1;
+}
+#cover_2{
+    position: absolute;
+    left: 783px;
+	top:  300px;
+	width: 20px;
+	background-color:white;
+	height :400px;
+	z-index:1;
 }
 </style>
+<div id="cover_2">
+</div>
+<div id="cover_1">
+</div>
+<div id="doc_middle">
+</div>
 <!-- 隐藏域，用来记录学院 -->
 <input type="hidden" id="hiddenval">
 <!-- 隐藏域，用来记录学院下的小目录 -->
@@ -56,14 +99,17 @@
 	<a href="#" onclick="$('#hiddenval').val('理学院');viewSub();">理学院</a> <a
 		href="#" onclick="$('#hiddenval').val('经贸学院');viewSub();">经贸学院</a>
 </div>
+
 <!-- 上传功能 -->
+<!-- 
 <div id="form">
-	<form action="@{Application.uploads()}" enctype="multipart/form-data"
+	<form action="@{Uploads.uploads()}" enctype="multipart/form-data"
 		method="post" id="myForm">
 		<input type="file" name="upfile" id="upfile"> <input
 			type="text" name="institute"> <input type="text"
 			name="subject"><input type="submit" value="commit">
 	</form>
+	 -->
 	<!-- 显示下载成功信息 -->
 	<div id="mes"></div>
 </div>
@@ -71,31 +117,53 @@
 <div id="downmes"></div>
 <!-- 显示推荐信息 -->
 <div id="suggest"></div>
+<!-- 显示搜索结果 -->
+<div id="searchres"></div>
+<!-- 登录错误提示信息 -->
+<label id="wronglogin">${user ?:'游客！欢迎你'}!</label>
+<!-- 显示对应学院的学科 -->
+<div id="subject"> </div>
 <!-- 显示登录框 -->
 <div id="login">
-	<form action="@{Application.LoginCheck()}" id="loginForms">
-		用户名:<input type="text" name="username"><br> 密码:<input
-			type="password" name="password"><br> <input
-			type="submit" value="login">
-	</form>
+	<form class="form-horizontal" action="@{Login.LoginCheck()}" id="loginForms">
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">学号</label>
+    <div class="controls">
+      <input type="text" id="inputEmail" placeholder="Number" name="username">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">密码</label>
+    <div class="controls">
+      <input type="password" id="inputPassword" placeholder="Password" name="password">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <label class="checkbox">
+        <input type="checkbox"> Remember me
+      </label>
+      <button type="submit" class="btn">登录</button>
+    </div>
+  </div>
+</form>
 </div>
+
 <!-- 显示搜索栏 -->
+<!--  
 <div>
-	<form id="searchForm" action="@{Application.searchRes()}">
+	<form id="searchForm" action="@{Search.searchRes()}">
 		<input type="text" name="searchname"><br> <input
 			type="submit" value="搜索">
 	</form>
 </div>
-<!-- 显示搜索结果 -->
-<div id="searchres"></div>
-<!-- 登录错误提示信息 -->
-<label id="wronglogin">${user ?:'guest'}!</label>
-<!-- 显示对应学院的学科 -->
-<div id="subject"> </div>
+-->
 <script type="text/javascript">
+   // var space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+    //"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	/*显示相应学院学科目录*/
 	function viewSub() {
-		$.get("@{Application.searchSub()}",
+		$.get("@{ViewResource.viewSubject}",
 						{
 			               institute : $("#hiddenval").val()
 						},
@@ -120,19 +188,15 @@
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
-				$.get("@{Application.viewMostDown()}", function(data,
+				$.get("@{ViewResource.viewMostDown()}", function(data,
 						textStatus) {
-					var html = "热门资源";
+					var html = "热门资源" + "<br>";
 					$.each(data, function(commentIndex, comment) {
-						/*html += "<a href=" + "@{Application.addCount()}"
-								+ "?institute=" + data[commentIndex].institute
-								+ "&hashName=" + data[commentIndex].hashName
-								+ "&subject=" + data[commentIndex].subject + ">" + data[commentIndex].realName + "</a>"
-								+ "<br>"*/
-								html += "<a href=@{Application.viewDownloads()}?hashName="+data[commentIndex].hashName + ">" 
+								html += "<div class='doc_resourcedetails'>"+
+								"<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
 										+ data[commentIndex].realName 
 										+ "</a>" 
-										+"<br>";
+										+"</div><br>";
 					});
 					$('#suggest').html(html);
 				}, "json");
@@ -152,10 +216,11 @@
 			$('#wronglogin').text("用户名密码错误");
 		} else {
 			$.each(responseJson, function(commentIndex, comment) {
-				html += "<a href=@{Application.viewDownloads()}?hashName="+responseJson[commentIndex].hashName + ">" 
-				+ responseJson[commentIndex].realName 
-				+ "</a>" 
-				+"<br>";
+				html += "<div class='doc_resourcedetails'>"+
+				"<a href=@{ViewResource.viewDownloadsDetails}?hashName="+responseJson[commentIndex].hashName + ">" 
+						+ responseJson[commentIndex].realName 
+						+"</a>" 
+						+"</div><br>";
 			});
 			$('#wronglogin').text("");
 			$('#suggest').html(html);
@@ -165,14 +230,13 @@
 
 	/*显示学院学科资源*/
 	function viewRes() {
-		$.get("@{Application.downloads()}", {
+		$.get("@{ViewResource.viewDownloadsList}", {
 			fileroute : $("#hiddenval").val(),
 			subject : $("#hiddenvalsub").val()
 		}, function(data, textStatus) {
 			var html = "";
 			$.each(data, function(commentIndex, comment) {
-				//var route = "/public/resourse/" + $("#hiddenval").val() + "/" + data[commentIndex].hashName;
-				html += "<a href=@{Application.viewDownloads()}?hashName="+data[commentIndex].hashName + ">" 
+				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
 				+ data[commentIndex].realName 
 				+ "</a>" 
 				+"<br>";
@@ -196,7 +260,7 @@
 			*/
 		} else {
 			$.each(responseJson, function(commentIndex, comment) {
-				html += "<a href=@{Application.viewDownloads()}?hashName="+responseJson[commentIndex].hashName + ">" 
+				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+responseJson[commentIndex].hashName + ">" 
 				+ responseJson[commentIndex].realName 
 				+ "</a>" 
 				+"<br>";
