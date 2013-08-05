@@ -161,9 +161,10 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">上传</h3>
   </div>
+  <div id="mes"></div>
+  <div class="modal-body">
   <form action="@{Uploads.uploads()}" enctype="multipart/form-data"
 		method="post" id="myForm">
-  <div class="modal-body">
   学院：
   <select name="institute_sel" id="institute_sel">
   </select>
@@ -173,14 +174,15 @@
   </select>
   资源名称:
   <input type="file" name="upfile" id="upfile"> 
+  <input type="submit" value="上传" class="btn btn-primary">
+  </form>
   </div>
   <div class="modal-footer">
-  <input type="submit" value="上传" class="btn btn-primary">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  
   </div>
-  </form>
+ 
 </div>
-
 <!-- 显示搜索栏 -->
 <!--  
 <div>
@@ -209,11 +211,25 @@
 	}
 	/*异步上传*/
 	$(document).ready(function() {
-		$('#myForm').ajaxForm(function(responseText) {
-			 alert("上传成功");
-			$('#upfile').val("");
+		$('#myForm').ajaxForm({
+			dataType : 'json',
+			success : uploadsResponse
 		});
 	});
+	function uploadsResponse(data){
+		     alert("上传成功");
+			 $('#mes').html("<div class='alert'> " +
+			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
+			  "<form action='@{Uploads.alterFilename}' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
+			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
+			  "</div>");
+			 
+			 $('#alertfileform').ajaxForm(function(){
+				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
+			 });
+			$('#upfile').val("");
+	}
+	
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
