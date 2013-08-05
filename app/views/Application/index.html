@@ -23,6 +23,8 @@
 	left: 800px;
 	top: 200px;
 	width: 300px;
+	text-align:center;
+	
 }
 
 #searchForm {
@@ -47,15 +49,22 @@
 	left: 500px;
 	top: 200px;
 	overflow:auto;
-	height:500px;
+	height:400px;
 	width:300px;
 }
-#doc_middle{
+#doc_middle_1{
     position: absolute;
-	top: 180px;
-	width: 100%;
+	left: 300px;
+	width: 280px;
 	background-color:#e1e8e5;
-	height :280px;
+	height :100%;
+}
+#doc_middle_2{
+    position: absolute;
+	left: 925px;
+	width: 280px;
+	background-color:#e1e8e5;
+	height :100%;
 }
 .doc_resourcedetails{
     height:35px;
@@ -70,7 +79,7 @@
     left: 783px;
 	top:  180px;
 	width: 20px;
-	background-color:#e1e8e5;
+	background-color:white;
 	height :280px;
 	z-index:1;
 }
@@ -83,13 +92,20 @@
 	height :400px;
 	z-index:1;
 }
+#uploadsbutton{
+    position: absolute;
+    left: 190px;
+	top:30px;
+	width: 150px;
+}
 </style>
 <div id="cover_2">
 </div>
 <div id="cover_1">
 </div>
-<div id="doc_middle">
+<div id="doc_middle_1">
 </div>
+<div id="doc_middle_2"></div>
 <!-- 隐藏域，用来记录学院 -->
 <input type="hidden" id="hiddenval">
 <!-- 隐藏域，用来记录学院下的小目录 -->
@@ -100,19 +116,6 @@
 		href="#" onclick="$('#hiddenval').val('经贸学院');viewSub();">经贸学院</a>
 </div>
 
-<!-- 上传功能 -->
-<!-- 
-<div id="form">
-	<form action="@{Uploads.uploads()}" enctype="multipart/form-data"
-		method="post" id="myForm">
-		<input type="file" name="upfile" id="upfile"> <input
-			type="text" name="institute"> <input type="text"
-			name="subject"><input type="submit" value="commit">
-	</form>
-	 -->
-	<!-- 显示下载成功信息 -->
-	<div id="mes"></div>
-</div>
 <!-- 显示资源信息 -->
 <div id="downmes"></div>
 <!-- 显示推荐信息 -->
@@ -123,7 +126,9 @@
 <label id="wronglogin">${user ?:'游客！欢迎你'}!</label>
 <!-- 显示对应学院的学科 -->
 <div id="subject"> </div>
-<!-- 显示登录框 -->
+
+
+<!-- 登录块 -->
 <div id="login">
 	<form class="form-horizontal" action="@{Login.LoginCheck()}" id="loginForms">
   <div class="control-group">
@@ -149,6 +154,33 @@
 </form>
 </div>
 
+ 
+<!-- 上传对话框 -->
+<div id="uploadssurface" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">上传</h3>
+  </div>
+  <form action="@{Uploads.uploads()}" enctype="multipart/form-data"
+		method="post" id="myForm">
+  <div class="modal-body">
+  学院：
+  <select name="institute_sel" id="institute_sel">
+  </select>
+  学科:
+  <select name="subject_sel" id="subject_sel">
+  <option>---请选择---</option>
+  </select>
+  资源名称:
+  <input type="file" name="upfile" id="upfile"> 
+  </div>
+  <div class="modal-footer">
+  <input type="submit" value="上传" class="btn btn-primary">
+  <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  </div>
+  </form>
+</div>
+
 <!-- 显示搜索栏 -->
 <!--  
 <div>
@@ -159,8 +191,6 @@
 </div>
 -->
 <script type="text/javascript">
-   // var space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-    //"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	/*显示相应学院学科目录*/
 	function viewSub() {
 		$.get("@{ViewResource.viewSubject}",
@@ -180,11 +210,10 @@
 	/*异步上传*/
 	$(document).ready(function() {
 		$('#myForm').ajaxForm(function(responseText) {
-			$('#mes').html("上传成功");
+			 alert("上传成功");
 			$('#upfile').val("");
 		});
 	});
-	
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
@@ -224,7 +253,9 @@
 			});
 			$('#wronglogin').text("");
 			$('#suggest').html(html);
-			$('#login').html("欢迎你");
+			var html1 = "<div id='uploadsbutton'><span class='label label-info'>欢迎你</span><br><br>"
+			html1 += "<button class='btn btn-info btn-large btn-block' type='button' data-toggle='modal' data-target='#uploadssurface';>我要上传</button></div>";
+			$('#login').html(html1);
 		}
 	}
 
@@ -268,6 +299,33 @@
 		}
 		$('#searchres').html(html);
 	}
+	/*上传列表框二级联动*/
+	$(document).ready(function(){
+		$.get("@{ViewResource.viewInstitute}",function(data){
+			$('#institute_sel').empty();
+			$('#institute_sel').append("<option>---请选择---</option>");
+			$.each(data,function(commentIndex, comment){
+				$('#institute_sel').append("<option>"+data[commentIndex]+"</option>");
+			});
+		},"json");
+	});
+	
+     $('#institute_sel').change(function(){
+    	 $.get("@{ViewResource.viewSubject}",{
+    		 institute: $('#institute_sel').val()
+    	 },function(data){
+    		 $('#subject_sel').empty();
+    		 if(data == ""){
+    			 $('#subject_sel').append("<option>---请选择---</option>");
+    		 }else{
+ 			$.each(data,function(commentIndex, comment){
+ 				$('#subject_sel').append("<option>"+data[commentIndex].subject+"</option>");
+ 			});
+ 			}
+ 		},"json");
+     });
 </script>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="public/js/bootstrap.min.js"></script>
 <script src="./public/javascripts/jquery-1.6.4.min.js"></script>
 <script src="./public/javascripts/jquery.form.min.js"></script>

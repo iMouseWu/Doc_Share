@@ -7,7 +7,7 @@ import play.db.jpa.Model;
 
 @Entity
 @Table(name = "db_instituteinfo")
-public class instituteinfo extends Model {
+public class Instituteinfo extends Model {
 	public String institute;
 	public String subject;
 

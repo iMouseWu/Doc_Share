@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 
 import models.AllClass;
 import models.Filename;
-import models.instituteinfo;
+import models.Instituteinfo;
 
 public class ViewResource extends BaseCore {
 	/* 显示相应资源下载页面 */
@@ -27,7 +27,8 @@ public class ViewResource extends BaseCore {
 	
 	/* 显示相应学院的学科模块 */
 	public static void viewSubject(String institute) {
-		List<instituteinfo> list = instituteinfo
+			
+		List<Instituteinfo> list = Instituteinfo
 				.find("institute= ?", institute).fetch();
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
@@ -59,9 +60,9 @@ public class ViewResource extends BaseCore {
 	/* 显示最热的前10资源 */
 	public static void viewMostDown() {
 		List<Filename> list = Filename.find("order by downcount asc").fetch(10);
-		response.contentType = "application/json";
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(list);
+		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
 	}
@@ -94,6 +95,16 @@ public class ViewResource extends BaseCore {
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
 
+	}
+	/*返回学校学院目录*/
+	public static void viewInstitute(){
+		List instituteinfos = Instituteinfo.find("select p.institute from Instituteinfo p " +
+			    "GROUP BY p.institute").fetch();
+		Gson gson = new Gson();
+		String listToJson = gson.toJson(instituteinfos);
+		response.contentType = "application/json";
+		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		renderText(listToJson);
 	}
 
 
