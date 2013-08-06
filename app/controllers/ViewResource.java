@@ -27,11 +27,11 @@ public class ViewResource extends BaseCore {
 	
 	/* 显示相应学院的学科模块 */
 	public static void viewSubject(String institute) {
-			
 		List<Instituteinfo> list = Instituteinfo
 				.find("institute= ?", institute).fetch();
 		response.contentType = "application/json";
-		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		//response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		response.setHeader("Cache-Control","no-cache");
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(list);
 		renderText(listToJson);
@@ -103,7 +103,8 @@ public class ViewResource extends BaseCore {
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(instituteinfos);
 		response.contentType = "application/json";
-		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		//response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		response.setHeader("Cache-Control","no-cache");
 		renderText(listToJson);
 	}
 

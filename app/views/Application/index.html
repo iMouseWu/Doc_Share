@@ -14,17 +14,15 @@
 
 #subject {
 	position: absolute;
-	left: 200px;
-	top: 250px
+	left: 110px;
+	top: 45px
 }
-
 #login {
 	position: absolute;
-	left: 800px;
+	left: 925px;
 	top: 200px;
 	width: 300px;
 	text-align:center;
-	
 }
 
 #searchForm {
@@ -41,7 +39,7 @@
 
 #wronglogin {
 	position: absolute;
-	left: 1000px;
+	left: 1150px;
 	top: 180px;
 }
 #suggest{
@@ -61,7 +59,7 @@
 }
 #doc_middle_2{
     position: absolute;
-	left: 925px;
+	left: 1050px;
 	width: 280px;
 	background-color:#e1e8e5;
 	height :100%;
@@ -98,6 +96,27 @@
 	top:30px;
 	width: 150px;
 }
+#downmes{
+    position: absolute;
+    left: 0px;
+	top:0px;
+	width: 300px;
+	height:100%;
+	background-color:white;
+	display:none;
+	z-index:1;
+}
+#bread{
+    position: absolute;
+    left: 0px;
+	top:0px;
+	width: 300px;
+}
+#navagation{
+position: absolute;
+    left: 0px;
+	top:  36px;
+}
 </style>
 <div id="cover_2">
 </div>
@@ -110,14 +129,22 @@
 <input type="hidden" id="hiddenval">
 <!-- 隐藏域，用来记录学院下的小目录 -->
 <input type="hidden" id="hiddenvalsub">
+<!-- 隐藏域，用来记录学院学科资源html信息 -->
+<input type="hidden" id="resource_html">
+<!-- 显示资源信息 -->
+<div id="downmes">
+<div id="back_home"></div>
 
-<div id="institute">
-	<a href="#" onclick="$('#hiddenval').val('理学院');viewSub();">理学院</a> <a
-		href="#" onclick="$('#hiddenval').val('经贸学院');viewSub();">经贸学院</a>
+<div id="resource"></div>
+
+<div id="search_sure"><form id="search_sure_form" action="@{Search.search_sure_res}">
+<input type="text" name="sure_name">
+<input type="hidden" name="sure_subject"  id="sure_subject">
+<input type="hidden" name="sure_institute" id="sure_institute">
+<input type="submit" value="search">
+</form></div>
 </div>
 
-<!-- 显示资源信息 -->
-<div id="downmes"></div>
 <!-- 显示推荐信息 -->
 <div id="suggest"></div>
 <!-- 显示搜索结果 -->
@@ -153,8 +180,20 @@
   </div>
 </form>
 </div>
+<!-- 首页面包屑 -->
+<div id="bread">
+<ul class="breadcrumb">
+  <li class="active">首页</li>
+  </ul>
+</div>
 
- 
+<!-- 导航栏 -->
+<div id="navagation">
+<div class="tabbable tabs-left">
+<ul class="nav nav-tabs" id="institute_nav">
+</ul>
+</div>
+ </div>
 <!-- 上传对话框 -->
 <div id="uploadssurface" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
@@ -179,10 +218,9 @@
   </div>
   <div class="modal-footer">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-  
   </div>
- 
 </div>
+
 <!-- 显示搜索栏 -->
 <!--  
 <div>
@@ -192,22 +230,97 @@
 	</form>
 </div>
 -->
+
+
 <script type="text/javascript">
+/*搜索相应学院学科资源*/
+ $(document).ready(function() {
+		$('#search_sure_form').ajaxForm({
+			dataType : 'json',
+			success : sure_Response
+		});
+	});
+	
+	function sure_Response(data){
+		var html = '';
+		$.each(data, function(commentIndex, comment) {
+			html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
+			+ data[commentIndex].realName 
+			+ "</a>" 
+			+"<br>";
+		});
+		  var back_home = "<ul class='breadcrumb'>"
+		  +"<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"
+		  +"<li><a href='#' onclick='back_resource();'>资源</a> <span class='divider'>/</span></li>"
+		  +" <li class='active'>搜索</li></ul>"
+		$('#resource').html(html);
+		$('#back_home').html(back_home);
+	}
+	
+/*返回主界面*/
+function back_home(){
+	$('#downmes').fadeOut("slow");
+}
+/*返回资源界面*/
+ function back_resource(){
+	$('#resource').html($('#resource_html').val());
+	$('#back_home').html("<ul class='breadcrumb'>"+
+			   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
+			    "<li class='active'>资源</li></ul>");
+}
+ 
+
+/*显示学院*/
+$(document).ready(function() {
+	$.get("@{ViewResource.viewInstitute}",function(institute_data){
+		$.each(institute_data,function(commentIndex, comment){
+		$('#institute_nav').append("<li><a href='#' onclick=\"$('#hiddenval').val('"
+		+ institute_data[commentIndex]+"');viewSub();\">"
+		+ institute_data[commentIndex]
+		+ "</a></li>");
+		});
+	},"json");
+});
+
 	/*显示相应学院学科目录*/
 	function viewSub() {
 		$.get("@{ViewResource.viewSubject}",
-						{
-			               institute : $("#hiddenval").val()
-						},
-						function(data, textStatus) {
-							var html = "";
-							$.each(data,function(commentIndex, comment) {
-												html += "<a href='#' onclick=\"$('#hiddenvalsub').val('"+data[commentIndex].subject+"');viewRes();\">"
-														+ data[commentIndex].subject
-														+ "</a><br>";
-											});
-							$('#subject').html(html);
-						}, "json");
+		{
+	     institute : $("#hiddenval").val()
+		},
+		function(data, textStatus) {
+		var html = "";
+		$.each(data,function(commentIndex, comment) {
+		html += "<a href='#' onclick=\"$('#hiddenvalsub').val('"
+			+data[commentIndex].subject+"');viewRes();\">"
+			+ data[commentIndex].subject
+			+ "</a><br>";
+		});
+		$('#subject').html(html);
+		}, "json");
+	}
+	/*显示学院学科资源*/
+	function viewRes() {
+		$.get("@{ViewResource.viewDownloadsList}", {
+			fileroute : $("#hiddenval").val(),
+			subject : $("#hiddenvalsub").val()
+		}, function(data, textStatus) {
+			var html = "";
+			$.each(data, function(commentIndex, comment) {
+				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
+				+ data[commentIndex].realName 
+				+ "</a>" 
+				+"<br>";
+			});
+			$('#sure_subject').val($('#hiddenvalsub').val());
+			$('#sure_institute').val($('#hiddenval').val());
+			$('#resource').html(html);
+			$('#resource_html').val(html);
+			$('#back_home').html("<ul class='breadcrumb'>"+
+					   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
+					    "<li class='active'>资源</li></ul>");
+			$("#downmes").fadeIn("slow");
+		}, "json");
 	}
 	/*异步上传*/
 	$(document).ready(function() {
@@ -229,7 +342,6 @@
 			 });
 			$('#upfile').val("");
 	}
-	
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
@@ -247,50 +359,8 @@
 				}, "json");
 			});
 	
-	/*学生登录异步提交，并且显示该学生所在学院的热门资源*/
-	$(document).ready(function() {
-		$('#loginForms').ajaxForm({
-			success : showResponse,
-			datatype : 'json'
-		});
-	});
 
-	function showResponse(responseJson) {
-		var html = "";
-		if (responseJson == null) {
-			$('#wronglogin').text("用户名密码错误");
-		} else {
-			$.each(responseJson, function(commentIndex, comment) {
-				html += "<div class='doc_resourcedetails'>"+
-				"<a href=@{ViewResource.viewDownloadsDetails}?hashName="+responseJson[commentIndex].hashName + ">" 
-						+ responseJson[commentIndex].realName 
-						+"</a>" 
-						+"</div><br>";
-			});
-			$('#wronglogin').text("");
-			$('#suggest').html(html);
-			var html1 = "<div id='uploadsbutton'><span class='label label-info'>欢迎你</span><br><br>"
-			html1 += "<button class='btn btn-info btn-large btn-block' type='button' data-toggle='modal' data-target='#uploadssurface';>我要上传</button></div>";
-			$('#login').html(html1);
-		}
-	}
-
-	/*显示学院学科资源*/
-	function viewRes() {
-		$.get("@{ViewResource.viewDownloadsList}", {
-			fileroute : $("#hiddenval").val(),
-			subject : $("#hiddenvalsub").val()
-		}, function(data, textStatus) {
-			var html = "";
-			$.each(data, function(commentIndex, comment) {
-				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
-				+ data[commentIndex].realName 
-				+ "</a>" 
-				+"<br>";
-			});
-			$('#downmes').html(html);
-		}, "json");
-	}
+	
 	
 	/*异步搜索*/
 	$(document).ready(function() {
@@ -315,6 +385,7 @@
 		}
 		$('#searchres').html(html);
 	}
+	
 	/*上传列表框二级联动*/
 	$(document).ready(function(){
 		$.get("@{ViewResource.viewInstitute}",function(data){
@@ -341,7 +412,9 @@
  		},"json");
      });
 </script>
+<script src="/public/javascripts/jquery.pageslide.min.js"></script>
+<script src="/public/javascripts/studentlogin.js"></script>
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="public/js/bootstrap.min.js"></script>
-<script src="./public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="./public/javascripts/jquery.form.min.js"></script>
+<script src="/public/javascripts/bootstrap.min.js"></script>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/jquery.form.min.js"></script>
