@@ -134,7 +134,6 @@ position: absolute;
 <!-- 显示资源信息 -->
 <div id="downmes">
 <div id="back_home"></div>
-
 <div id="resource"></div>
 
 <div id="search_sure"><form id="search_sure_form" action="@{Search.search_sure_res}">
@@ -143,6 +142,13 @@ position: absolute;
 <input type="hidden" name="sure_institute" id="sure_institute">
 <input type="submit" value="search">
 </form></div>
+
+<div id="test" style="height:70px;padding:30px 10px;font-size: 300%;"></div>
+
+<div id="pageNav"></div>
+ 
+</div>
+
 </div>
 
 <!-- 显示推荐信息 -->
@@ -231,8 +237,30 @@ position: absolute;
 </div>
 -->
 
-
+<script src="/public/javascripts/pagenav1.1.min.js"></script>
+<script src="/public/javascripts/jquery.pageslide.min.js"></script>
+<script src="/public/javascripts/studentlogin.js"></script>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/public/javascripts/bootstrap.min.js"></script>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/jquery.form.min.js"></script>
 <script type="text/javascript">
+
+/*分页*/
+    $(function(){
+		pageNav.pre="PRE";
+		pageNav.next="NEXT";
+		 //  p:current page number.  
+		 //  pn: page sum.
+		pageNav.fn = function(p,pn){
+			 $("#test").text("Page:"+p+" of "+pn + " pages."); //for jquery
+		};
+		//goto the page 3 of 33.
+		pageNav.go(1,33);
+	});
+  
+  
+  
 /*搜索相应学院学科资源*/
  $(document).ready(function() {
 		$('#search_sure_form').ajaxForm({
@@ -299,29 +327,36 @@ $(document).ready(function() {
 		$('#subject').html(html);
 		}, "json");
 	}
+	
 	/*显示学院学科资源*/
+       function getRes(){
+    	   var html = "";
+   		$.get("@{ViewResource.viewDownloadsList}", {
+   			fileroute : $("#hiddenval").val(),
+   			subject : $("#hiddenvalsub").val()
+   		   }, function(data, textStatus) {
+   			$.each(data, function(commentIndex, comment) {
+   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
+   				+ data[commentIndex].realName 
+   				+ "</a>" 
+   				+"<br>";
+   				$('#resource').html(html);
+   				$('#resource_html').val(html);
+   			});
+   		  }, "json");
+	   }
 	function viewRes() {
-		$.get("@{ViewResource.viewDownloadsList}", {
-			fileroute : $("#hiddenval").val(),
-			subject : $("#hiddenvalsub").val()
-		}, function(data, textStatus) {
-			var html = "";
-			$.each(data, function(commentIndex, comment) {
-				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
-				+ data[commentIndex].realName 
-				+ "</a>" 
-				+"<br>";
-			});
-			$('#sure_subject').val($('#hiddenvalsub').val());
-			$('#sure_institute').val($('#hiddenval').val());
-			$('#resource').html(html);
-			$('#resource_html').val(html);
-			$('#back_home').html("<ul class='breadcrumb'>"+
-					   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
-					    "<li class='active'>资源</li></ul>");
-			$("#downmes").fadeIn("slow");
-		}, "json");
+		getRes();
+		$('#sure_subject').val($('#hiddenvalsub').val());
+		$('#sure_institute').val($('#hiddenval').val());
+		
+		$('#back_home').html("<ul class='breadcrumb'>"+
+				   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
+				    "<li class='active'>资源</li></ul>");
+		$("#downmes").fadeIn("slow");
 	}
+	
+	
 	/*异步上传*/
 	$(document).ready(function() {
 		$('#myForm').ajaxForm({
@@ -412,9 +447,3 @@ $(document).ready(function() {
  		},"json");
      });
 </script>
-<script src="/public/javascripts/jquery.pageslide.min.js"></script>
-<script src="/public/javascripts/studentlogin.js"></script>
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="/public/javascripts/bootstrap.min.js"></script>
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="/public/javascripts/jquery.form.min.js"></script>

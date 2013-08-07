@@ -39,20 +39,21 @@ public class ViewResource extends BaseCore {
 	
 	/* 获取相应的学院以及相应的学科下载目录，并返回json格式 (没有完成当目录为空的时候所执行的操作) */
 	public static void viewDownloadsList(String fileroute, String subject) {
-		List<Filename> refileList = new ArrayList();
+		//List<Filename> refileList = new ArrayList();
 		// File file=new File(".");
 		// System.out.println(file.getAbsolutePath());
-		File listfile = new File("./public/resourse/" + fileroute + "/"
+		/*File listfile = new File("./public/resourse/" + fileroute + "/"
 				+ subject);
 		String[] list = listfile.list();
 		for (String name : list) {
 			List<Filename> filelist = Filename.find("hashName", name).fetch();
 			Filename filename = filelist.get(0);
 			refileList.add(filename);
-		}
+		}*/
+		List<Filename> refilelist = Filename.find("institute = ? And subject = ?",fileroute,subject).fetch();
 		response.contentType = "application/json";
 		Gson gson = new Gson();
-		String listToJson = gson.toJson(refileList);
+		String listToJson = gson.toJson(refilelist);
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
 	}
