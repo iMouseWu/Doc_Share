@@ -38,22 +38,18 @@ public class ViewResource extends BaseCore {
 	}
 	
 	/* 获取相应的学院以及相应的学科下载目录，并返回json格式 (没有完成当目录为空的时候所执行的操作) */
-	public static void viewDownloadsList(String fileroute, String subject) {
-		//List<Filename> refileList = new ArrayList();
-		// File file=new File(".");
-		// System.out.println(file.getAbsolutePath());
-		/*File listfile = new File("./public/resourse/" + fileroute + "/"
-				+ subject);
-		String[] list = listfile.list();
-		for (String name : list) {
-			List<Filename> filelist = Filename.find("hashName", name).fetch();
-			Filename filename = filelist.get(0);
-			refileList.add(filename);
-		}*/
-		List<Filename> refilelist = Filename.find("institute = ? And subject = ?",fileroute,subject).fetch();
+	public static void viewDownloadsList(String fileroute, String subject,int page) {
+		List filenameCountList = new ArrayList();
+		List<List> reJsonList =new ArrayList<List>();
+		List<Filename>  refilelist = Filename.find("institute = ? And subject = ?",fileroute,subject).from((page-1)*3).fetch(3);
+		long userFilenameCount =Filename.count("institute = ? And subject = ?",fileroute,subject);
+		int pageCount = (int)(userFilenameCount / 3 + 1) ;
+		filenameCountList.add(pageCount);
+		reJsonList.add(refilelist);
+		reJsonList.add(filenameCountList);
 		response.contentType = "application/json";
 		Gson gson = new Gson();
-		String listToJson = gson.toJson(refilelist);
+		String listToJson = gson.toJson(reJsonList);
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
 	}

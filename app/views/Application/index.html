@@ -52,7 +52,7 @@
 }
 #doc_middle_1{
     position: absolute;
-	left: 300px;
+	left: 500px;
 	width: 280px;
 	background-color:#e1e8e5;
 	height :100%;
@@ -100,7 +100,7 @@
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 300px;
+	width: 500px;
 	height:100%;
 	background-color:white;
 	display:none;
@@ -110,7 +110,7 @@
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 300px;
+	width: 500px;
 }
 #navagation{
 position: absolute;
@@ -131,22 +131,29 @@ position: absolute;
 <input type="hidden" id="hiddenvalsub">
 <!-- 隐藏域，用来记录学院学科资源html信息 -->
 <input type="hidden" id="resource_html">
+<!-- 隐藏域，记录总的页数 -->
+<input type="hidden" id="page">
 <!-- 显示资源信息 -->
 <div id="downmes">
 <div id="back_home"></div>
 <div id="resource"></div>
 
-<div id="search_sure"><form id="search_sure_form" action="@{Search.search_sure_res}">
+<div id="search_sure">
+<form id="search_sure_form" action="@{Search.search_sure_res}">
 <input type="text" name="sure_name">
 <input type="hidden" name="sure_subject"  id="sure_subject">
 <input type="hidden" name="sure_institute" id="sure_institute">
+<input type="hidden" name="sure_page" id="sure_page" value="1">
 <input type="submit" value="search">
 </form></div>
 
-<div id="test" style="height:70px;padding:30px 10px;font-size: 300%;"></div>
+<div id="test" style="height:70px;padding:30px 10px;"></div>
 
 <div id="pageNav"></div>
- 
+ <div class="pagination">
+  <ul id="pagenumber">
+  </ul>
+</div>
 </div>
 
 </div>
@@ -237,30 +244,23 @@ position: absolute;
 </div>
 -->
 
-<script src="/public/javascripts/pagenav1.1.min.js"></script>
-<script src="/public/javascripts/jquery.pageslide.min.js"></script>
+
 <script src="/public/javascripts/studentlogin.js"></script>
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="/public/javascripts/bootstrap.min.js"></script>
 <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/pagenav1.1.min.js"></script>
+<script src="/public/javascripts/seach_paging.js"></script>
 <script src="/public/javascripts/jquery.form.min.js"></script>
 <script type="text/javascript">
+/*搜索的分页操作*/
+ function Search_paging(page){
+	$('#sure_page').val(page);
+	//alert(page);
+	$("#search_sure_form").submit();
+}
+ 
 
-/*分页*/
-    $(function(){
-		pageNav.pre="PRE";
-		pageNav.next="NEXT";
-		 //  p:current page number.  
-		 //  pn: page sum.
-		pageNav.fn = function(p,pn){
-			 $("#test").text("Page:"+p+" of "+pn + " pages."); //for jquery
-		};
-		//goto the page 3 of 33.
-		pageNav.go(1,33);
-	});
-  
-  
-  
 /*搜索相应学院学科资源*/
  $(document).ready(function() {
 		$('#search_sure_form').ajaxForm({
@@ -271,16 +271,18 @@ position: absolute;
 	
 	function sure_Response(data){
 		var html = '';
-		$.each(data, function(commentIndex, comment) {
-			html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
-			+ data[commentIndex].realName 
+		$.each(data[0], function(commentIndex, comment) {
+			html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+			+ comment.realName 
 			+ "</a>" 
 			+"<br>";
 		});
+		  search_pageNav.go(parseInt($('#sure_page').val()),data[1]);/*$('#sure_page').val()蛋疼的传到后方是String类型导致+法计算的时候它直接按照String来连接了*/
 		  var back_home = "<ul class='breadcrumb'>"
 		  +"<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"
 		  +"<li><a href='#' onclick='back_resource();'>资源</a> <span class='divider'>/</span></li>"
 		  +" <li class='active'>搜索</li></ul>"
+		$('#search_sure').hide();
 		$('#resource').html(html);
 		$('#back_home').html(back_home);
 	}
@@ -291,6 +293,7 @@ function back_home(){
 }
 /*返回资源界面*/
  function back_resource(){
+	$('#search_sure').show();
 	$('#resource').html($('#resource_html').val());
 	$('#back_home').html("<ul class='breadcrumb'>"+
 			   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
@@ -328,25 +331,28 @@ $(document).ready(function() {
 		}, "json");
 	}
 	
-	/*显示学院学科资源*/
-       function getRes(){
+	/*显示学院学科资源，并调用分页插件*/
+       function getRes(page){
     	   var html = "";
    		$.get("@{ViewResource.viewDownloadsList}", {
    			fileroute : $("#hiddenval").val(),
-   			subject : $("#hiddenvalsub").val()
+   			subject : $("#hiddenvalsub").val(),
+   			page : page
    		   }, function(data, textStatus) {
-   			$.each(data, function(commentIndex, comment) {
-   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
-   				+ data[commentIndex].realName 
+   			pageNav.go(page,data[1]);
+   			$.each(data[0], function(commentIndex, comment) {
+   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+   				+ comment.realName 
    				+ "</a>" 
    				+"<br>";
    				$('#resource').html(html);
    				$('#resource_html').val(html);
    			});
    		  }, "json");
+   		     
 	   }
 	function viewRes() {
-		getRes();
+		getRes(1);
 		$('#sure_subject').val($('#hiddenvalsub').val());
 		$('#sure_institute').val($('#hiddenval').val());
 		
