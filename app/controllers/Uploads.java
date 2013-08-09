@@ -4,7 +4,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -44,9 +46,18 @@ public class Uploads extends BaseCore{
 		filedatename.uploadname = user;
 		filedatename.uploaddate = formatter.format(date);
 		dao.AddFilename.addFile(filedatename);
-		List list = new ArrayList();
-		list.add(filedatename.id);
-		list.add(filedatename.realName);
+//		List list = new ArrayList();
+//		list.add(filedatename.id);
+//		list.add(filedatename.realName);
+		 List<Map> list = new ArrayList<Map>();
+		 Map jsono = new HashMap();
+         jsono.put("name", upfile.getName());
+         jsono.put("size", upfile.length());
+         jsono.put("url", "upload?getfile=" + upfile.getName());
+         jsono.put("thumbnail_url", "upload?getthumb=" + upfile.getName());
+         jsono.put("delete_url", "upload?delfile=" + upfile.getName());
+         jsono.put("delete_type", "GET");
+         list.add(jsono);
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		Gson gson = new Gson();
@@ -59,7 +70,11 @@ public class Uploads extends BaseCore{
 	      List<Filename> list = Filename.find("id = ?", id).fetch();
 	      list.get(0).realName = filename;
 	      list.get(0).save();
+	}
+	/*对应jquery-file-uploads插件的get方法需要处理文件上传后的删除等功能*/
+	public static void eidtFile(){
 		
 	}
+	
 
 }

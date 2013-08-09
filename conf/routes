@@ -13,4 +13,4 @@ GET     /public/                                staticDir:public
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
-GET     /home                                   staticFile:/public/html/_modal.html
+GET     /home                                   staticFile:/public/html/index.html

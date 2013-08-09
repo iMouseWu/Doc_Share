@@ -1,8 +1,11 @@
-#{extends 'main.html' /} #{set title:'Home' /}
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" media="screen" href="/public/stylesheets/bootstrap.min.css">
-
+ <!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/public/css/style.css">
+<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
+<link rel="stylesheet" href="/public/css/jquery.fileupload-ui.css">
+<link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
 <style type="text/css">
 #form {
 	position: absolute;
@@ -121,7 +124,10 @@ position: absolute;
     left: 0px;
 	top:  36px;
 }
+
 </style>
+</head>
+<body>
 <div id="cover_2">
 </div>
 <div id="cover_1">
@@ -143,7 +149,7 @@ position: absolute;
 <div id="resource"></div>
 
 <div id="search_sure">
-<form id="search_sure_form" action="@{Search.search_sure_res}">
+<form id="search_sure_form" action="Search/search_sure_res">
 <input type="text" name="sure_name">
 <input type="hidden" name="sure_subject"  id="sure_subject">
 <input type="hidden" name="sure_institute" id="sure_institute">
@@ -174,7 +180,7 @@ position: absolute;
 
 <!-- 登录块 -->
 <div id="login">
-	<form class="form-horizontal" action="@{Login.LoginCheck()}" id="loginForms">
+	<form class="form-horizontal" action="Login/LoginCheck" id="loginForms">
   <div class="control-group">
     <label class="control-label" for="inputEmail">学号</label>
     <div class="controls">
@@ -219,19 +225,69 @@ position: absolute;
   </div>
   <div id="mes"></div>
   <div class="modal-body">
-  <form action="@{Uploads.uploads()}" enctype="multipart/form-data"
-		method="post" id="myForm">
-  学院：
+<!--   <form action="Uploads/uploads" enctype="multipart/form-data" -->
+<!-- 		method="post" id="myForm"> -->
+<!--   <input type="file" name="upfile" id="upfile">  -->
+<!--   <input type="submit" value="上传" class="btn btn-primary"> -->
+<div class="container">
+    <!-- The file upload form used as target for the file upload widget -->
+    <form id="fileupload" action="Uploads/uploads" method="POST" enctype="multipart/form-data">
+    学院：
   <select name="institute_sel" id="institute_sel">
   </select>
   学科:
   <select name="subject_sel" id="subject_sel">
   <option>---请选择---</option>
   </select>
-  资源名称:
-  <input type="file" name="upfile" id="upfile"> 
-  <input type="submit" value="上传" class="btn btn-primary">
-  </form>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <br>
+        资源名称:
+        <div class="row fileupload-buttonbar">
+            <div class="span7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="icon-plus icon-white"></i>
+                    <span>Add files...</span>
+                    <input type="file" name="upfile" multiple>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="icon-ban-circle icon-white"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-danger delete">
+                    <i class="icon-trash icon-white"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">
+                
+            <!-- The global progress information -->
+<!--             <div class="span5 fileupload-progress fade"> -->
+            <!--The global progress bar -->
+<!--                 <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"> -->
+<!--                     <div class="bar" style="width:0%;"></div> -->
+<!--                 </div> -->
+                
+       <!--The extended global progress information -->
+<!--                 <div class="progress-extended">&nbsp;</div> -->
+<!--             </div> -->
+        </div>
+        </div>
+<!-- The loading indicator is shown during file processing -->
+<!--         <div class="fileupload-loading"></div> -->
+        <br>
+<!--The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped">
+        <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+        </tbody>
+        </table>
+    </form>
+    <br>
+    </div>
+<!--   </form> -->
   </div>
   <div class="modal-footer">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
@@ -247,18 +303,31 @@ position: absolute;
 	</form>
 </div>
 -->
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="/public/javascripts/studentlogin.js"></script>
+
+
+
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="/public/javascripts/bootstrap.min.js"></script>
-<script src="/public/javascripts/pagenav1.1.min.js"></script>
-<script src="/public/javascripts/seach_paging.js"></script>
+ <script src="/public/javascripts/bootstrap.min.js"></script>
+ <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+ <script src="/public/javascripts/pagenav1.1.min.js"></script>
+ <script src="/public/javascripts/seach_paging.js"></script>
 <script src="/public/javascripts/jquery.form.min.js"></script>
+<script src="/public/js/vendor/jquery.ui.widget.js"></script>
+<script src="/public/js/tmpl.min.js"></script>
+<script src="/public/js/load-image.js"></script>
+<script src="/public/js/canvas-to-blob.min.js"></script>
+<!-- <script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script> -->
+<script src="/public/js/jquery.iframe-transport.js"></script>
+  <script src="/public/js/jquery.fileupload.js"></script> 
+  <script src="/public/js/jquery.fileupload-fp.js"></script> 
+<script src="/public/js/jquery.fileupload-ui.js"></script>
+ <script src="/public/js/locale.js"></script>
+ <script src="/public/js/main.js"></script>
+ <script src="/public/javascripts/studentlogin.js"></script>
 <script type="text/javascript">
 /*搜索相应学院学科资源的分页操作*/
  function Search_paging(page){
 	$('#sure_page').val(page);
-	//alert(page);
 	$("#search_sure_form").submit();
 }
  
@@ -270,11 +339,10 @@ position: absolute;
 			success : sure_Response
 		});
 	});
-	
 	function sure_Response(data){
 		var html = '';
 		$.each(data[0], function(commentIndex, comment) {
-			html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+			html += "<a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
 			+ comment.realName 
 			+ "</a>" 
 			+"<br>";
@@ -305,7 +373,7 @@ function back_home(){
 
 /*显示学院*/
 $(document).ready(function() {
-	$.get("@{ViewResource.viewInstitute}",function(institute_data){
+	$.get("ViewResource/viewInstitute",function(institute_data){
 		$.each(institute_data,function(commentIndex, comment){
 		$('#institute_nav').append("<li><a href='#' onclick=\"$('#hiddenval').val('"
 		+ institute_data[commentIndex]+"');viewSub();\">"
@@ -317,7 +385,7 @@ $(document).ready(function() {
 
 	/*显示相应学院学科目录*/
 	function viewSub() {
-		$.get("@{ViewResource.viewSubject}",
+		$.get("ViewResource/viewSubject",
 		{
 	     institute : $("#hiddenval").val()
 		},
@@ -336,14 +404,14 @@ $(document).ready(function() {
 	/*显示学院学科资源，并调用分页插件*/
        function getRes(page){
     	   var html = "";
-   		$.get("@{ViewResource.viewDownloadsList}", {
+   		$.get("ViewResource/viewDownloadsList", {
    			fileroute : $("#hiddenval").val(),
    			subject : $("#hiddenvalsub").val(),
    			page : page
    		   }, function(data, textStatus) {
    			pageNav.go(page,data[1]);
    			$.each(data[0], function(commentIndex, comment) {
-   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+   				html += "<a href=ViewResource/viewDownloadsDetails}?hashName="+comment.hashName + ">" 
    				+ comment.realName 
    				+ "</a>" 
    				+"<br>";
@@ -376,7 +444,7 @@ $(document).ready(function() {
 		     alert("上传成功");
 			 $('#mes').html("<div class='alert'> " +
 			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
-			  "<form action='@{Uploads.alterFilename}' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
+			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
 			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
 			  "</div>");
 			 
@@ -388,12 +456,12 @@ $(document).ready(function() {
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
-				$.get("@{ViewResource.viewMostDown()}", function(data,
+				$.get("ViewResource/viewMostDown", function(data,
 						textStatus) {
 					var html = "热门资源" + "<br>";
 					$.each(data, function(commentIndex, comment) {
 								html += "<div class='doc_resourcedetails'>"+
-								"<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
+								"<a href=ViewResource/viewDownloadsDetails?hashName="+data[commentIndex].hashName + ">" 
 										+ data[commentIndex].realName 
 										+ "</a>" 
 										+"</div><br>";
@@ -420,7 +488,7 @@ $(document).ready(function() {
 			*/
 		} else {
 			$.each(responseJson, function(commentIndex, comment) {
-				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+responseJson[commentIndex].hashName + ">" 
+				html += "<a href=ViewResource/viewDownloadsDetails?hashName="+responseJson[commentIndex].hashName + ">" 
 				+ responseJson[commentIndex].realName 
 				+ "</a>" 
 				+"<br>";
@@ -431,7 +499,7 @@ $(document).ready(function() {
 	
 	/*上传列表框二级联动*/
 	$(document).ready(function(){
-		$.get("@{ViewResource.viewInstitute}",function(data){
+		$.get("ViewResource/viewInstitute",function(data){
 			$('#institute_sel').empty();
 			$('#institute_sel').append("<option>---请选择---</option>");
 			$.each(data,function(commentIndex, comment){
@@ -441,7 +509,7 @@ $(document).ready(function() {
 	});
 	
      $('#institute_sel').change(function(){
-    	 $.get("@{ViewResource.viewSubject}",{
+    	 $.get("ViewResource/viewSubject",{
     		 institute: $('#institute_sel').val()
     	 },function(data){
     		 $('#subject_sel').empty();
@@ -454,4 +522,66 @@ $(document).ready(function() {
  			}
  		},"json");
      });
-</script>
+     </script>
+
+     <script id="template-upload" type="text/x-tmpl">
+     {% for (var i=0, file; file=o.files[i]; i++) { %}
+         <tr class="template-upload fade">
+             <td class="preview"><span class="fade"></span></td>
+             <td class="name"><span>{%=file.name%}</span></td>
+             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+             {% if (file.error) { %}
+                 <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+             {% } else if (o.files.valid && !i) { %}
+                 <td>
+                     <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+                 </td>
+                 <td class="start">{% if (!o.options.autoUpload) { %}
+                     <button class="btn btn-primary">
+                         <i class="icon-upload icon-white"></i>
+                         <span>{%=locale.fileupload.start%}</span>
+                     </button>
+                 {% } %}</td>
+             {% } else { %}
+                 <td colspan="2"></td>
+             {% } %}
+             <td class="cancel">{% if (!i) { %}
+                 <button class="btn btn-warning">
+                     <i class="icon-ban-circle icon-white"></i>
+                     <span>{%=locale.fileupload.cancel%}</span>
+                 </button>
+             {% } %}</td>
+         </tr>
+     {% } %}
+     </script>
+     <!-- The template to display files available for download -->
+     <script id="template-download" type="text/x-tmpl">
+     {% for (var i=0, file; file=o.files[i]; i++) { %}
+         <tr class="template-download fade">
+             {% if (file.error) { %}
+                 <td></td>
+                 <td class="name"><span>{%=file.name%}</span></td>
+                 <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+                 <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+             {% } else { %}
+                 <td class="preview">{% if (file.thumbnail_url) { %}
+                     <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
+                 {% } %}</td>
+                 <td class="name">
+                     <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+                 </td>
+                 <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+                 <td colspan="2"></td>
+             {% } %}
+             <td class="delete">
+                 <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                     <i class="icon-trash icon-white"></i>
+                     <span>{%=locale.fileupload.destroy%}</span>
+                 </button>
+                 <input type="checkbox" name="delete" value="1">
+             </td>
+         </tr>
+     {% } %}
+     </script>
+     </body>
+</html>
