@@ -4,6 +4,10 @@
 
 # Home page
 GET     /                                       Application.index
+#定义上传文件后的修改文件的路由
+
+GET     /uploads/{editway}/hash/{hashname}                         Uploads.editFile
+
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -13,4 +17,8 @@ GET     /public/                                staticDir:public
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
+#静态首页
 GET     /home                                   staticFile:/public/html/index.html
+
+
+

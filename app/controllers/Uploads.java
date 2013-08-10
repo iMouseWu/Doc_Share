@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.core.dom.ThisExpression;
+
 import com.google.gson.Gson;
 
 import models.Filename;
@@ -53,9 +55,9 @@ public class Uploads extends BaseCore{
 		 Map jsono = new HashMap();
          jsono.put("name", upfile.getName());
          jsono.put("size", upfile.length());
-         jsono.put("url", "upload?getfile=" + upfile.getName());
-         jsono.put("thumbnail_url", "upload?getthumb=" + upfile.getName());
-         jsono.put("delete_url", "upload?delfile=" + upfile.getName());
+         jsono.put("url", "uploads/getfile/hash/"+ hash + fileext);
+         jsono.put("thumbnail_url", "uploads/getthumb/hash/" + hash + fileext);
+         jsono.put("delete_url", "uploads/delfile/hash/" + hash + fileext);
          jsono.put("delete_type", "GET");
          list.add(jsono);
 		response.contentType = "application/json";
@@ -72,8 +74,32 @@ public class Uploads extends BaseCore{
 	      list.get(0).save();
 	}
 	/*对应jquery-file-uploads插件的get方法需要处理文件上传后的删除等功能*/
-	public static void eidtFile(){
-		
+	public static void editFile(){
+		String editway=params.get("editway");
+		String hashname=params.get("hashname");
+		if(editway == "delfile"){
+			/*删除数据库下面的文件*/
+			List<Filename> list = Filename.find("hashName = ?",editway).fetch();
+			Filename filename = list.get(0);
+			String institute = filename.institute;
+			String subject = filename.subject;
+			String path = "/public/resourse/" + institute + "/" + subject + "/" + hashname;
+			File file = new File(path);
+			file.delete();
+			filename.delete();
+			
+		}else if(editway == "getthumb"){
+			/*下面这个蛋疼的东西就不知道干什么了，目测是为了如果服务端是图片的话，传完以后图片可以显示在页面上
+			 但是demo里面是用流来处理的，明明可以用一个路径就可以解决了，所以demo的代码就看不懂，然后后面也发现demo的
+			 代码可有可无，前端页面根本不买账所以这里留着以后写吧！*/
+			
+		}else if(editway == "getfile"){
+			/*这个判断就是从服务器通过流来下载文件，防止如果是图片链接的话，会直接打开文件！如果是其它文件的话
+			 效率也会高点*/
+		}else{
+			/*这个蛋疼的返回是给form表单的时候增加一个option的一个done的回调，目测是*/
+			renderText("call POST with multipart form data");
+		}
 	}
 	
 
