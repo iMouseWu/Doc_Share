@@ -20,7 +20,7 @@ import play.mvc.Controller;
 public class Uploads extends BaseCore{
 	
 	/* 上传功能 */
-	public static void uploads(File upfile, String institute_sel, String subject_sel) {
+	public static void uploads(File upfile, String institute_sel, String subject_sel,String intro_sel) {
 		/* 获取文件哈希码 */
 		int hash = upfile.hashCode();
 		/* 获取文件名字 */
@@ -47,19 +47,22 @@ public class Uploads extends BaseCore{
 		filedatename.downcount = 0;
 		filedatename.uploadname = user;
 		filedatename.uploaddate = formatter.format(date);
+		filedatename.intro = intro_sel;
 		dao.AddFilename.addFile(filedatename);
 //		List list = new ArrayList();
 //		list.add(filedatename.id);
 //		list.add(filedatename.realName);
-		 List<Map> list = new ArrayList<Map>();
-		 Map jsono = new HashMap();
-         jsono.put("name", upfile.getName());
-         jsono.put("size", upfile.length());
-         jsono.put("url", "uploads/getfile/hash/"+ hash + fileext);
-         jsono.put("thumbnail_url", "uploads/getthumb/hash/" + hash + fileext);
-         jsono.put("delete_url", "uploads/delfile/hash/" + hash + fileext);
-         jsono.put("delete_type", "GET");
-         list.add(jsono);
+//		 List<Map> list = new ArrayList<Map>();
+//		 Map jsono = new HashMap();
+//         jsono.put("name", upfile.getName());
+//         jsono.put("size", upfile.length());
+//         jsono.put("url", "uploads/getfile/hash/"+ hash + fileext);
+//         jsono.put("thumbnail_url", "uploads/getthumb/hash/" + hash + fileext);
+//         jsono.put("delete_url", "uploads/delfile/hash/" + hash + fileext);
+//         jsono.put("delete_type", "GET");
+//         list.add(jsono);
+		List list = new ArrayList();
+		list.add(filedatename);
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		Gson gson = new Gson();
@@ -77,23 +80,22 @@ public class Uploads extends BaseCore{
 	public static void editFile(){
 		String editway=params.get("editway");
 		String hashname=params.get("hashname");
-		if(editway == "delfile"){
+		if(editway.equals("delfile") ){
 			/*删除数据库下面的文件*/
-			List<Filename> list = Filename.find("hashName = ?",editway).fetch();
+			List<Filename> list = Filename.find("hashName = ?",hashname).fetch();
 			Filename filename = list.get(0);
 			String institute = filename.institute;
 			String subject = filename.subject;
 			String path = "/public/resourse/" + institute + "/" + subject + "/" + hashname;
-			File file = new File(path);
-			file.delete();
+			File file = Play.getFile(path);
+			Files.delete(file);
 			filename.delete();
-			
-		}else if(editway == "getthumb"){
+		}else if(editway .equals("getthumb")){
 			/*下面这个蛋疼的东西就不知道干什么了，目测是为了如果服务端是图片的话，传完以后图片可以显示在页面上
 			 但是demo里面是用流来处理的，明明可以用一个路径就可以解决了，所以demo的代码就看不懂，然后后面也发现demo的
 			 代码可有可无，前端页面根本不买账所以这里留着以后写吧！*/
 			
-		}else if(editway == "getfile"){
+		}else if(editway.equals("getfile")){
 			/*这个判断就是从服务器通过流来下载文件，防止如果是图片链接的话，会直接打开文件！如果是其它文件的话
 			 效率也会高点*/
 		}else{

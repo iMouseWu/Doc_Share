@@ -30,9 +30,9 @@
             window.loadImage
         );
     }
-}(function ($, tmpl, loadImage) {
+}
+(function ($, tmpl, loadImage) {
     'use strict';
-
     // The UI version extends the FP (file processing) version or the basic
     // file upload widget and adds complete user interface interaction:
     var parentWidget = ($.blueimpFP || $.blueimp).fileupload;

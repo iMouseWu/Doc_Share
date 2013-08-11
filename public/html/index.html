@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/public/css/style.css">
+<!-- <link rel="stylesheet" href="/public/css/style.css"> -->
 <link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
 <link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
 <link rel="stylesheet" href="/public/css/jquery.fileupload-ui.css">
 <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="/public/css/resource_hot.css">
 <style type="text/css">
 #form {
 	position: absolute;
 	left: 1000px;
 	top: 50px;
 }
-
 #institute {
 	position: absolute;
 	left: 0px;
 	top: 250px
 }
-
 #subject {
 	position: absolute;
 	left: 110px;
@@ -49,21 +48,8 @@
 	left: 1150px;
 	top: 180px;
 }
-#suggest{
-    position: absolute;
-	left: 500px;
-	top: 200px;
-	overflow:auto;
-	height:400px;
-	width:300px;
-}
-#doc_middle_1{
-    position: absolute;
-	left: 500px;
-	width: 280px;
-	background-color:#e1e8e5;
-	height :100%;
-}
+ 
+ 
 #doc_middle_2{
     position: absolute;
 	left: 1050px;
@@ -71,32 +57,7 @@
 	background-color:#e1e8e5;
 	height :100%;
 }
-.doc_resourcedetails{
-    height:35px;
-	width:220px;
-	line-height:35px;
-	text-align:center;
-	background-color:#CFDAD5;
-	font-weight: 10
-}
-#cover_1{
-    position: absolute;
-    left: 783px;
-	top:  180px;
-	width: 20px;
-	background-color:white;
-	height :280px;
-	z-index:1;
-}
-#cover_2{
-    position: absolute;
-    left: 783px;
-	top:  300px;
-	width: 20px;
-	background-color:white;
-	height :400px;
-	z-index:1;
-}
+
 #uploadsbutton{
     position: absolute;
     left: 190px;
@@ -107,7 +68,7 @@
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 500px;
+	width: 290px;
 	height:100%;
 	background-color:white;
 	display:none;
@@ -117,23 +78,19 @@
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 500px;
+	width: 290px;
 }
 #navagation{
 position: absolute;
     left: 0px;
 	top:  36px;
 }
-
+#mes{
+display:none;
+}
 </style>
 </head>
 <body>
-<div id="cover_2">
-</div>
-<div id="cover_1">
-</div>
-<div id="doc_middle_1">
-</div>
 <div id="doc_middle_2"></div>
 <!-- 隐藏域，用来记录学院 -->
 <input type="hidden" id="hiddenval">
@@ -147,7 +104,7 @@ position: absolute;
 <div id="downmes">
 <div id="back_home"></div>
 <div id="resource"></div>
-
+<!-- 相应学院科目资源搜索框 -->
 <div id="search_sure">
 <form id="search_sure_form" action="Search/search_sure_res">
 <input type="text" name="sure_name">
@@ -156,7 +113,7 @@ position: absolute;
 <input type="hidden" name="sure_page" id="sure_page" value="1">
 <input type="submit" value="search">
 </form></div>
-
+<!-- 分页显示 -->
 <div id="test" style="height:70px;padding:30px 10px;"></div>
 
 <div id="pageNav"></div>
@@ -166,14 +123,12 @@ position: absolute;
 </div>
 </div>
 
-</div>
-
 <!-- 显示推荐信息 -->
 <div id="suggest"></div>
 <!-- 显示搜索结果 -->
 <div id="searchres"></div>
 <!-- 登录错误提示信息 -->
-<label id="wronglogin">${user ?:'游客！欢迎你'}!</label>
+<label id="wronglogin">游客！欢迎你</label>
 <!-- 显示对应学院的学科 -->
 <div id="subject"> </div>
 
@@ -209,7 +164,6 @@ position: absolute;
   <li class="active">首页</li>
   </ul>
 </div>
-
 <!-- 导航栏 -->
 <div id="navagation">
 <div class="tabbable tabs-left">
@@ -223,15 +177,9 @@ position: absolute;
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">上传</h3>
   </div>
-  <div id="mes"></div>
+  
   <div class="modal-body">
-<!--   <form action="Uploads/uploads" enctype="multipart/form-data" -->
-<!-- 		method="post" id="myForm"> -->
-<!--   <input type="file" name="upfile" id="upfile">  -->
-<!--   <input type="submit" value="上传" class="btn btn-primary"> -->
-<div class="container">
-    <!-- The file upload form used as target for the file upload widget -->
-    <form id="fileupload" action="Uploads/uploads" method="POST" enctype="multipart/form-data">
+ <form id="fileupload" action="Uploads/uploads" method="POST" enctype="multipart/form-data">
     学院：
   <select name="institute_sel" id="institute_sel">
   </select>
@@ -239,55 +187,24 @@ position: absolute;
   <select name="subject_sel" id="subject_sel">
   <option>---请选择---</option>
   </select>
-        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-        <br>
-        资源名称:
-        <div class="row fileupload-buttonbar">
-            <div class="span7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="icon-plus icon-white"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="upfile" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="icon-upload icon-white"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="icon-ban-circle icon-white"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="icon-trash icon-white"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" class="toggle">
-                
-            <!-- The global progress information -->
-<!--             <div class="span5 fileupload-progress fade"> -->
-            <!--The global progress bar -->
-<!--                 <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"> -->
-<!--                     <div class="bar" style="width:0%;"></div> -->
-<!--                 </div> -->
-                
-       <!--The extended global progress information -->
-<!--                 <div class="progress-extended">&nbsp;</div> -->
-<!--             </div> -->
-        </div>
-        </div>
-<!-- The loading indicator is shown during file processing -->
-<!--         <div class="fileupload-loading"></div> -->
-        <br>
-<!--The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped">
-        <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
-        </tbody>
-        </table>
+          <span class="btn btn-success fileinput-button">
+          <i class="icon-plus icon-white"></i>
+          <span>Add files...</span>
+          <input type="file" name="upfile" id="upfile" class="btn btn-primary">
+          </span>
+          <br>
+          <div id="add_success">请添加文件</div>
+          <br>
+          <br>
+          <div id="mes"> 简介(30字以内):<br><textarea rows="2" cols="" name="intro_sel" style="resize:none" maxlength="30"></textarea> </div>
+          <!-- 上传按钮 -->
+          <div id="submit"></div>
+          <!-- 过程提示 -->
+          <div id="progress_prompt"></div>
     </form>
-    <br>
+     <!-- 上传条 -->
+    <div id="progress">
     </div>
-<!--   </form> -->
   </div>
   <div class="modal-footer">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
@@ -320,7 +237,7 @@ position: absolute;
 <script src="/public/js/jquery.iframe-transport.js"></script>
   <script src="/public/js/jquery.fileupload.js"></script> 
   <script src="/public/js/jquery.fileupload-fp.js"></script> 
-<script src="/public/js/jquery.fileupload-ui.js"></script>
+<!-- <script src="/public/js/jquery.fileupload-ui.js"></script> -->
  <script src="/public/js/locale.js"></script>
  <script src="/public/js/main.js"></script>
  <script src="/public/javascripts/studentlogin.js"></script>
@@ -369,8 +286,6 @@ function back_home(){
 			   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
 			    "<li class='active'>资源</li></ul>");
 }
- 
-
 /*显示学院*/
 $(document).ready(function() {
 	$.get("ViewResource/viewInstitute",function(institute_data){
@@ -431,28 +346,25 @@ $(document).ready(function() {
 				    "<li class='active'>资源</li></ul>");
 		$("#downmes").fadeIn("slow");
 	}
-	
-	
-	/*异步上传*/
-	$(document).ready(function() {
-		$('#myForm').ajaxForm({
-			dataType : 'json',
-			success : uploadsResponse
-		});
-	});
-	function uploadsResponse(data){
-		     alert("上传成功");
-			 $('#mes').html("<div class='alert'> " +
-			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
-			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
-			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
-			  "</div>");
+// 	/*异步上传*/
+// 	$(document).ready(function() {
+// 		$('#myForm').ajaxForm({
+// 			dataType : 'json',
+// 			success : uploadsResponse
+// 		});
+// 	});
+// 	function uploadsResponse(data){
+// 			 $('#mes').html("<div class='alert'> " +
+// 			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
+// 			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
+// 			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
+// 			  "</div>");
 			 
-			 $('#alertfileform').ajaxForm(function(){
-				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
-			 });
-			$('#upfile').val("");
-	}
+// 			 $('#alertfileform').ajaxForm(function(){
+// 				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
+// 			 });
+// 			$('#upfile').val("");
+// 	}
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
@@ -460,13 +372,23 @@ $(document).ready(function() {
 						textStatus) {
 					var html = "热门资源" + "<br>";
 					$.each(data, function(commentIndex, comment) {
-								html += "<div class='doc_resourcedetails'>"+
+								html += "<div id='doc_resourcedetails_"+commentIndex+"'>"+
 								"<a href=ViewResource/viewDownloadsDetails?hashName="+data[commentIndex].hashName + ">" 
 										+ data[commentIndex].realName 
 										+ "</a>" 
 										+"</div><br>";
 					});
 					$('#suggest').html(html);
+					$("#doc_resourcedetails_0").fadeIn(5000);
+					$("#doc_resourcedetails_1").fadeIn(5000);
+					$("#doc_resourcedetails_2").fadeIn(7000);
+					$("#doc_resourcedetails_3").fadeIn(5000);
+					$("#doc_resourcedetails_4").fadeIn(3000);
+					$("#doc_resourcedetails_5").fadeIn(5000);
+					$("#doc_resourcedetails_6").fadeIn(3000);
+					$("#doc_resourcedetails_7").fadeIn(7000);
+					$("#doc_resourcedetails_8").fadeIn(6000);
+					$("#doc_resourcedetails_9").fadeIn(3000);
 				}, "json");
 			});
 	
@@ -522,66 +444,6 @@ $(document).ready(function() {
  			}
  		},"json");
      });
-     </script>
-
-     <script id="template-upload" type="text/x-tmpl">
-     {% for (var i=0, file; file=o.files[i]; i++) { %}
-         <tr class="template-upload fade">
-             <td class="preview"><span class="fade"></span></td>
-             <td class="name"><span>{%=file.name%}</span></td>
-             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-             {% if (file.error) { %}
-                 <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
-             {% } else if (o.files.valid && !i) { %}
-                 <td>
-                     <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
-                 </td>
-                 <td class="start">{% if (!o.options.autoUpload) { %}
-                     <button class="btn btn-primary">
-                         <i class="icon-upload icon-white"></i>
-                         <span>{%=locale.fileupload.start%}</span>
-                     </button>
-                 {% } %}</td>
-             {% } else { %}
-                 <td colspan="2"></td>
-             {% } %}
-             <td class="cancel">{% if (!i) { %}
-                 <button class="btn btn-warning">
-                     <i class="icon-ban-circle icon-white"></i>
-                     <span>{%=locale.fileupload.cancel%}</span>
-                 </button>
-             {% } %}</td>
-         </tr>
-     {% } %}
-     </script>
-     <!-- The template to display files available for download -->
-     <script id="template-download" type="text/x-tmpl">
-     {% for (var i=0, file; file=o.files[i]; i++) { %}
-         <tr class="template-download fade">
-             {% if (file.error) { %}
-                 <td></td>
-                 <td class="name"><span>{%=file.name%}</span></td>
-                 <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-                 <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
-             {% } else { %}
-                 <td class="preview">{% if (file.thumbnail_url) { %}
-                     <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
-                 {% } %}</td>
-                 <td class="name">
-                     <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
-                 </td>
-                 <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-                 <td colspan="2"></td>
-             {% } %}
-             <td class="delete">
-                 <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
-                     <i class="icon-trash icon-white"></i>
-                     <span>{%=locale.fileupload.destroy%}</span>
-                 </button>
-                 <input type="checkbox" name="delete" value="1">
-             </td>
-         </tr>
-     {% } %}
      </script>
      </body>
 </html>

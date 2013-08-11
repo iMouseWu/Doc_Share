@@ -16,5 +16,6 @@ public class Filename extends Model {
 	public String subject;
 	public float avescore;
 	public int numberval;
+	public String intro;
 
 }
