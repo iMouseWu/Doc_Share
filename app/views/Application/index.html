@@ -1,21 +1,21 @@
-#{extends 'main.html' /} #{set title:'Home' /}
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" media="screen" href="/public/stylesheets/bootstrap.min.css">
-
+ #{extends 'main.html' /} #{set title:'index.html' /}
+<!-- <link rel="stylesheet" href="/public/css/style.css"> -->
+<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
+<link rel="stylesheet" href="/public/css/jquery.fileupload-ui.css">
+<link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="/public/css/resource_hot.css">
 <style type="text/css">
 #form {
 	position: absolute;
 	left: 1000px;
 	top: 50px;
 }
-
 #institute {
 	position: absolute;
 	left: 0px;
 	top: 250px
 }
-
 #subject {
 	position: absolute;
 	left: 110px;
@@ -28,13 +28,11 @@
 	width: 300px;
 	text-align:center;
 }
-
 #searchForm {
 	position: absolute;
 	left: 800px;
 	top: 250px;
 }
-
 #searchres {
 	position: absolute;
 	left: 800px;
@@ -46,21 +44,8 @@
 	left: 1150px;
 	top: 180px;
 }
-#suggest{
-    position: absolute;
-	left: 500px;
-	top: 200px;
-	overflow:auto;
-	height:400px;
-	width:300px;
-}
-#doc_middle_1{
-    position: absolute;
-	left: 500px;
-	width: 280px;
-	background-color:#e1e8e5;
-	height :100%;
-}
+ 
+ 
 #doc_middle_2{
     position: absolute;
 	left: 1050px;
@@ -68,32 +53,7 @@
 	background-color:#e1e8e5;
 	height :100%;
 }
-.doc_resourcedetails{
-    height:35px;
-	width:220px;
-	line-height:35px;
-	text-align:center;
-	background-color:#CFDAD5;
-	font-weight: 10
-}
-#cover_1{
-    position: absolute;
-    left: 783px;
-	top:  180px;
-	width: 20px;
-	background-color:white;
-	height :280px;
-	z-index:1;
-}
-#cover_2{
-    position: absolute;
-    left: 783px;
-	top:  300px;
-	width: 20px;
-	background-color:white;
-	height :400px;
-	z-index:1;
-}
+
 #uploadsbutton{
     position: absolute;
     left: 190px;
@@ -104,7 +64,7 @@
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 500px;
+	width: 290px;
 	height:100%;
 	background-color:white;
 	display:none;
@@ -114,20 +74,19 @@
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 500px;
+	width: 290px;
 }
 #navagation{
 position: absolute;
     left: 0px;
 	top:  36px;
 }
+#mes{
+display:none;
+}
 </style>
-<div id="cover_2">
-</div>
-<div id="cover_1">
-</div>
-<div id="doc_middle_1">
-</div>
+</head>
+<body>
 <div id="doc_middle_2"></div>
 <!-- 隐藏域，用来记录学院 -->
 <input type="hidden" id="hiddenval">
@@ -141,18 +100,17 @@ position: absolute;
 <div id="downmes">
 <div id="back_home"></div>
 <div id="resource"></div>
-
+<!-- 相应学院科目资源搜索框 -->
 <div id="search_sure">
-<form id="search_sure_form" action="@{Search.search_sure_res}">
+<form id="search_sure_form" action="Search/search_sure_res">
 <input type="text" name="sure_name">
 <input type="hidden" name="sure_subject"  id="sure_subject">
 <input type="hidden" name="sure_institute" id="sure_institute">
 <input type="hidden" name="sure_page" id="sure_page" value="1">
 <input type="submit" value="search">
 </form></div>
-
+<!-- 分页显示 -->
 <div id="test" style="height:70px;padding:30px 10px;"></div>
-
 <div id="pageNav"></div>
  <div class="pagination">
   <ul id="pagenumber">
@@ -160,21 +118,19 @@ position: absolute;
 </div>
 </div>
 
-</div>
-
 <!-- 显示推荐信息 -->
 <div id="suggest"></div>
 <!-- 显示搜索结果 -->
 <div id="searchres"></div>
 <!-- 登录错误提示信息 -->
-<label id="wronglogin">${user ?:'游客！欢迎你'}!</label>
+<label id="wronglogin">${user ?:'游客欢迎你'}</label>
 <!-- 显示对应学院的学科 -->
 <div id="subject"> </div>
 
 
 <!-- 登录块 -->
 <div id="login">
-	<form class="form-horizontal" action="@{Login.LoginCheck()}" id="loginForms">
+	<form class="form-horizontal" action="Login/LoginCheck" id="loginForms">
   <div class="control-group">
     <label class="control-label" for="inputEmail">学号</label>
     <div class="controls">
@@ -203,7 +159,6 @@ position: absolute;
   <li class="active">首页</li>
   </ul>
 </div>
-
 <!-- 导航栏 -->
 <div id="navagation">
 <div class="tabbable tabs-left">
@@ -217,21 +172,34 @@ position: absolute;
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">上传</h3>
   </div>
-  <div id="mes"></div>
+  
   <div class="modal-body">
-  <form action="@{Uploads.uploads()}" enctype="multipart/form-data"
-		method="post" id="myForm">
-  学院：
+ <form id="fileupload" action="Uploads/uploads" method="POST" enctype="multipart/form-data">
+    学院：
   <select name="institute_sel" id="institute_sel">
   </select>
   学科:
   <select name="subject_sel" id="subject_sel">
   <option>---请选择---</option>
   </select>
-  资源名称:
-  <input type="file" name="upfile" id="upfile"> 
-  <input type="submit" value="上传" class="btn btn-primary">
-  </form>
+          <span class="btn btn-success fileinput-button">
+          <i class="icon-plus icon-white"></i>
+          <span>Add files...</span>
+          <input type="file" name="upfile" id="upfile" class="btn btn-primary">
+          </span>
+          <br>
+          <div id="add_success">请添加文件</div>
+          <br>
+          <br>
+          <div id="mes"> </div>
+          <!-- 上传按钮 -->
+          <div id="submit"></div>
+          <!-- 过程提示 -->
+          <div id="progress_prompt"></div>
+    </form>
+     <!-- 上传条 -->
+    <div id="progress">
+    </div>
   </div>
   <div class="modal-footer">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
@@ -247,18 +215,31 @@ position: absolute;
 	</form>
 </div>
 -->
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="/public/javascripts/studentlogin.js"></script>
+
+
+
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="/public/javascripts/bootstrap.min.js"></script>
-<script src="/public/javascripts/pagenav1.1.min.js"></script>
-<script src="/public/javascripts/seach_paging.js"></script>
+ <script src="/public/javascripts/bootstrap.min.js"></script>
+ <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+ <script src="/public/javascripts/pagenav1.1.min.js"></script>
+ <script src="/public/javascripts/seach_paging.js"></script>
 <script src="/public/javascripts/jquery.form.min.js"></script>
+<script src="/public/js/vendor/jquery.ui.widget.js"></script>
+<script src="/public/js/tmpl.min.js"></script>
+<script src="/public/js/load-image.js"></script>
+<script src="/public/js/canvas-to-blob.min.js"></script>
+<!-- <script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script> -->
+<script src="/public/js/jquery.iframe-transport.js"></script>
+  <script src="/public/js/jquery.fileupload.js"></script> 
+  <script src="/public/js/jquery.fileupload-fp.js"></script> 
+<!-- <script src="/public/js/jquery.fileupload-ui.js"></script> -->
+ <script src="/public/js/locale.js"></script>
+ <script src="/public/js/main.js"></script>
+ <script src="/public/javascripts/studentlogin.js"></script>
 <script type="text/javascript">
 /*搜索相应学院学科资源的分页操作*/
  function Search_paging(page){
 	$('#sure_page').val(page);
-	//alert(page);
 	$("#search_sure_form").submit();
 }
  
@@ -270,11 +251,10 @@ position: absolute;
 			success : sure_Response
 		});
 	});
-	
 	function sure_Response(data){
 		var html = '';
 		$.each(data[0], function(commentIndex, comment) {
-			html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+			html += "<a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
 			+ comment.realName 
 			+ "</a>" 
 			+"<br>";
@@ -301,11 +281,9 @@ function back_home(){
 			   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
 			    "<li class='active'>资源</li></ul>");
 }
- 
-
 /*显示学院*/
 $(document).ready(function() {
-	$.get("@{ViewResource.viewInstitute}",function(institute_data){
+	$.get("ViewResource/viewInstitute",function(institute_data){
 		$.each(institute_data,function(commentIndex, comment){
 		$('#institute_nav').append("<li><a href='#' onclick=\"$('#hiddenval').val('"
 		+ institute_data[commentIndex]+"');viewSub();\">"
@@ -317,7 +295,7 @@ $(document).ready(function() {
 
 	/*显示相应学院学科目录*/
 	function viewSub() {
-		$.get("@{ViewResource.viewSubject}",
+		$.get("ViewResource/viewSubject",
 		{
 	     institute : $("#hiddenval").val()
 		},
@@ -336,14 +314,14 @@ $(document).ready(function() {
 	/*显示学院学科资源，并调用分页插件*/
        function getRes(page){
     	   var html = "";
-   		$.get("@{ViewResource.viewDownloadsList}", {
+   		$.get("ViewResource/viewDownloadsList", {
    			fileroute : $("#hiddenval").val(),
    			subject : $("#hiddenvalsub").val(),
    			page : page
    		   }, function(data, textStatus) {
    			pageNav.go(page,data[1]);
    			$.each(data[0], function(commentIndex, comment) {
-   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+   				html += "<a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
    				+ comment.realName 
    				+ "</a>" 
    				+"<br>";
@@ -351,7 +329,6 @@ $(document).ready(function() {
    				$('#resource_html').val(html);
    			});
    		  }, "json");
-   		     
 	   }
 	function viewRes() {
 		getRes(1);
@@ -363,42 +340,49 @@ $(document).ready(function() {
 				    "<li class='active'>资源</li></ul>");
 		$("#downmes").fadeIn("slow");
 	}
-	
-	
-	/*异步上传*/
-	$(document).ready(function() {
-		$('#myForm').ajaxForm({
-			dataType : 'json',
-			success : uploadsResponse
-		});
-	});
-	function uploadsResponse(data){
-		     alert("上传成功");
-			 $('#mes').html("<div class='alert'> " +
-			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
-			  "<form action='@{Uploads.alterFilename}' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
-			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
-			  "</div>");
+// 	/*异步上传*/
+// 	$(document).ready(function() {
+// 		$('#myForm').ajaxForm({
+// 			dataType : 'json',
+// 			success : uploadsResponse
+// 		});
+// 	});
+// 	function uploadsResponse(data){
+// 			 $('#mes').html("<div class='alert'> " +
+// 			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
+// 			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
+// 			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
+// 			  "</div>");
 			 
-			 $('#alertfileform').ajaxForm(function(){
-				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
-			 });
-			$('#upfile').val("");
-	}
+// 			 $('#alertfileform').ajaxForm(function(){
+// 				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
+// 			 });
+// 			$('#upfile').val("");
+// 	}
 	/*登录之前显示热门资源*/
 	$(document).ready(
 			function() {
-				$.get("@{ViewResource.viewMostDown()}", function(data,
+				$.get("ViewResource/viewMostDown", function(data,
 						textStatus) {
 					var html = "热门资源" + "<br>";
 					$.each(data, function(commentIndex, comment) {
-								html += "<div class='doc_resourcedetails'>"+
-								"<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
+								html += "<div id='doc_resourcedetails_"+commentIndex+"'>"+
+								"<a href=ViewResource/viewDownloadsDetails?hashName="+data[commentIndex].hashName + ">" 
 										+ data[commentIndex].realName 
 										+ "</a>" 
 										+"</div><br>";
 					});
 					$('#suggest').html(html);
+					$("#doc_resourcedetails_0").fadeIn(5000);
+					$("#doc_resourcedetails_1").fadeIn(5000);
+					$("#doc_resourcedetails_2").fadeIn(7000);
+					$("#doc_resourcedetails_3").fadeIn(5000);
+					$("#doc_resourcedetails_4").fadeIn(3000);
+					$("#doc_resourcedetails_5").fadeIn(5000);
+					$("#doc_resourcedetails_6").fadeIn(3000);
+					$("#doc_resourcedetails_7").fadeIn(7000);
+					$("#doc_resourcedetails_8").fadeIn(6000);
+					$("#doc_resourcedetails_9").fadeIn(3000);
 				}, "json");
 			});
 	
@@ -420,7 +404,7 @@ $(document).ready(function() {
 			*/
 		} else {
 			$.each(responseJson, function(commentIndex, comment) {
-				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+responseJson[commentIndex].hashName + ">" 
+				html += "<a href=ViewResource/viewDownloadsDetails?hashName="+responseJson[commentIndex].hashName + ">" 
 				+ responseJson[commentIndex].realName 
 				+ "</a>" 
 				+"<br>";
@@ -431,7 +415,7 @@ $(document).ready(function() {
 	
 	/*上传列表框二级联动*/
 	$(document).ready(function(){
-		$.get("@{ViewResource.viewInstitute}",function(data){
+		$.get("ViewResource/viewInstitute",function(data){
 			$('#institute_sel').empty();
 			$('#institute_sel').append("<option>---请选择---</option>");
 			$.each(data,function(commentIndex, comment){
@@ -439,9 +423,8 @@ $(document).ready(function() {
 			});
 		},"json");
 	});
-	
      $('#institute_sel').change(function(){
-    	 $.get("@{ViewResource.viewSubject}",{
+    	 $.get("ViewResource/viewSubject",{
     		 institute: $('#institute_sel').val()
     	 },function(data){
     		 $('#subject_sel').empty();
@@ -454,4 +437,4 @@ $(document).ready(function() {
  			}
  		},"json");
      });
-</script>
+     </script>

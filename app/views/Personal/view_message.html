@@ -1,0 +1,6 @@
+#{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+<ul>
+    #{list items:re_list, as:'map' }
+        <li>${map.message}</li><a href="@{Personal.Remove_Tips()}?id=${map.tips_id}">标记为已读</a>
+    #{/list}
+</ul>

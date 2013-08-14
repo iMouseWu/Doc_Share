@@ -1,0 +1,118 @@
+14:08:08,649 ERROR ~ You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'update, upname) values (0, '-275056678.jpg', '????-|é?￠', '1339470729h6a3Rr.jpg'' at line 1
+重定向出现中文乱码
+模板里面的一些标记比如说play里面的@{}，如果是通过后台的程序用String传到前台然后用${}输出后，就会解析成string文件，而不是模板的语法规则！
+onclick事件和href同时存在。那么就会先执行onclick事件
+
+html1 += "<button class='btn btn-info btn-large btn-block' type='button' onclick='alert(\"我 \")';>我要上传</button></div>";
+这里的我用单引号转义就不正确
+
+html1 += "<button class='btn btn-info btn-large btn-block' type='button' onclick='alert("+"'我'"+")';>我要上传</button></div>";
+这样也不正确
+
+html1 += "<button class='btn btn-info btn-large btn-block' type='button' onclick='alert("+"我"+")';>我要上传</button></div>";
+这样也不正确,如果这里的"我"是一个变量的话，情况可能不一样！
+在引用js的时候也要注意顺序，不然会报错！应该下面的Js会引用上面的js的方法
+
+play如果修改了model里面的内容必须把注解删除掉重新写一遍！
+书写sql语句的时候如果用到+,那就要注意空格！“slect”+"from"这里的from前面就需要空格
+  有的时候js里面一个错误，会导致所有的Js语句不能用
+
+
+js异步获取问题！
+
+js方法体里面的方法改变了外部方法体中的变量，但是在外部方法体中该变量没有改变！
+function viewRes() {
+		var html = "123";
+		$.get("@{ViewResource.viewDownloadsList}", {
+			fileroute : $("#hiddenval").val(),
+			subject : $("#hiddenvalsub").val()
+		}, function(data, textStatus) {
+			$.each(data, function(commentIndex, comment) {
+				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+data[commentIndex].hashName + ">" 
+				+ data[commentIndex].realName 
+				+ "</a>" 
+				+"<br>";
+			});
+			alert(html);
+		}, "json");
+		alert(html);
+		$('#sure_subject').val($('#hiddenvalsub').val());
+		$('#sure_institute').val($('#hiddenval').val());
+		$('#resource').html(html);
+		$('#resource_html').val(html);
+		$('#back_home').html("<ul class='breadcrumb'>"+
+				   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
+				    "<li class='active'>资源</li></ul>");
+		$("#downmes").fadeIn("slow");
+	}
+  
+
+ function getRes(page){
+    	   var html = "";
+   		$.get("@{ViewResource.viewDownloadsList}", {
+   			fileroute : $("#hiddenval").val(),
+   			subject : $("#hiddenvalsub").val(),
+   			page : page
+   		   }, function(data, textStatus) {
+   			$.each(data[0], function(commentIndex, comment) {
+   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+   				+ comment.realName 
+   				+ "</a>" 
+   				+"<br>";
+   				$('#resource').html(html);
+   				$('#resource_html').val(html);
+   			});
+   			$('#page').val(data[1]);
+   		  }, "json");
+   		     alert($('#page').val());----------------------------不要在下面写方法和函数！
+   		     paging();-------------------------------------------不要在下面写方法和函数！
+	   }
+
+
+
+
+
+
+  function getRes(page){
+    	   var html = "";
+   		$.get("@{ViewResource.viewDownloadsList}", {
+   			fileroute : $("#hiddenval").val(),
+   			subject : $("#hiddenvalsub").val(),
+   			page : page
+   		   }, function(data, textStatus) {
+   			$('#page').val(data[1]);
+   			paging();-----------这句就要放在这里不要方法下面的方法里面
+   			$.each(data[0], function(commentIndex, comment) {
+   				html += "<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
+   				+ comment.realName 
+   				+ "</a>" 
+   				+"<br>";
+   				$('#resource').html(html);
+   				$('#resource_html').val(html);
+   			});
+   		  }, "json");
+   		     
+	   }
+	function viewRes() {
+		getRes(1);
+		$('#sure_subject').val($('#hiddenvalsub').val());
+		$('#sure_institute').val($('#hiddenval').val());
+		
+		$('#back_home').html("<ul class='breadcrumb'>"+
+				   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
+				    "<li class='active'>资源</li></ul>");
+		$("#downmes").fadeIn("slow");
+	}
+	
+	js和java里面this的用法
+eclipse生成的一些文件的作用比如说.setting .project
+welcomepage没用，struts里面全局result和拦截器include失效
+
+用bootstrap时需要在头部写上<!DOCTYPE html>
+<img src="">如果这里的src是一个地址的话，会自动执行这个地址！比如说是uploads?xx=xx
+路径问题！1.File时候   2.引入js的时候  3.下载文件的时候
+
+如果html页面使用了模板，然后引入了js文件！在这个js文件里面是否可以使用模板语言？
+src地址的/xx.html   ./xx.html都是不一样的
+在后端返回的时候用List ，对象，map的研究
+play在执行的时候怎么区分方法重载

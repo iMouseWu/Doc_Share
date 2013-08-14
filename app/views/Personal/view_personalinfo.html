@@ -1,0 +1,16 @@
+ #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+ <style type="text/css">
+ #info_view{
+ position: absolute;
+ left : 200px;
+ top : 200px;
+ scrolling :no;
+ width : 500px;
+ height : 500px;
+ border : 0;
+ }
+ </style>
+ <a href="@{Personal.view_myresources()}" target="info_view">我的资源</a>
+ <a href="@{Personal.view_message()}" target="info_view">我的新消息</a>
+ <a href="@{Personal.view_old_message()}" target="info_view">我的历史消息</a>
+ <iframe name="info_view" id="info_view" src="${iframe_info}"></iframe>

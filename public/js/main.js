@@ -15,9 +15,11 @@
 $(function () {
     'use strict';
     // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload({
+    $('#fileupload')
+    .fileupload({
     	dataType : 'json',
     	autoUpload: false,
+    	acceptFileTypes: /(\.|\/)(jpg)$/i,
 //        // The following option limits the number of files that are
 //        // allowed to be uploaded using this widget:
 //        maxNumberOfFiles: undefined,
@@ -52,6 +54,12 @@ $(function () {
 //        // Set the following option to true, to prepend files instead:
 //        prependFiles: false,
         add: function (e, data) {
+        	var uploadFile = data.files[0];
+        	if (!(/(zip)|(rar)$/i).test(uploadFile.name)) {
+        		alert("文件类型错误");
+        		$('#upfile').val("");
+            }else{
+        	$('#mes').html("简介(30字以内):<br><textarea rows='2'name='intro_sel' style='resize:none' maxlength='30'></textarea>");
         	$('#add_success').html("文件添加成功");
         	$('#progress').html('<div class="progress progress-striped" id="proessview">');
             $('#proessview').html("<div class='bar' id='bar'></div>");
@@ -61,6 +69,7 @@ $(function () {
                 data.submit();
             });
             $('#mes').fadeIn();
+            }
         },
         progress: function (e, data) {
             if (data.context) {
@@ -83,6 +92,7 @@ $(function () {
        			 });
        			$('#upfile').val("");
        			$('#add_success').html("请添加文件");
+       			$('#progress').html("");
         },
         send:function(e, data){
         	if ($("#institute_sel").val() == "---请选择---") {
@@ -94,7 +104,8 @@ $(function () {
         		$('#mes').fadeOut(1);
         		return false;
             }
-        }
+        },
     });
+    
 
 });

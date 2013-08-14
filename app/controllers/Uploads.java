@@ -48,7 +48,7 @@ public class Uploads extends BaseCore{
 		filedatename.uploadname = user;
 		filedatename.uploaddate = formatter.format(date);
 		filedatename.intro = intro_sel;
-		dao.AddFilename.addFile(filedatename);
+		dao.AddResources.addFile(filedatename);
 //		List list = new ArrayList();
 //		list.add(filedatename.id);
 //		list.add(filedatename.realName);

@@ -1,0 +1,6 @@
+ #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+<ul>
+    #{list items:re_list, as:'oldmessage' }
+        <li>${oldmessage}</li>
+    #{/list}
+</ul>

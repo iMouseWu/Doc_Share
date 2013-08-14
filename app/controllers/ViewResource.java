@@ -13,6 +13,8 @@ import com.google.gson.reflect.TypeToken;
 import models.AllClass;
 import models.Filename;
 import models.Instituteinfo;
+import models.Seek_Help;
+import models.Tips;
 
 public class ViewResource extends BaseCore {
 	/* 显示相应资源下载页面 */
@@ -24,7 +26,6 @@ public class ViewResource extends BaseCore {
 				+ filename.subject;
 		render(filename, downLoadRoute);
 	}
-	
 	/* 显示相应学院的学科模块 */
 	public static void viewSubject(String institute) {
 		List<Instituteinfo> list = Instituteinfo
@@ -63,9 +64,9 @@ public class ViewResource extends BaseCore {
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
 	}
-	
-	/* 根据登陆者的当前学期的课表显示推荐资源 */
+	/* 根据登陆者的当前学期的课表显示推荐资源，并且获取该用户的信息（e.g.还有几条消息没有读取） */
 	public static void viewInsMostDown() {
+		List re_list = new ArrayList();
 		Gson gson = new Gson();
 		String info = "[{'classname':'高数'},{'classname':'会计学'}]";
 		List<AllClass> list = gson.fromJson(info,
@@ -83,15 +84,21 @@ public class ViewResource extends BaseCore {
 		Collections.sort(alllistname, assit);
 		String listToJson = "";
 		if (alllistname.size() > 10) {
-			List returnlist = alllistname.subList(0, 9);
-			listToJson = gson.toJson(returnlist);
-		} else {
-			listToJson = gson.toJson(alllistname);
+			alllistname = alllistname.subList(0, 9);
+		}  
+		/*获取用户的信息*/
+		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
+		int size = 0 ;
+		for(Seek_Help seek_Help : se_list){
+		List<Tips> tips_list = Tips.find("tip_from_id = ? And tip_status = ?",seek_Help.id,1).fetch();
+		size += tips_list.size();
 		}
+		re_list.add(alllistname);
+		re_list.add(size);
+		listToJson = gson.toJson(re_list);
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
-
 	}
 	/*返回学校学院目录*/
 	public static void viewInstitute(){
@@ -104,6 +111,4 @@ public class ViewResource extends BaseCore {
 		response.setHeader("Cache-Control","no-cache");
 		renderText(listToJson);
 	}
-
-
 }

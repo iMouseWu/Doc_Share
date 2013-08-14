@@ -1,0 +1,7 @@
+ #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+ #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+<ul>
+    #{list items:file_list, as:'filename' }
+        <a href="@{ViewResource.viewDownloadsDetails()}?hashName=${filename.hashName}">${filename.realName}</a><br>
+    #{/list}
+</ul>

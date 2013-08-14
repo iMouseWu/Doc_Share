@@ -196,7 +196,7 @@ display:none;
           <div id="add_success">请添加文件</div>
           <br>
           <br>
-          <div id="mes"> 简介(30字以内):<br><textarea rows="2" cols="" name="intro_sel" style="resize:none" maxlength="30"></textarea> </div>
+          <div id="mes"> </div>
           <!-- 上传按钮 -->
           <div id="submit"></div>
           <!-- 过程提示 -->
@@ -429,7 +429,6 @@ $(document).ready(function() {
 			});
 		},"json");
 	});
-	
      $('#institute_sel').change(function(){
     	 $.get("ViewResource/viewSubject",{
     		 institute: $('#institute_sel').val()
