@@ -79,23 +79,28 @@ $(function () {
                     );
             }
         },
+        /*逻辑：如果上传成功，如果你修改那么按照你修改的名字给你好友消息，如果你没有修改那么按照你上传时候的名字给你好友发送消息*/
         done:function(e,data){
-        	data.context.html('上传成功');
-        	 $('#mes').html("<div class='alert alert-success'> <h4>Well Done</h4>Alert Your File Name?" +
+        	 data.context.html('上传成功');
+        	 $('#mes').html("<div class='alert alert-success' id='my_alert'> <h4>Well Done</h4>Alert Your File Name?" +
        			  "<button type='button' class='close' data-dismiss='alert'>&times;</button>"+
-       			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data.result[0].realName +"'>"
+       			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' id='filename' name='filename' value='"+ data.result[0].realName +"'>"
        			  +"<input type='hidden' value='"+data.result[0].id+"' name='id'><br><input type='submit' value='修改' class='btn btn-danger'></form>"+
        			  "</div>");
+        	 $('.close').bind('click',function(){
+        		 $('#share_button').fadeIn(1);
+        	 });
         	     $("#share_hashName").val(data.result[0].hashName);
         	     $("#share_realName").val(data.result[0].realName);
-        	     share_realName
        			 $('#alertfileform').ajaxForm(function(){
-       				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
+       				$('#share_button').fadeIn(1);
+       				$("#share_realName").val($('#filename').val());
+       				$('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
        			 });
        			$('#upfile').val("");
        			$('#add_success').html("请添加文件");
        			$('#progress').html("");
-       			$('#share_button').fadeIn(1);
+       			
         },
         send:function(e, data){
         	if ($("#institute_sel").val() == "---请选择---") {

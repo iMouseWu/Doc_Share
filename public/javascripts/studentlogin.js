@@ -23,7 +23,8 @@
 			var html1 = "<div id='uploadsbutton'><span class='label label-info'>欢迎你</span><br><br>"
 			html1 += "<button class='btn btn-info btn-large btn-block' type='button' data-toggle='modal' data-target='#uploadssurface';>我要上传</button></div>";
 			html1 += "<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区！</a>";
-			html1 += "<a href='Personal/view_personalinfo'>你有"+responseJson[1]+"消息</a>";
+			html1 += "<a href='Personal/view_personalinfo?iframe_info=./view_message'>你有"+responseJson[1]+"条消息</a>";
+			html1 += "<a href='Personal/view_personalinfo?iframe_info=./view_myresources'>个人中心</a>"
 			$('#login').html(html1);
 			$.each(responseJson[2],function(commentIndex,comment){
 				$('#modal-body').append("<label class='checkbox'>"+

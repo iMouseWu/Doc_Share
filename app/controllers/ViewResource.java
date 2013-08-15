@@ -124,4 +124,12 @@ public class ViewResource extends BaseCore {
 		response.setHeader("Cache-Control","no-cache");
 		renderText(listToJson);
 	}
+	/*获取当前登陆者的联系人*/
+	public static void viewLinkname(){
+		List<LinkMan> list = LinkMan.find("host_name = ?", session.get("user")).fetch();
+		Gson gson = new Gson();
+		String listToJson = gson.toJson(list);
+		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		renderText(listToJson);
+	}
 }

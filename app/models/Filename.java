@@ -1,11 +1,9 @@
 package models;
-
-
-
 import javax.persistence.Entity;
-
+import javax.persistence.Table;
 import play.db.jpa.Model;
 @Entity
+@Table(name = "db_file")
 public class Filename extends Model {
 	public String hashName;
 	public String realName;

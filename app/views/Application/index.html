@@ -220,18 +220,21 @@ display:none;
           <div id="mes"> </div>
           <!-- 上传按钮 -->
           <div id="submit"></div>
+         
           <!-- 过程提示 -->
           <div id="progress_prompt"></div>
     </form>
+    <!-- 分享按钮 -->
+          <div id="share_button">
+          <button class="btn btn-primary" onclick="share_begin();">分享</button>
+           </div>
      <!-- 上传条 -->
     <div id="progress">
     </div>
   </div>
   <div class="modal-footer">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-  <div id="share_button">
-  <button class="btn" onclick="share_begin();">分享</button>
-  </div>
+  
   </div>
 </div>
 <!-- 联系人显示块 -->
@@ -240,7 +243,7 @@ display:none;
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h6 id="myModalLabel">联系人</h6>
     </div>
-    <form id="" action="@{Share_all.share_resource()}">
+    <form id="share_form" action="@{Share_all.share_resource()}">
     <input type="hidden" name="hashName" id="share_hashName">
     <input type="hidden" name="realName" id="share_realName">
     <div class="modal-body" id="modal-body">
@@ -281,6 +284,21 @@ display:none;
  <script src="/public/js/main.js"></script>
  <script src="/public/javascripts/studentlogin.js"></script>
 <script type="text/javascript">
+/*异步提交form表单*/
+	$(document).ready(function() {
+		$('#share_form').ajaxForm({
+			dataType : 'json',
+			success : share_response
+		});
+	});
+	function share_response(){
+		alert("分享成功");
+		jQuery.noConflict();
+		$('#linkman').modal('hide')
+	}
+	
+ 
+/*好友列表框出现*/
 function share_begin(){
 	 jQuery.noConflict();
 	$('#linkman').modal();

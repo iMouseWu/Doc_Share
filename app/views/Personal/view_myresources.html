@@ -1,7 +1,61 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<div id="linkman" class="modal hide fade">
+<div class="modal-header" id="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h6 id="myModalLabel">联系人</h6>
+    </div>
+    <form id="share_form" action="@{Share_all.share_resource()}">
+    <input type="hidden" name="hashName" id="share_hashName">
+    <input type="hidden" name="realName" id="share_realName">
+    <div class="modal-body" id="modal-body">
+    
+    </div>
+  <div class="modal-footer">
+  <textarea rows='2' name='share_content' id="share_content"></textarea>
+  <input type="submit" value="提交">
+  </div>
+  </form>
+</div>
 <ul>
     #{list items:file_list, as:'filename' }
-        <a href="@{ViewResource.viewDownloadsDetails()}?hashName=${filename.hashName}">${filename.realName}</a><br>
+        <div id=div_${filename.id}><a href="@{ViewResource.viewDownloadsDetails()}?hashName=${filename.hashName}">${filename.realName}                   
+</a></div>
+<div><a href="#" onclick="share_begin('${filename.hashName}',${filename.realName});">分享</a></div>
+<br>
     #{/list}
 </ul>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/public/javascripts/bootstrap.min.js"></script>
+ <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+ <script src="/public/javascripts/jquery.form.min.js"></script>
+<script type="text/javascript">
+/*好友列表框出现*/
+ $(document).ready(function() {
+		$('#share_form').ajaxForm({
+			dataType : 'json',
+			success : share_response
+		});
+	});
+	function share_response(){
+		alert("分享成功");
+		jQuery.noConflict();
+		$('#linkman').modal('hide')
+	}
+function share_begin(hashName,realName){
+	$("#share_hashName").val(hashName);
+	$("#share_realName").val(realName);
+	 jQuery.noConflict();
+	$('#linkman').modal();
+}
+$(function(){
+	$.get("@{ViewResource.viewLinkname()}",function(data,textStatus){
+		$.each(data,function(commentIndex,comment){
+			$('#modal-body').append("<label class='checkbox'>"+
+			  "<input type='checkbox' name='linkname' value='"+comment.friend_name+"'>"+ comment.friend_name +
+			  "</label>");
+			});
+	});
+});
+</script>

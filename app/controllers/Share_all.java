@@ -6,11 +6,9 @@ import java.util.Date;
 import javax.xml.crypto.Data;
 
 import models.Share_Tips;
-
-
 	public class Share_all extends BaseCore{
 		public static void share_resource(String[] linkname,String hashName,String realName,String share_content){
-			String content = "这是我上传的文件 ：<a href='ViewResource/viewDownloadsDetails?hashName="+hashName+"'>"+ 
+			String content = "这是我上传的文件 ：<a href='/ViewResource/viewDownloadsDetails?hashName="+hashName+"'>"+ 
 					realName +"</a><br>备注:"+share_content;
 			Date date = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -3,6 +3,7 @@ package controllers;
 import groovy.ui.SystemOutputInterceptor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +13,10 @@ import models.Filename;
 import models.Re_Seek_Help;
 import models.Seek_Help;
 import models.Ask_Tips;
+import models.Share_Tips;
 
 public class Personal extends BaseCore{
-	public static void view_personalinfo(){
-		String iframe_info = "./view_message";
+	public static void view_personalinfo(String iframe_info){
 		render(iframe_info);
 	}
 	public static void view_message(){
@@ -32,7 +33,17 @@ public class Personal extends BaseCore{
 				re_list.add(list_map);
 			}
 		}
-		render(re_list);
+		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ?And tip_status = ?", session.get("user"),1).fetch();
+		List<Map> share_message_list = new ArrayList<Map>();
+		Map share_mapMap = new HashMap();
+		for(Share_Tips share_Tips : share_list){
+			String message = share_Tips.tip_from_name + "向你分享了：" + share_Tips.tip_content;
+			share_mapMap.put("message", message);
+			share_mapMap.put("tips_id", share_Tips.id);
+			share_message_list.add(share_mapMap);
+		}
+		
+		render(re_list,share_message_list);
 	}
 //		List<Tips> tips_list = Tips.find("tip_to_name = ? And tip_status = ?",session.get("user"),1).fetch();
 //		List<Long> list = new ArrayList<Long>();
@@ -64,6 +75,7 @@ public class Personal extends BaseCore{
 //		}
 //		render(re_list,seek_id);
 		List<String> re_list = new ArrayList<String>();
+		List<String> share_list = new ArrayList<String>();
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
 		for(Seek_Help seek_Help : seek_list){
 			List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?", seek_Help.id,0).fetch();
@@ -73,7 +85,12 @@ public class Personal extends BaseCore{
 				re_list.add(messageString);
 			}
 		}
-		render(re_list);
+		List<Share_Tips> share_tips_list = Share_Tips.find("tip_to_name", session.get("user")).fetch();
+		for(Share_Tips share_Tips : share_tips_list){
+			String message = share_Tips.tip_content;
+			share_list.add(message);
+		}
+		render(re_list,share_list);
 	}
 	public static void Remove_Tips(long id){
 		Ask_Tips tips = (Ask_Tips)Ask_Tips.find("id = ?", id).fetch().get(0);
@@ -84,5 +101,11 @@ public class Personal extends BaseCore{
 	public static void view_myresources(){
 		List<Filename> file_list = Filename.find("uploadname = ?", session.get("user")).fetch();
 		render(file_list);
+	}
+	public static void Remove_Share_Tips(long id){
+		Share_Tips tips = (Share_Tips)Share_Tips.find("id = ?", id).fetch().get(0);
+		tips.tip_status = 0;
+		tips.save();
+		view_message();
 	}
 }

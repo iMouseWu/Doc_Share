@@ -1,6 +1,11 @@
 #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+问答：
 <ul>
     #{list items:re_list, as:'map' }
-        <li>${map.message}</li><a href="@{Personal.Remove_Tips()}?id=${map.tips_id}">标记为已读</a>
+        <li>${map.message.raw()}</li><a href="@{Personal.Remove_Tips()}?id=${map.tips_id}">标记为已读</a>
     #{/list}
 </ul>
+分享:
+#{list items:share_message_list, as:'map' }
+        <li>${map.message.raw()}</li><a href="@{Personal.Remove_Share_Tips()}?id=${map.tips_id}">标记为已读</a>
+    #{/list}

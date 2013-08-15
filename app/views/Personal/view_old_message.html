@@ -1,6 +1,9 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
 <ul>
     #{list items:re_list, as:'oldmessage' }
-        <li>${oldmessage}</li>
+        <li>${oldmessage.raw()}</li>
+    #{/list}
+    #{list items:share_list, as:'oldmessage' }
+        <li>${oldmessage.raw()}</li>
     #{/list}
 </ul>
