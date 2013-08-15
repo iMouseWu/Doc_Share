@@ -13,8 +13,10 @@ import com.google.gson.reflect.TypeToken;
 import models.AllClass;
 import models.Filename;
 import models.Instituteinfo;
+import models.LinkMan;
 import models.Seek_Help;
-import models.Tips;
+import models.Ask_Tips;
+import models.Share_Tips;
 
 public class ViewResource extends BaseCore {
 	/* 显示相应资源下载页面 */
@@ -86,15 +88,26 @@ public class ViewResource extends BaseCore {
 		if (alllistname.size() > 10) {
 			alllistname = alllistname.subList(0, 9);
 		}  
-		/*获取用户的信息*/
+		/*获取用户的信息，获取后天提醒的消息数*/
+		/*回答的消息数目*/
 		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
 		int size = 0 ;
 		for(Seek_Help seek_Help : se_list){
-		List<Tips> tips_list = Tips.find("tip_from_id = ? And tip_status = ?",seek_Help.id,1).fetch();
+		List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?",seek_Help.id,1).fetch();
 		size += tips_list.size();
+		}
+		/*分享的消息数目*/
+		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ?", session.get("user")).fetch();
+		size += share_list.size();
+		/*获取好友列表*/
+		List<LinkMan> link_list = LinkMan.find("host_name = ?", session.get("user")).fetch();
+		List<String> linkman_list = new ArrayList<String>();
+		for(LinkMan linkMan : link_list){
+			linkman_list.add(linkMan.friend_name);
 		}
 		re_list.add(alllistname);
 		re_list.add(size);
+		re_list.add(linkman_list);
 		listToJson = gson.toJson(re_list);
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");

@@ -19,7 +19,6 @@ $(function () {
     .fileupload({
     	dataType : 'json',
     	autoUpload: false,
-    	acceptFileTypes: /(\.|\/)(jpg)$/i,
 //        // The following option limits the number of files that are
 //        // allowed to be uploaded using this widget:
 //        maxNumberOfFiles: undefined,
@@ -87,12 +86,16 @@ $(function () {
        			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data.result[0].realName +"'>"
        			  +"<input type='hidden' value='"+data.result[0].id+"' name='id'><br><input type='submit' value='修改' class='btn btn-danger'></form>"+
        			  "</div>");
+        	     $("#share_hashName").val(data.result[0].hashName);
+        	     $("#share_realName").val(data.result[0].realName);
+        	     share_realName
        			 $('#alertfileform').ajaxForm(function(){
        				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
        			 });
        			$('#upfile').val("");
        			$('#add_success').html("请添加文件");
        			$('#progress').html("");
+       			$('#share_button').fadeIn(1);
         },
         send:function(e, data){
         	if ($("#institute_sel").val() == "---请选择---") {

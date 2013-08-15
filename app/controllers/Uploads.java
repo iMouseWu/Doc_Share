@@ -34,7 +34,7 @@ public class Uploads extends BaseCore{
 				+ hash + fileext;
 		Files.copy(upfile, Play.getFile(path));
 		/* 获取当前日期 */
-		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 Date date = new Date();
 		/* 获取上传者的姓名 */
 		String user = session.get("user");

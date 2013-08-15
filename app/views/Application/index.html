@@ -1,11 +1,35 @@
  #{extends 'main.html' /} #{set title:'index.html' /}
 <!-- <link rel="stylesheet" href="/public/css/style.css"> -->
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
-<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
+<link rel="stylesheet" href="/public/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="/public/css/bootstrap-image-gallery.min.css">
 <link rel="stylesheet" href="/public/css/jquery.fileupload-ui.css">
 <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="/public/css/resource_hot.css">
 <style type="text/css">
+  
+#share_content{
+ resize:none;
+ width : 100px;
+ height : 20px;
+ enable : ture;
+ maxlength :30;  
+}
+#modal-header{
+height : 15px;
+}
+#linkman{
+    position: absolute;
+	left: 1250px;
+	top: 60px;
+	width : 150px;
+	height : 500px;
+	
+}
+#modal-body{
+    height : 465px;
+    overflow-y: auto; 
+	overflow-x:hidden;
+}
 #form {
 	position: absolute;
 	left: 1000px;
@@ -82,6 +106,9 @@ position: absolute;
 	top:  36px;
 }
 #mes{
+
+}
+#share_button{
 display:none;
 }
 </style>
@@ -172,7 +199,6 @@ display:none;
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">上传</h3>
   </div>
-  
   <div class="modal-body">
  <form id="fileupload" action="Uploads/uploads" method="POST" enctype="multipart/form-data">
     学院：
@@ -203,9 +229,29 @@ display:none;
   </div>
   <div class="modal-footer">
   <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  <div id="share_button">
+  <button class="btn" onclick="share_begin();">分享</button>
+  </div>
   </div>
 </div>
-
+<!-- 联系人显示块 -->
+<div id="linkman" class="modal hide fade">
+<div class="modal-header" id="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h6 id="myModalLabel">联系人</h6>
+    </div>
+    <form id="" action="@{Share_all.share_resource()}">
+    <input type="hidden" name="hashName" id="share_hashName">
+    <input type="hidden" name="realName" id="share_realName">
+    <div class="modal-body" id="modal-body">
+    
+    </div>
+  <div class="modal-footer">
+  <textarea rows='2' name='share_content' id="share_content"></textarea>
+  <input type="submit" value="提交">
+  </div>
+  </form>
+</div>
 <!-- 显示搜索栏 -->
 <!--  
 <div>
@@ -215,8 +261,6 @@ display:none;
 	</form>
 </div>
 -->
-
-
 
 <script src="http://code.jquery.com/jquery.js"></script>
  <script src="/public/javascripts/bootstrap.min.js"></script>
@@ -237,6 +281,11 @@ display:none;
  <script src="/public/js/main.js"></script>
  <script src="/public/javascripts/studentlogin.js"></script>
 <script type="text/javascript">
+function share_begin(){
+	 jQuery.noConflict();
+	$('#linkman').modal();
+}
+
 /*搜索相应学院学科资源的分页操作*/
  function Search_paging(page){
 	$('#sure_page').val(page);
@@ -385,10 +434,6 @@ $(document).ready(function() {
 					$("#doc_resourcedetails_9").fadeIn(3000);
 				}, "json");
 			});
-	
-
-	
-	
 	/*异步搜索*/
 	$(document).ready(function() {
 		$('#searchForm').ajaxForm({

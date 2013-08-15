@@ -3,7 +3,8 @@ package dao;
 import models.Filename;
 import models.Re_Seek_Help;
 import models.Seek_Help;
-import models.Tips;
+import models.Ask_Tips;
+import models.Share_Tips;
 
 public class AddResources {
 	public static void addFile(Filename filedatename){
@@ -15,8 +16,11 @@ public class AddResources {
 	public static void addRe_Seek(Re_Seek_Help re_Seek_Help){
 		re_Seek_Help.save();
 	}
-	public static void addTips(Tips tips){
+	public static void addAsk_Tips(Ask_Tips tips){
 		tips.save();
+	}
+	public static void addShare_Tips(Share_Tips share_Tips){
+		share_Tips.save();
 	}
 
 }

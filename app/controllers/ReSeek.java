@@ -8,7 +8,7 @@ import org.jaxen.function.StringFunction;
 
 import models.Re_Seek_Help;
 import models.Seek_Help;
-import models.Tips;
+import models.Ask_Tips;
 
 public class ReSeek extends BaseCore {
 	/*
@@ -16,7 +16,7 @@ public class ReSeek extends BaseCore {
 	 */
 
 	public static void AddReSeek(String re_seek_content,long seek_id,int nowpage){
-		Tips tips = new Tips();
+		Ask_Tips tips = new Ask_Tips();
 		/*把回复信息加入回复数据表中*/
 //		Re_Seek_Help re_Seek_Help = new Re_Seek_Help();
 //		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -40,10 +40,9 @@ public class ReSeek extends BaseCore {
 		tips.tip_date = formatter.format(date);
 		tips.tip_status = 1;
 		tips.tip_from_name = session.get("user");
-		tips.tip_type = "问答";
 		tips.tip_content = re_seek_content;
-		tips.tip_from_id = seek_id;
-		dao.AddResources.addTips(tips);
+//		tips.tip_from_id = seek_id;
+		dao.AddResources.addAsk_Tips(tips);
 		}
 		SeekHelp.seek_home(nowpage,(int)(seek_id/1));
 	}

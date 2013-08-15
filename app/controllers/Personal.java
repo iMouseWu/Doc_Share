@@ -11,7 +11,7 @@ import org.apache.commons.collections.map.HashedMap;
 import models.Filename;
 import models.Re_Seek_Help;
 import models.Seek_Help;
-import models.Tips;
+import models.Ask_Tips;
 
 public class Personal extends BaseCore{
 	public static void view_personalinfo(){
@@ -22,20 +22,14 @@ public class Personal extends BaseCore{
 		List<Map> re_list = new ArrayList<Map>();
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
 		for(Seek_Help seek_Help : seek_list){
-			List<Tips> tips_list = Tips.find("tip_from_id = ? And tip_status = ?", seek_Help.id,1).fetch();
-			for(Tips tips : tips_list){
-				if(tips.tip_type.equals("问答")){
+			List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?", seek_Help.id,1).fetch();
+			for(Ask_Tips tips : tips_list){
 					Map list_map = new HashedMap();
 				String message = tips.tip_from_name + "回答了" + seek_Help.seek_content + "问题：" +
 						tips.tip_content;
 				list_map.put("message", message);
 				list_map.put("tips_id",tips.id);
 				re_list.add(list_map);
-				}else{
-					/*
-					 * 分享的显示
-					 * */
-				}
 			}
 		}
 		render(re_list);
@@ -72,20 +66,17 @@ public class Personal extends BaseCore{
 		List<String> re_list = new ArrayList<String>();
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
 		for(Seek_Help seek_Help : seek_list){
-			List<Tips> tips_list = Tips.find("tip_from_id = ? And tip_status = ?", seek_Help.id,0).fetch();
-			for(Tips tips : tips_list){
-				if(tips.tip_type.equals("问答")){
+			List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?", seek_Help.id,0).fetch();
+			for(Ask_Tips tips : tips_list){
 				String messageString = tips.tip_from_name + "回答了" + seek_Help.seek_content + "问题：" +
 						tips.tip_content;
 				re_list.add(messageString);
-				}else{
-				}
 			}
 		}
 		render(re_list);
 	}
 	public static void Remove_Tips(long id){
-		Tips tips = (Tips)Tips.find("id = ?", id).fetch().get(0);
+		Ask_Tips tips = (Ask_Tips)Ask_Tips.find("id = ?", id).fetch().get(0);
 		tips.tip_status = 0;
 		tips.save();
 		view_message();
