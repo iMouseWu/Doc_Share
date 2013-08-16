@@ -22,7 +22,7 @@
     #{list items:file_list, as:'filename' }
         <div id=div_${filename.id}><a href="@{ViewResource.viewDownloadsDetails()}?hashName=${filename.hashName}">${filename.realName}                   
 </a></div>
-<div><a href="#" onclick="share_begin('${filename.hashName}',${filename.realName});">分享</a></div>
+<div><a href="#" onclick="share_begin('${filename.hashName}','${filename.realName}');">分享</a></div>
 <br>
     #{/list}
 </ul>

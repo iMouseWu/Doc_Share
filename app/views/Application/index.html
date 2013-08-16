@@ -6,7 +6,6 @@
 <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="/public/css/resource_hot.css">
 <style type="text/css">
-  
 #share_content{
  resize:none;
  width : 100px;
@@ -123,6 +122,9 @@ display:none;
 <input type="hidden" id="resource_html">
 <!-- 隐藏域，记录总的页数 -->
 <input type="hidden" id="page">
+<!-- 如果session有值的话，用来存放session的值即用户名和密码 -->
+<input type="hidden" value="${username}" id="session_username">
+<input type="hidden" value="${password}" id="session_password">
 <!-- 显示资源信息 -->
 <div id="downmes">
 <div id="back_home"></div>
@@ -159,9 +161,9 @@ display:none;
 <div id="login">
 	<form class="form-horizontal" action="Login/LoginCheck" id="loginForms">
   <div class="control-group">
-    <label class="control-label" for="inputEmail">学号</label>
+    <label class="control-label" for="inputNo">学号</label>
     <div class="controls">
-      <input type="text" id="inputEmail" placeholder="Number" name="username">
+      <input type="text" id="inputNo" placeholder="Number" name="username">
     </div>
   </div>
   <div class="control-group">
@@ -284,6 +286,9 @@ display:none;
  <script src="/public/js/main.js"></script>
  <script src="/public/javascripts/studentlogin.js"></script>
 <script type="text/javascript">
+/*如果已经登录了session有值的话，那么就不显示登录框 
+ 
+*/
 /*异步提交form表单*/
 	$(document).ready(function() {
 		$('#share_form').ajaxForm({

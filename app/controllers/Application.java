@@ -23,7 +23,11 @@ import models.*;
 public class Application extends BaseCore {
 
 	public static void index(String user) {
-		render(user);
+		String username = "";
+		String password = "";
+		username = session.get("user");
+		password = session.get("password");
+		render(user,username,password);
 	}
 
 //	/* 上传功能 */

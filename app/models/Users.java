@@ -11,4 +11,6 @@ public class Users extends Model {
 	public String username;
 	public String password;
 	public String institute;
+	public String mailaddress;
+	public String mailpassword;
 }

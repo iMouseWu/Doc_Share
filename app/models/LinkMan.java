@@ -9,4 +9,5 @@ import play.db.jpa.Model;
 public class LinkMan extends Model{
 	public String host_name;
 	public String friend_name;
+	public String firend_group;
 }

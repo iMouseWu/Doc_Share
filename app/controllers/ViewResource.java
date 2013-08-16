@@ -3,7 +3,9 @@ package controllers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import tools.Assist;
 
@@ -100,14 +102,22 @@ public class ViewResource extends BaseCore {
 		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ?", session.get("user")).fetch();
 		size += share_list.size();
 		/*获取好友列表*/
-		List<LinkMan> link_list = LinkMan.find("host_name = ?", session.get("user")).fetch();
-		List<String> linkman_list = new ArrayList<String>();
-		for(LinkMan linkMan : link_list){
-			linkman_list.add(linkMan.friend_name);
+		List<String> group_list = LinkMan.find("select distinct u.firend_group from LinkMan u where u.host_name= ?",session.get("user")).fetch();
+		List<Map> linkman_group_list = new ArrayList<Map>();
+		/*i传到前端用来唯一标识分组的div*/
+		int i = 0;
+		for(String a : group_list){
+			List<LinkMan> linkman_list = LinkMan.find("host_name= ? and firend_group = ?",session.get("user"),a).fetch();
+			Map map = new HashMap();
+			map.put("group_id", i);
+			map.put("group",a);
+			map.put("linkman", linkman_list);
+			i++;
+			linkman_group_list.add(map);
 		}
 		re_list.add(alllistname);
 		re_list.add(size);
-		re_list.add(linkman_list);
+		re_list.add(linkman_group_list);
 		listToJson = gson.toJson(re_list);
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
