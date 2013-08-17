@@ -1,0 +1,33 @@
+#{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<form id="movefirend" action="@{Personal.moveFriend}">
+#{list items:list,as:'LinkMan' }
+<label class="checkbox">
+  <input type="checkbox" value="${LinkMan.id}">
+  ${LinkMan.friend_name}
+</label>
+#{/list}
+<select name="to_group">
+<option>移动好友到.....</option>
+#{list items:group_list,as:'to_group' }
+<option>${to_group}</option>
+#{/list}
+</select>
+<input type="submit" value="移动联系人">
+</form>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/public/javascripts/bootstrap.min.js"></script>
+ <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+ <script src="/public/javascripts/jquery.form.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#movefirend').ajaxForm({
+		dataType : 'json',
+		success : move_response
+	});
+});
+function move_response(data){
+	
+}
+
+</script>

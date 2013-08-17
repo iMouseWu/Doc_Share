@@ -1,12 +1,11 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
- #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
  <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
 <div id="linkman" class="modal hide fade">
 <div class="modal-header" id="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h6 id="myModalLabel">联系人</h6>
     </div>
-    <form id="share_form" action="@{Share_all.share_resource()}">
+    <form id="share_form" action="@{Personal.share_resource()}">
     <input type="hidden" name="hashName" id="share_hashName">
     <input type="hidden" name="realName" id="share_realName">
     <div class="modal-body" id="modal-body">
@@ -31,6 +30,28 @@
  <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
  <script src="/public/javascripts/jquery.form.min.js"></script>
 <script type="text/javascript">
+/*这里用jquery会出现问题所以只能用js来实现组选了*/
+function group_click(group_id){
+	var test = document.getElementById("group_" + group_id).checked;
+	selElements = document.getElementsByTagName("input"); 
+	if(test == true){
+		for (var i = 0; i < selElements.length; i++) {  
+	        if (selElements[i].className == "div_firend_" + group_id) {
+	        	selElements[i].checked = true;
+	        }  
+	    }  
+	}else{
+		for (var i = 0; i < selElements.length; i++) {  
+	        if (selElements[i].className == "div_firend_" + group_id) {
+	        	selElements[i].checked = false;
+	        }  
+	    }  
+	}
+}
+function friend_state(group_id){
+	 $("#div_group_" + group_id).toggle();
+}
+
 /*好友列表框出现*/
  $(document).ready(function() {
 		$('#share_form').ajaxForm({
@@ -51,11 +72,18 @@ function share_begin(hashName,realName){
 }
 $(function(){
 	$.get("@{ViewResource.viewLinkname()}",function(data,textStatus){
-		$.each(data,function(commentIndex,comment){
-			$('#modal-body').append("<label class='checkbox'>"+
-			  "<input type='checkbox' name='linkname' value='"+comment.friend_name+"'>"+ comment.friend_name +
-			  "</label>");
-			});
+		$.each(data,function(commentIndex,map){
+		$('#modal-body').append("<label class='checkbox'>"+
+				  "<input type='checkbox' id='group_" + map.group_id + "' onclick='group_click("+ map.group_id +");' name='group_name' value='"+ map.group +"'><a href='#' onclick='friend_state("+ map.group_id +");'>"+ map.group + "</a>" +
+		  "</label>");
+		$('#modal-body').append("<div id='div_group_" + map.group_id + "'></div>");
+		$.each(map.linkman,function(Index,LinkName){
+			$("#div_group_" + map.group_id).append("<label class='checkbox'>"+
+					  "<input type='checkbox' name='linkname' class='div_firend_"+ map.group_id + "' value='"+LinkName.friend_name+"'>"+LinkName.friend_name+
+					  "</label>"); 
 	});
+		});
 });
+});
+
 </script>

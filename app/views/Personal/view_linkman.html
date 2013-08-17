@@ -1,0 +1,9 @@
+#{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+
+ <div id="linkgroup">
+ #{list items:group_list,as:'group' }
+    <a href="@{Personal.view_linkman_bygroup}?group=${group}" target="linkname">${group}</a><br>
+ #{/list}
+ </div>
+<iframe src="" name="linkname"><br>
+  }</iframe>

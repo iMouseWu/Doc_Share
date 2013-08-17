@@ -7,13 +7,18 @@
 	<a href="@{DownLoads.addCount}${downLoadRoute}" onclick="doit();">下载地址</a>
 </h1>
 <div id="comment">
-
+</div>
+<div id="comment_view">
+#{list items:rescomments, as:'Rescomment' }
+${Rescomment.comment} ${Rescomment.comment_date} ${Rescomment.comment_user}
+   #{/list}
 </div>
 <script type="text/javascript">
 	function doit() {
 		var html = "<form action='@{Evaluate.addScore()}' id='scoreForm'>"
 				+ "<input type='text' name='score'>"
 				+ "<input type='submit' value='提交'>"
+				+"<input type='textarea' name='res_comment'>"
 				+ "<input type='hidden' value='${filename.hashName}' name='hashName'>"
 				+ "</form>";
 		$('#comment').html(html);

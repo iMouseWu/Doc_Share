@@ -16,6 +16,7 @@ import models.AllClass;
 import models.Filename;
 import models.Instituteinfo;
 import models.LinkMan;
+import models.Rescomment;
 import models.Seek_Help;
 import models.Ask_Tips;
 import models.Share_Tips;
@@ -28,7 +29,8 @@ public class ViewResource extends BaseCore {
 		String downLoadRoute = "?institute=" + filename.institute
 				+ "&hashName=" + filename.hashName + "&subject="
 				+ filename.subject;
-		render(filename, downLoadRoute);
+		List<Rescomment> rescomments = Rescomment.find("resource_hashName = ?", hashName).fetch();
+		render(filename, downLoadRoute,rescomments);
 	}
 	/* 显示相应学院的学科模块 */
 	public static void viewSubject(String institute) {
@@ -136,10 +138,25 @@ public class ViewResource extends BaseCore {
 	}
 	/*获取当前登陆者的联系人*/
 	public static void viewLinkname(){
-		List<LinkMan> list = LinkMan.find("host_name = ?", session.get("user")).fetch();
+		List<String> group_list = LinkMan.find("select distinct u.firend_group from LinkMan u where u.host_name= ?",session.get("user")).fetch();
+		List<Map> linkman_group_list = new ArrayList<Map>();
+		/*i传到前端用来唯一标识分组的div*/
+		int i = 0;
+		for(String a : group_list){
+			List<LinkMan> linkman_list = LinkMan.find("host_name= ? and firend_group = ?",session.get("user"),a).fetch();
+			Map map = new HashMap();
+			map.put("group_id", i);
+			map.put("group",a);
+			map.put("linkman", linkman_list);
+			i++;
+			linkman_group_list.add(map);
+		}
 		Gson gson = new Gson();
-		String listToJson = gson.toJson(list);
+		String listToJson = gson.toJson(linkman_group_list);
+		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
+		
+		
 	}
 }

@@ -48,7 +48,7 @@
 			html1 += "<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区！</a>";
 			html1 += "<a href='Personal/view_personalinfo?iframe_info=./view_message'>你有"+responseJson[1]+"条消息</a>";
 			html1 += "<a href='Personal/view_personalinfo?iframe_info=./view_myresources'>个人中心</a>"
-			$('#login').html(html1);
+			$('#login_uploads').html(html1);
 			/*联系人的分组显示*/
 			$.each(responseJson[2],function(commentIndex,map){
 				$('#modal-body').append("<label class='checkbox'>"+
@@ -68,10 +68,10 @@
 		var username = $('#session_username').val();
 		var password = $('#session_password').val();
 		if(username != ""){
+			$('#login').hide();
 			$.getJSON('ViewResource/viewInsMostDown',function(data){
 				showResponse(data);
 			});
-			
 		}
 	});
 	
