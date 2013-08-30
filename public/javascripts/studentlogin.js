@@ -28,27 +28,25 @@
 		});
 	});
 	
-	
 	function showResponse(responseJson) {
 		var html = "";
 		if (responseJson == null) {
-			$('#wronglogin').text("用户名密码错误");
+			alert("用户名或者密码错误");
 		} else {
 			$.each(responseJson[0], function(commentIndex, comment) {
-				html += "<div class='doc_resourcedetails'>"+
-				"<a href=@{ViewResource.viewDownloadsDetails}?hashName="+comment.hashName + ">" 
-						+ comment.realName 
-						+"</a>" 
-						+"</div><br>";
+			$("#top_information").empty();
+			$("#top_information").append("<li class='navTag'><a href='#' onclick='uploadframe();'>我要上传</a></li>"
+					+ "<li class='navTag'><a href='Personal/view_personalinfo?iframe_info=./view_message'>你有"+responseJson[1]+"条消息</a></li>"
+					+ "<li class='navTag'><a href='Personal/view_personalinfo?iframe_info=./view_myresources'>个人中心</a></li>");
+			$("#suggestorlogin").empty();
+			if(commentIndex%2 == 0) 
+				html+= '<ul class="suggestColumn suggestCommon">';
+			html+='<li class="suggestItem suggestItemCommon"><div class="wantItemHeader"><h3 class="left">'+comment.realName+'</h3></div><br><br><div class="suggestItemBody">简介:'+comment.intro+'</div>'
+			html+='<div class="right operation"><span class="tips">'+comment.uploaddate+'</span><span class="tips">'+comment.uploadname+'</span></div></li>';
+			if(commentIndex%2 != 0)
+				html+='</ul>';
 			});
-			$('#wronglogin').text("");
-			$('#suggest').html(html);
-			var html1 = "<div id='uploadsbutton'><span class='label label-info'>欢迎你</span><br><br>"
-			html1 += "<button class='btn btn-info btn-large btn-block' type='button' data-toggle='modal' data-target='#uploadssurface';>我要上传</button></div>";
-			html1 += "<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区！</a>";
-			html1 += "<a href='Personal/view_personalinfo?iframe_info=./view_message'>你有"+responseJson[1]+"条消息</a>";
-			html1 += "<a href='Personal/view_personalinfo?iframe_info=./view_myresources'>个人中心</a>"
-			$('#login_uploads').html(html1);
+			$("#suggestorlogin").html(html);
 			/*联系人的分组显示*/
 			$.each(responseJson[2],function(commentIndex,map){
 				$('#modal-body').append("<label class='checkbox'>"+
@@ -64,16 +62,21 @@
 		}
 	}
 	/*如果session里面有值的话就自动登录,即存放session的隐藏域不为空值*/
-	$(function(){
-		var username = $('#session_username').val();
-		var password = $('#session_password').val();
-		if(username != ""){
-			$('#login').hide();
-			$.getJSON('ViewResource/viewInsMostDown',function(data){
-				showResponse(data);
-			});
-		}
-	});
+//	$(function(){
+//		var username = $('#session_username').val();
+//		var password = $('#session_password').val();
+//		if(username != ""){
+//			$('#login').hide();
+//			$.getJSON('ViewResource/viewInsMostDown',function(data){
+//				showResponse(data);
+//			});
+//		}
+//	});
+	function uploadframe(){
+		$('#share_button').hide();
+		jQuery.noConflict();
+		$('#uploadssurface').modal();
+	}
 	
 	
 	

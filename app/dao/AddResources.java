@@ -1,6 +1,8 @@
 package dao;
 
 import models.Filename;
+import models.LinkMan;
+import models.Linkgroup;
 import models.Re_Seek_Help;
 import models.Seek_Help;
 import models.Ask_Tips;
@@ -21,6 +23,12 @@ public class AddResources {
 	}
 	public static void addShare_Tips(Share_Tips share_Tips){
 		share_Tips.save();
+	}
+	public static void addLinkMan(LinkMan linkMan){
+		linkMan.save();
+	}
+	public static void addGroup(Linkgroup linkgroup){
+		linkgroup.save();
 	}
 
 }

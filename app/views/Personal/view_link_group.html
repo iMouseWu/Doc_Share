@@ -1,0 +1,12 @@
+#{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+
+ <div id="linkgroup">
+ #{list items:group_list,as:'linkgroup' }
+    <a href="@{Personal.view_linkman_bygroup}?group_id=${linkgroup.id}" target="linkname">${linkgroup.firend_group}</a><br>
+ #{/list}
+ </div>
+<iframe name="linkname"></iframe>
+<form action=@{Personal.addGroup}>
+<input type="text" name="newgroup">
+<input type="submit">
+</form>

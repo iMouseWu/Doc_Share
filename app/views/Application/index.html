@@ -1,11 +1,59 @@
  #{extends 'main.html' /} #{set title:'index.html' /}
 <!-- <link rel="stylesheet" href="/public/css/style.css"> -->
-<link rel="stylesheet" href="/public/css/bootstrap-responsive.min.css">
 <link rel="stylesheet" href="/public/css/bootstrap-image-gallery.min.css">
 <link rel="stylesheet" href="/public/css/jquery.fileupload-ui.css">
 <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="/public/css/resource_hot.css">
+<link type="text/css" href="/public/css/index.css" rel="stylesheet"/>
+<link type="text/css" href="/public/css/page.css" rel="stylesheet"/>
+<link type="text/css" href="/public/css/want.css" rel="stylesheet"/>
 <style type="text/css">
+.pagination{
+margin-right: auto; 
+margin-left: auto;
+width:auto;
+}
+#search_sure{
+position :absolute;
+top:5px;
+left:200px;
+}
+.resource_name{
+position: relative;
+margin: 0 0 0 100px;
+}
+#pagination_contain{
+position: absolute;
+width: 380px;
+top:400px;
+left:0px;
+}
+.suggestItemBody {
+	width: 300px;
+	line-height: 15px;
+}
+.suggestColumn {
+	float: left;
+	vertical-align: top;
+	position: relative;
+	height: auto;
+}
+.suggestCommon {
+	width: 300px;
+}
+.suggestItem {
+	list-style: none;
+	height: auto;
+	display: inline-block;
+	background-color: #FFF;
+	color: #666;
+	font-size: 0.8em;
+	box-shadow: 0 1px 3px rgba(100, 100, 100, 0.3);
+}
+.suggestItemCommon {
+	width: 280px;
+	margin: 15px 15px 0 0; 
+}
 #share_content{
  resize:none;
  width : 100px;
@@ -13,6 +61,7 @@
  enable : ture;
  maxlength :30;  
 }
+
 #modal-header{
 height : 15px;
 }
@@ -22,18 +71,20 @@ height : 15px;
 	top: 60px;
 	width : 150px;
 	height : 500px;
-	
 }
+
 #modal-body{
     height : 465px;
     overflow-y: auto; 
 	overflow-x:hidden;
 }
+
 #form {
 	position: absolute;
 	left: 1000px;
 	top: 50px;
 }
+
 #institute {
 	position: absolute;
 	left: 0px;
@@ -87,9 +138,9 @@ height : 15px;
     position: absolute;
     left: 0px;
 	top:0px;
-	width: 290px;
+	width: 380px;
 	height:100%;
-	background-color:white;
+	background-color:#E6E6E6;
 	display:none;
 	z-index:1;
 }
@@ -113,7 +164,7 @@ display:none;
 </style>
 </head>
 <body>
-<div id="doc_middle_2"></div>
+
 <!-- 隐藏域，用来记录学院 -->
 <input type="hidden" id="hiddenval">
 <!-- 隐藏域，用来记录学院下的小目录 -->
@@ -122,81 +173,69 @@ display:none;
 <input type="hidden" id="resource_html">
 <!-- 隐藏域，记录总的页数 -->
 <input type="hidden" id="page">
-<!-- 如果session有值的话，用来存放session的值即用户名和密码 -->
+<!--隐藏域， 如果session有值的话，用来存放session的值即用户名和密码 -->
 <input type="hidden" value="${username}" id="session_username">
 <input type="hidden" value="${password}" id="session_password">
-<!-- 显示资源信息 -->
-<div id="downmes">
-<div id="back_home"></div>
-<div id="resource"></div>
-<!-- 相应学院科目资源搜索框 -->
-<div id="search_sure">
-<form id="search_sure_form" action="Search/search_sure_res">
-<input type="text" name="sure_name">
-<input type="hidden" name="sure_subject"  id="sure_subject">
-<input type="hidden" name="sure_institute" id="sure_institute">
-<input type="hidden" name="sure_page" id="sure_page" value="1">
-<input type="submit" value="search">
-</form></div>
-<!-- 分页显示 -->
-<div id="test" style="height:70px;padding:30px 10px;"></div>
-<div id="pageNav"></div>
- <div class="pagination">
-  <ul id="pagenumber">
-  </ul>
-</div>
+
+<!-- ***************************************************************************************** -->
+<!-- 首页顶端导航 -->
+<div id="topBar">
+	<ol class="left">
+		<li class="navTag"><a class="navLink" href="http://www.zjut.com/">精弘网络</a></li>
+		<li class="navTag"><a class="navLink" href="http://bbs.zjut.com/">论坛</a></li>
+		<li class="navTag"><a class="navLink" href="http://pt.zjut.com/">PT</a></li>
+		<li class="navTag"><a class="navLink" href="http://down.zjut.com/">下载站</a></li>
+		<li class="navTag"><a class="navLink" href="http://feel.zjut.com/">电台</a></li>
+		<li class="navTag"><a class="navLink active" href="#">文档</a></li>
+		<li class="navTag"><a class="navLink" href="http://go.zjut.com/">导航</a></li>
+	</ol>
+	<ol class="right" id="top_information">
+		<li class="signin"><!-- <input type="button" class="topbtn" name="login" value="登陆"/> -->登录</li>
+		<li class="navTag">注册</li>
+	</ol>
 </div>
 
-<!-- 显示推荐信息 -->
-<div id="suggest"></div>
-<!-- 显示搜索结果 -->
-<div id="searchres"></div>
-<!-- 登录错误提示信息 -->
-<label id="wronglogin">${user ?:'游客欢迎你'}</label>
-<!-- 显示对应学院的学科 -->
-<div id="subject"> </div>
+<!-- ***************************************************************************************** -->
+<!-- 首页中间内容 -->
+<div class="wrapper">
+	<div class="header" id="header">
+		<div class="box">
+			<div class="left logo">
+			<!-- 左上角空白处用来画logo，我画的不好，可以让美工试试 -->
+			</div>
+			<div class="search right">
+				<input type="text" class="span left" placeholder="搜点什么试试" />
+				<input type="button" class="btn btn-primary" value="搜索"/><br>
+				<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区问问看!</a>
+			</div>
+		</div>
+		
+		<!-- 登录块和显示推荐资源 -->
+		<div id="suggestorlogin">
+		<div class="login" id="login">
+		<form action="Login/LoginCheck" id="loginForms">
+			<div class="lineRow"><input type="text" class="span" name="username" placeholder="学号/工号"/></div>
+			<div class="lineRow"><input type="password" class="span" name="password" placeholder="密码"/></div>
+			<div class="lineRow"><input type="submit" class="btn left" name="login" value="登陆"/><span class="tips left">忘记密码</span></div>
+		</form>
+		</div>
+		</div>
+	</div>
+	
+	<div class="contain">
+		<h1>热门资源</h1>
+		<!-- 资源列表 -->
+		<ul class="resources right" id="hot_resource">
+		</ul>
+	</div>
+	
+	<div id="footer">
+		<p class="left">Copyright © 2013 <a href="http://www.zjut.com">浙江工业大学-精弘网络</a></p>
+		<p class="right">Design by <a href="http://www.hellohjk.com">HJK</a></p>
+	</div>
+</div>
 
-
-<!-- 登录块 -->
-<div id="login_uploads">
-<div id="login">
-	<form class="form-horizontal" action="Login/LoginCheck" id="loginForms">
-  <div class="control-group">
-    <label class="control-label" for="inputNo">学号</label>
-    <div class="controls">
-      <input type="text" id="inputNo" placeholder="Number" name="username">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="inputPassword">密码</label>
-    <div class="controls">
-      <input type="password" id="inputPassword" placeholder="Password" name="password">
-    </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <label class="checkbox">
-        <input type="checkbox"> Remember me
-      </label>
-      <button type="submit" class="btn">登录</button>
-    </div>
-  </div>
-</form>
-</div>
-</div>
-<!-- 首页面包屑 -->
-<div id="bread">
-<ul class="breadcrumb">
-  <li class="active">首页</li>
-  </ul>
-</div>
-<!-- 导航栏 -->
-<div id="navagation">
-<div class="tabbable tabs-left">
-<ul class="nav nav-tabs" id="institute_nav">
-</ul>
-</div>
- </div>
+<!-- ***************************************************************************************** -->
 <!-- 上传对话框 -->
 <div id="uploadssurface" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
@@ -224,7 +263,6 @@ display:none;
           <div id="mes"> </div>
           <!-- 上传按钮 -->
           <div id="submit"></div>
-         
           <!-- 过程提示 -->
           <div id="progress_prompt"></div>
     </form>
@@ -241,6 +279,8 @@ display:none;
   
   </div>
 </div>
+<!-- ******************************************************************** -->
+
 <!-- 联系人显示块 -->
 <div id="linkman" class="modal hide fade">
 <div class="modal-header" id="modal-header">
@@ -259,21 +299,60 @@ display:none;
   </div>
   </form>
 </div>
-<!-- 显示搜索栏 -->
-<!--  
-<div>
-	<form id="searchForm" action="@{Search.searchRes()}">
-		<input type="text" name="searchname"><br> <input
-			type="submit" value="搜索">
-	</form>
-</div>
--->
 
+<!-- ******************************************************************** -->
+<!-- 左边滑块 -->
+<div id="left_side">
+
+<div id="left_content">
+<div id="navagation">
+<div class="tabbable tabs-left">
+<ul class="nav nav-tabs" id="institute_nav">
+</ul>
+</div>
+ </div>
+ <!-- 显示对应学院的学科 -->
+<div id="subject"> </div>
+
+<!-- 显示资源信息，分页，面包屑等信息 -->
+<div id="downmes">
+<!-- 搜索栏面包屑 -->
+<div id="back_home"></div>
+<!-- 资源显示区域 -->
+<div id="resource"></div>
+
+<!-- 相应学院科目资源搜索框 -->
+<div id="search_sure">
+<form id="search_sure_form" action="Search/search_sure_res">
+<input type="text" name="sure_name" style="width:100px;">
+<input type="hidden" name="sure_subject"  id="sure_subject">
+<input type="hidden" name="sure_institute" id="sure_institute">
+<input type="hidden" name="sure_page" id="sure_page" value="1">
+<button type="submit" class="btn btn-info  btn-small">搜索</button>
+</form></div>
+
+<!-- 分页显示 -->
+<!-- <div id="test" style="height:70px;padding:30px 10px;"></div> -->
+<!-- <div id="pageNav"></div> -->
+<div id="pagination_contain">
+ <div class="pagination pagination-small">
+  <ul id="pagenumber">
+  </ul>
+</div>
+</div>
+</div>
+ </div>
+ 
+<!-- 滑块按钮 -->
+<div id="left_active">
+</div>
+</div>
+<!-- ******************************************************************** -->
 <script src="http://code.jquery.com/jquery.js"></script>
- <script src="/public/javascripts/bootstrap.min.js"></script>
- <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
- <script src="/public/javascripts/pagenav1.1.min.js"></script>
- <script src="/public/javascripts/seach_paging.js"></script>
+<script src="/public/javascripts/bootstrap.min.js"></script>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/pagenav1.1.min.js"></script>
+<script src="/public/javascripts/seach_paging.js"></script>
 <script src="/public/javascripts/jquery.form.min.js"></script>
 <script src="/public/js/vendor/jquery.ui.widget.js"></script>
 <script src="/public/js/tmpl.min.js"></script>
@@ -287,11 +366,10 @@ display:none;
  <script src="/public/js/locale.js"></script>
  <script src="/public/js/main.js"></script>
  <script src="/public/javascripts/studentlogin.js"></script>
+ <script type="text/javascript" src="/public/javascripts/login.js"></script>
 <script type="text/javascript">
-/*如果已经登录了session有值的话，那么就不显示登录框 
- 
-*/
-/*异步提交form表单*/
+
+/*异步提交form分享表单*/
 	$(document).ready(function() {
 		$('#share_form').ajaxForm({
 			dataType : 'json',
@@ -328,16 +406,18 @@ function share_begin(){
 	function sure_Response(data){
 		var html = '';
 		$.each(data[0], function(commentIndex, comment) {
-			html += "<a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
+			html += "<div class='resource_name'><a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
 			+ comment.realName 
-			+ "</a>" 
+			+ "</a></div>" 
 			+"<br>";
 		});
+		h
 		  search_pageNav.go(parseInt($('#sure_page').val()),data[1]);/*$('#sure_page').val()蛋疼的传到后方是String类型导致+法计算的时候它直接按照String来连接了*/
 		  var back_home = "<ul class='breadcrumb'>"
-		  +"<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"
-		  +"<li><a href='#' onclick='back_resource();'>资源</a> <span class='divider'>/</span></li>"
-		  +" <li class='active'>搜索</li></ul>"
+		  + "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"
+		  + "<li><a href='#' onclick='back_resource();'>资源</a> <span class='divider'>/</span></li>"
+		  + " <li class='active'>搜索</li></ul>"
+		  + ""
 		$('#search_sure').hide();
 		$('#resource').html(html);
 		$('#back_home').html(back_home);
@@ -355,6 +435,7 @@ function back_home(){
 			   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
 			    "<li class='active'>资源</li></ul>");
 }
+
 /*显示学院*/
 $(document).ready(function() {
 	$.get("ViewResource/viewInstitute",function(institute_data){
@@ -395,9 +476,9 @@ $(document).ready(function() {
    		   }, function(data, textStatus) {
    			pageNav.go(page,data[1]);
    			$.each(data[0], function(commentIndex, comment) {
-   				html += "<a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
+   				html += "<div class='resource_name'><a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
    				+ comment.realName 
-   				+ "</a>" 
+   				+ "</a></div>" 
    				+"<br>";
    				$('#resource').html(html);
    				$('#resource_html').val(html);
@@ -414,51 +495,27 @@ $(document).ready(function() {
 				    "<li class='active'>资源</li></ul>");
 		$("#downmes").fadeIn("slow");
 	}
-// 	/*异步上传*/
-// 	$(document).ready(function() {
-// 		$('#myForm').ajaxForm({
-// 			dataType : 'json',
-// 			success : uploadsResponse
-// 		});
-// 	});
-// 	function uploadsResponse(data){
-// 			 $('#mes').html("<div class='alert'> " +
-// 			  "<button type='button' class='close' data-dismiss='alert'>关闭</button>"+
-// 			  "<form action='Uploads/alterFilename' id='alertfileform'><input type='text' name='filename' value='"+ data[1] +"'>"
-// 			  +"<input type='hidden' value='"+data[0]+"' name='id'><input type='submit' value='修改' class='btn btn-danger'></form>"+
-// 			  "</div>");
-			 
-// 			 $('#alertfileform').ajaxForm(function(){
-// 				 $('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")
-// 			 });
-// 			$('#upfile').val("");
-// 	}
-	/*登录之前显示热门资源*/
+	
+	/*登录之前显示热门资源(已整合)*/
 	$(document).ready(
 			function() {
 				$.get("ViewResource/viewMostDown", function(data,
 						textStatus) {
-					var html = "热门资源" + "<br>";
 					$.each(data, function(commentIndex, comment) {
-								html += "<div id='doc_resourcedetails_"+commentIndex+"'>"+
-								"<a href=ViewResource/viewDownloadsDetails?hashName="+data[commentIndex].hashName + ">" 
-										+ data[commentIndex].realName 
-										+ "</a>" 
-										+"</div><br>";
+                  $('#hot_resource').append("<li class='item'>" + 
+                		  "<img class='icon left' src='word.png' />" + 
+                		  "<div class='detail left'>" + 
+                		  "<h3>"+data[commentIndex].realName+"</h3>" +
+                		  "<p><span class='tips'>" + data[commentIndex].uploadname + "</span>"+
+                				  "<span class='tips'>"+data[commentIndex].uploaddate+"</span></p></div>" + 
+                		  "<a href='ViewResource/viewDownloadsDetails?hashName="+ data[commentIndex].hashName +
+                				  "'><img class='icon right' src='/public/images/down.png'/><a>" + 
+                		  "<img class='icon right' src='/public/images/like.png'/></li>"
+                  );
 					});
-					$('#suggest').html(html);
-					$("#doc_resourcedetails_0").fadeIn(5000);
-					$("#doc_resourcedetails_1").fadeIn(5000);
-					$("#doc_resourcedetails_2").fadeIn(7000);
-					$("#doc_resourcedetails_3").fadeIn(5000);
-					$("#doc_resourcedetails_4").fadeIn(3000);
-					$("#doc_resourcedetails_5").fadeIn(5000);
-					$("#doc_resourcedetails_6").fadeIn(3000);
-					$("#doc_resourcedetails_7").fadeIn(7000);
-					$("#doc_resourcedetails_8").fadeIn(6000);
-					$("#doc_resourcedetails_9").fadeIn(3000);
 				}, "json");
 			});
+	
 	/*异步搜索*/
 	$(document).ready(function() {
 		$('#searchForm').ajaxForm({
@@ -507,4 +564,12 @@ $(document).ready(function() {
  			}
  		},"json");
      });
+     /*左侧滑块事件*/
+     $("#left_active").click(function(){
+    		if($("#left_side").hasClass("open")){
+    			$("#left_side").animate({width: '20px'}).removeClass("open");
+    		}else{
+    		$("#left_side").animate({width: '400px'}).addClass("open");
+    		}
+    	});
      </script>

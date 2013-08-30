@@ -92,7 +92,7 @@ $(function () {
         	 });
         	     $("#share_hashName").val(data.result[0].hashName);
         	     $("#share_realName").val(data.result[0].realName);
-       			 $('#alertfileform').ajaxForm(function(){
+        	     jQuery('#alertfileform').ajaxForm(function(){
        				$('#share_button').fadeIn(1);
        				$("#share_realName").val($('#filename').val());
        				$('#mes').html("<div class='alert alert-success'>恭喜你！修改成功！<br></div>")

@@ -1,20 +1,19 @@
 #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
  <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
-<form id="movefirend" action="@{Personal.moveFriend}">
+ <form id="movefirend" action="@{Personal.moveFriend}">
 #{list items:list,as:'LinkMan' }
-<label class="checkbox">
-  <input type="checkbox" value="${LinkMan.id}">
+<label class="checkbox" id= "checkbox_${LinkMan.id}">
+  <input type="checkbox"  id="linkid_${LinkMan.id}" name="move_linkname_id" value="${LinkMan.id}">
   ${LinkMan.friend_name}
 </label>
 #{/list}
-<select name="to_group">
+<select name="to_group_id">
 <option>移动好友到.....</option>
 #{list items:group_list,as:'to_group' }
-<option>${to_group}</option>
+<option value="${to_group.id}">${to_group.firend_group}</option>
 #{/list}
 </select>
 <input type="submit" value="移动联系人">
-</form>
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="/public/javascripts/bootstrap.min.js"></script>
  <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
@@ -27,7 +26,8 @@ $(document).ready(function() {
 	});
 });
 function move_response(data){
-	
+	$.each(data,function(commentIndex, comment){
+		$("#checkbox_"+comment).remove();
+	});
 }
-
 </script>

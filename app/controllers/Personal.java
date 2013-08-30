@@ -15,8 +15,11 @@ import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
+import com.google.gson.Gson;
+
 import models.Filename;
 import models.LinkMan;
+import models.Linkgroup;
 import models.Re_Seek_Help;
 import models.Seek_Help;
 import models.Ask_Tips;
@@ -27,7 +30,6 @@ public class Personal extends BaseCore {
 	public static void view_personalinfo(String iframe_info) {
 		render(iframe_info);
 	}
-
 	public static void view_message() {
 		List<Map> re_list = new ArrayList<Map>();
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",
@@ -170,21 +172,36 @@ public class Personal extends BaseCore {
 		}
 	}
 
-	public static void view_linkman() {
-		
-		List<String> group_list = LinkMan
-				.find("select distinct u.firend_group from LinkMan u where u.host_name= ?",
-						session.get("user")).fetch();
+	public static void view_link_group() {
+		List<Linkgroup> group_list = Linkgroup.find("host_name= ?",session.get("user")).fetch();
 		render(group_list);
 	}
-	public static void view_linkman_bygroup(String group){
-		List<LinkMan> list = LinkMan.find("host_name = ? and firend_group = ?", session.get("user"),group).fetch();
-		List<String> group_list = LinkMan
-				.find("select distinct u.firend_group from LinkMan u where u.host_name= ? and u.firend_group != ?",
-						session.get("user"),group).fetch();
-		render(list,group_list);
+	public static void view_linkman_bygroup(long group_id) {
+		List<LinkMan> list = LinkMan.find("linkgroup_id = ?",group_id).fetch();
+		List<Linkgroup> group_list = Linkgroup
+				.find("select  u from Linkgroup u where u.id != ?",group_id).fetch();
+		render(list, group_list);
 	}
-	public static void moveFriend(){
-		
+	public static void moveFriend(Long[] move_linkname_id, long to_group_id) {
+		for(long linkname_id : move_linkname_id){
+			List<LinkMan> link_list = LinkMan.find("id = ?",linkname_id).fetch();
+			LinkMan linkMan = link_list.get(0);
+			Linkgroup linkgroup =new Linkgroup();
+			linkgroup.id = to_group_id;
+			linkMan.linkgroup= linkgroup;
+			dao.AddResources.addLinkMan(linkMan);
+		}
+		response.contentType = "application/json";
+		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		Gson gson = new Gson();
+		String stringToJson = gson.toJson(move_linkname_id);
+		renderText(stringToJson);
+	}
+	public static void addGroup(String newgroup){
+		Linkgroup linkgroup =new Linkgroup();
+		linkgroup.host_name = session.get("user");
+		linkgroup.firend_group = newgroup;
+		dao.AddResources.addGroup(linkgroup);
+		view_link_group();
 	}
 }

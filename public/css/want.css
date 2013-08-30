@@ -1,0 +1,84 @@
+.wantContent {
+	position: relative;
+	margin: 0 auto;
+	width: 1000px;
+	overflow: hidden;
+}
+.wantHot {
+	width: 300px;
+}
+.wantColumn {
+	float: left;
+	vertical-align: top;
+	position: relative;
+	height: auto;
+	
+}
+.wantCommon {
+	width: 350px;
+}
+.wantItem {
+	list-style: none;
+	height: auto;
+	display: inline-block;
+	background-color: #FFF;
+	color: #666;
+	font-size: 1.2em;
+	box-shadow: 0 1px 3px rgba(100, 100, 100, 0.3);
+}
+.wantItemCommon {
+	width: 335px;
+	margin: 15px 15px 0 0; 
+}
+.wantItemHot {
+	width: 300px;
+	margin: 15px 0 0 0; 
+}
+.wantItemHeader {
+	margin: 10px;
+	width: 320px; height: 20px;
+}
+.wantItemBody {
+	margin: 0 20px 15px;
+	width: 300px;
+	line-height: 15px;
+}
+}
+.wantItemFoot {
+	border-top: 1px solid #F3F3F3;
+	background: #F6F6F9;
+	height: 32px;
+	font-size: 1em;
+}
+
+.wantItemHeaderHot {
+	margin: 10px;
+	width: 270px; height: 20px;
+}
+.wantItemBodyHot {
+	margin: 0 20px 15px;
+	width: 270px;
+	line-height: 15px;
+}
+.name {
+	margin: 8px 0;
+	font-size: 0.8em;
+}
+.time {
+	margin: 8px;
+}
+.ava {
+	margin: 6px;
+	width: 20px; height: 20px;
+}
+.operation {
+	margin: 6px;
+}
+.pureBtn {
+	width: 30px; line-height: 20px;
+	font-size: 1.2em;
+	cursor: pointer;
+}
+.aNoLine {
+	text-decoration: none;
+}

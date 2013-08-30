@@ -16,6 +16,7 @@ import models.AllClass;
 import models.Filename;
 import models.Instituteinfo;
 import models.LinkMan;
+import models.Linkgroup;
 import models.Rescomment;
 import models.Seek_Help;
 import models.Ask_Tips;
@@ -61,9 +62,9 @@ public class ViewResource extends BaseCore {
 		renderText(listToJson);
 	}
 	
-	/* 显示最热的前10资源 */
+	/* 显示最热的前6资源 */
 	public static void viewMostDown() {
-		List<Filename> list = Filename.find("order by downcount asc").fetch(10);
+		List<Filename> list = Filename.find("order by downcount asc").fetch(6);
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(list);
 		response.contentType = "application/json";
@@ -89,8 +90,8 @@ public class ViewResource extends BaseCore {
 		Assist assit = new Assist();
 		Collections.sort(alllistname, assit);
 		String listToJson = "";
-		if (alllistname.size() > 10) {
-			alllistname = alllistname.subList(0, 9);
+		if (alllistname.size() > 6) {
+			alllistname = alllistname.subList(0, 6);
 		}  
 		/*获取用户的信息，获取后天提醒的消息数*/
 		/*回答的消息数目*/
@@ -104,15 +105,15 @@ public class ViewResource extends BaseCore {
 		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ?", session.get("user")).fetch();
 		size += share_list.size();
 		/*获取好友列表*/
-		List<String> group_list = LinkMan.find("select distinct u.firend_group from LinkMan u where u.host_name= ?",session.get("user")).fetch();
 		List<Map> linkman_group_list = new ArrayList<Map>();
+		List<Linkgroup> group_list = Linkgroup.find("host_name= ?",session.get("user")).fetch();
 		/*i传到前端用来唯一标识分组的div*/
 		int i = 0;
-		for(String a : group_list){
-			List<LinkMan> linkman_list = LinkMan.find("host_name= ? and firend_group = ?",session.get("user"),a).fetch();
+		for(Linkgroup linkgroup : group_list){
+			List<LinkMan> linkman_list = LinkMan.find("linkgroup_id = ?",linkgroup.id).fetch();
 			Map map = new HashMap();
 			map.put("group_id", i);
-			map.put("group",a);
+			map.put("group",linkgroup.firend_group);
 			map.put("linkman", linkman_list);
 			i++;
 			linkman_group_list.add(map);
@@ -138,15 +139,15 @@ public class ViewResource extends BaseCore {
 	}
 	/*获取当前登陆者的联系人*/
 	public static void viewLinkname(){
-		List<String> group_list = LinkMan.find("select distinct u.firend_group from LinkMan u where u.host_name= ?",session.get("user")).fetch();
+		List<Linkgroup> group_list = Linkgroup.find("host_name= ?",session.get("user")).fetch();
 		List<Map> linkman_group_list = new ArrayList<Map>();
 		/*i传到前端用来唯一标识分组的div*/
 		int i = 0;
-		for(String a : group_list){
-			List<LinkMan> linkman_list = LinkMan.find("host_name= ? and firend_group = ?",session.get("user"),a).fetch();
+		for(Linkgroup linkgroup : group_list){
+			List<LinkMan> linkman_list = LinkMan.find("linkgroup_id = ?",linkgroup.id).fetch();
 			Map map = new HashMap();
 			map.put("group_id", i);
-			map.put("group",a);
+			map.put("group",linkgroup.firend_group);
 			map.put("linkman", linkman_list);
 			i++;
 			linkman_group_list.add(map);
@@ -156,7 +157,5 @@ public class ViewResource extends BaseCore {
 		response.contentType = "application/json";
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
-		
-		
 	}
 }
