@@ -1,0 +1,62 @@
+  #{extends 'main.html' /} #{set title:'index.html' /}
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <style>
+ .left{
+ text-align:left;
+ }
+ .right{
+ text-align:right;
+ }
+ td{
+ width:200px
+ }
+  #tableview{
+ margin: 50px 20px 20px;
+ }
+ #top_search{
+ margin: 50px auto;
+ position: relative;
+ overflow: hidden;
+ width :500px;
+ }
+ .search_td{
+ width:200px
+ }
+ .search_table{
+ max-width: 100%;
+ }
+ </style>
+   <div id="top_search">
+ <form action="@{Admin.searchInstitute()}">
+ <table class="search_table">
+ <tr>
+ <th class="search_td right" >学院:</th>
+ <td class="search_td left"><input type="text" name="serach_institute"></td>
+ </tr>
+ <tr><td ></td>
+ <td><button type="submit" class="pull-right">提交</button></td>
+ </tr>
+ </table>
+ </form>
+ </div>
+ 
+ <div id="tableview">
+ <table class="table table-condensed">
+  <thead>
+  <tr>
+  <td>学院</td>
+  </tr>
+ </thead>
+ 
+ <tbody>
+  #{list items:filelist, as:'Institute' }
+ <tr>
+  <td>${Institute.institute}</td>
+  <td><a href="@{Admin.deleteInstitute(page,Institute.id)}">删除</a></td>
+  <td><a href="@{Admin.vieweditInstitute(page,Institute.id)}">编辑</a></td>
+  </tr>
+  #{/list}
+ </tbody>
+</table>
+</div>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>

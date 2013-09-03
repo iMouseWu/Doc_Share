@@ -1,0 +1,18 @@
+  #{extends 'main.html' /} #{set title:'index.html' /}
+  <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <form class="form-horizontal" action="@{Admin.editInstitute()}">
+  <input type="hidden" value="${institute.id}" name="id">
+  <input type="hidden" value="${page}" name="page">
+  <div class="control-group">
+    <label class="control-label" for="institute">学院</label>
+    <div class="controls">
+    <input type="text" id="institute" name="institute" value=${institute.institute}>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">提交</button>
+    </div>
+  </div>
+</form>

@@ -1,5 +1,21 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
  <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <style type="text/css">
+ #content{
+ margin:100px;
+ }
+ #main{
+ margin-top:10px;
+ border:1px solid gray;
+ }
+ td{
+ width:230px;
+ }
+ .right{
+ text-align:right;
+ }
+ </style>
+<!--  联系人显示 -->
 <div id="linkman" class="modal hide fade">
 <div class="modal-header" id="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -17,14 +33,28 @@
   </div>
   </form>
 </div>
+<div id="content">
 <ul>
     #{list items:file_list, as:'filename' }
-        <div id=div_${filename.id}><a href="@{ViewResource.viewDownloadsDetails()}?hashName=${filename.hashName}">${filename.realName}                   
-</a></div>
-<div><a href="#" onclick="share_begin('${filename.hashName}','${filename.realName}');">分享</a></div>
-<br>
+    <div id="main">
+        
+        <table>
+        <div id=div_${filename.id}>
+        <tr>
+        <td>资源名称：<a href="@{ViewResource.viewDownloadsDetails()}?hashName=${filename.hashName}">${filename.realName}</a></td>
+        <td>上传日期：${filename.uploaddate}</td>
+        <td>下载次数：${filename.downcount}</td>
+        <td>评分：${filename.avescore}</td>
+        </div>
+        </tr>
+        <tr><td colspan="3" ></td><td><div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="share_begin('${filename.hashName}','${filename.realName}');">分享</a></div></td></tr>
+        </table>
+ 
+
+</div>
     #{/list}
 </ul>
+</div>
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="/public/javascripts/bootstrap.min.js"></script>
  <script src="/public/javascripts/jquery-1.6.4.min.js"></script>

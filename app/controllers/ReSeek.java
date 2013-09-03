@@ -41,7 +41,7 @@ public class ReSeek extends BaseCore {
 		tips.tip_status = 1;
 		tips.tip_from_name = session.get("user");
 		tips.tip_content = re_seek_content;
-//		tips.tip_from_id = seek_id;
+		tips.tip_from_id = seek_id;
 		dao.AddResources.addAsk_Tips(tips);
 		}
 		SeekHelp.seek_home(nowpage,(int)(seek_id/1));

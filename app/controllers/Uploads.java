@@ -29,6 +29,8 @@ public class Uploads extends BaseCore{
 		String filename = allfilename.substring(0, allfilename.lastIndexOf("."));
 		/* 获取文件扩展名 */
 		String fileext = allfilename.substring(allfilename.lastIndexOf("."));
+		/*获取扩展名，不包括点*/
+		String fileextexceptdoc = allfilename.substring(allfilename.lastIndexOf(".")+1);
 		/* 构成hash路径名 */
 		String path = "/public/resourse/" + institute_sel + "/" + subject_sel + "/"
 				+ hash + fileext;
@@ -38,6 +40,9 @@ public class Uploads extends BaseCore{
 		 Date date = new Date();
 		/* 获取上传者的姓名 */
 		String user = session.get("user");
+		if(intro_sel.equals("")){
+			intro_sel = "暂无简介";
+		}
 		/* 将此资源储存到数据库 */
 		Filename filedatename = new Filename();
 		filedatename.hashName = hash + fileext;
@@ -47,6 +52,7 @@ public class Uploads extends BaseCore{
 		filedatename.downcount = 0;
 		filedatename.uploadname = user;
 		filedatename.uploaddate = formatter.format(date);
+		filedatename.picture = fileextexceptdoc + ".png";
 		filedatename.intro = intro_sel;
 		dao.AddResources.addFile(filedatename);
 //		List list = new ArrayList();

@@ -33,11 +33,11 @@
 		if (responseJson == null) {
 			alert("用户名或者密码错误");
 		} else {
-			$.each(responseJson[0], function(commentIndex, comment) {
 			$("#top_information").empty();
 			$("#top_information").append("<li class='navTag'><a href='#' onclick='uploadframe();'>我要上传</a></li>"
 					+ "<li class='navTag'><a href='Personal/view_personalinfo?iframe_info=./view_message'>你有"+responseJson[1]+"条消息</a></li>"
 					+ "<li class='navTag'><a href='Personal/view_personalinfo?iframe_info=./view_myresources'>个人中心</a></li>");
+			$.each(responseJson[0], function(commentIndex, comment) {
 			$("#suggestorlogin").empty();
 			if(commentIndex%2 == 0) 
 				html+= '<ul class="suggestColumn suggestCommon">';

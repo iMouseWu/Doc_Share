@@ -1,0 +1,25 @@
+ #{extends 'main.html' /} #{set title:'index.html' /}
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <form class="form-horizontal" action="@{Admin.editSubject()}">
+  <input type="hidden" value="${instituteinfo.id}" name="id">
+  <input type="hidden" value="${page}" name="page">
+  <div class="control-group">
+    <label class="control-label" for="institute">学院</label>
+    <div class="controls">
+      ${instituteinfo.institute}
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="subject">学科</label>
+    <div class="controls">
+      <input type="text" id="subject" name="subject" value=${instituteinfo.subject}>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">提交</button>
+    </div>
+  </div>
+</form>

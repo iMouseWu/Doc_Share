@@ -15,7 +15,7 @@
 	
 }
 .wantCommon {
-	width: 350px;
+	width: 300px;
 }
 .wantItem {
 	list-style: none;
@@ -23,12 +23,12 @@
 	display: inline-block;
 	background-color: #FFF;
 	color: #666;
-	font-size: 1.2em;
+	font-size: 0.9em;
 	box-shadow: 0 1px 3px rgba(100, 100, 100, 0.3);
 }
 .wantItemCommon {
-	width: 335px;
-	margin: 15px 15px 0 0; 
+	width:280px;
+	margin: 15px 15px 15px 15px; 
 }
 .wantItemHot {
 	width: 300px;
@@ -36,11 +36,11 @@
 }
 .wantItemHeader {
 	margin: 10px;
-	width: 320px; height: 20px;
+	width: 270px; height: 20px;
 }
 .wantItemBody {
 	margin: 0 20px 15px;
-	width: 300px;
+	width: 250px;
 	line-height: 15px;
 }
 }
@@ -48,7 +48,7 @@
 	border-top: 1px solid #F3F3F3;
 	background: #F6F6F9;
 	height: 32px;
-	font-size: 1em;
+	font-size: 1.0em;
 }
 
 .wantItemHeaderHot {
@@ -76,9 +76,12 @@
 }
 .pureBtn {
 	width: 30px; line-height: 20px;
-	font-size: 1.2em;
+	font-size: 1.0em;
 	cursor: pointer;
 }
 .aNoLine {
 	text-decoration: none;
+}
+.wantItemHeader h4{
+	margin: 0 0 0 0;
 }

@@ -47,11 +47,17 @@ public class ViewResource extends BaseCore {
 	
 	/* 获取相应的学院以及相应的学科下载目录，并返回json格式 (没有完成当目录为空的时候所执行的操作) */
 	public static void viewDownloadsList(String fileroute, String subject,int page) {
+		int pageCount;
 		List filenameCountList = new ArrayList();
 		List<List> reJsonList =new ArrayList<List>();
 		List<Filename>  refilelist = Filename.find("institute = ? And subject = ?",fileroute,subject).from((page-1)*3).fetch(3);
-		long userFilenameCount =Filename.count("institute = ? And subject = ?",fileroute,subject);
-		int pageCount = (int)(userFilenameCount / 3 + 1) ;
+		int userFilenameCount =(int)Filename.count("institute = ? And subject = ?",fileroute,subject);
+		/**************************需要增加当刚好整除的时候的判断**************************/
+		if(userFilenameCount % 3 == 0){
+			pageCount = userFilenameCount / 3 ;
+		}else{
+			pageCount = userFilenameCount / 3 + 1 ;
+		}
 		filenameCountList.add(pageCount);
 		reJsonList.add(refilelist);
 		reJsonList.add(filenameCountList);
@@ -62,9 +68,9 @@ public class ViewResource extends BaseCore {
 		renderText(listToJson);
 	}
 	
-	/* 显示最热的前6资源 */
+	/* 显示最热的前10资源 */
 	public static void viewMostDown() {
-		List<Filename> list = Filename.find("order by downcount asc").fetch(6);
+		List<Filename> list = Filename.find("order by downcount asc").fetch(10);
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(list);
 		response.contentType = "application/json";

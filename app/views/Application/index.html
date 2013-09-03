@@ -8,6 +8,10 @@
 <link type="text/css" href="/public/css/page.css" rel="stylesheet"/>
 <link type="text/css" href="/public/css/want.css" rel="stylesheet"/>
 <style type="text/css">
+i{
+position: absolute;
+top:30px;
+}
 .pagination{
 margin-right: auto; 
 margin-left: auto;
@@ -205,7 +209,7 @@ display:none;
 			</div>
 			<div class="search right">
 				<input type="text" class="span left" placeholder="搜点什么试试" />
-				<input type="button" class="btn btn-primary" value="搜索"/><br>
+				<input type="button" class="btn btn-primary" value="搜索"/>&nbsp; &nbsp;
 				<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区问问看!</a>
 			</div>
 		</div>
@@ -345,6 +349,9 @@ display:none;
  
 <!-- 滑块按钮 -->
 <div id="left_active">
+<div id="arrows">
+<i class="icon-chevron-right icon-white"></i>
+</div>
 </div>
 </div>
 <!-- ******************************************************************** -->
@@ -411,7 +418,6 @@ function share_begin(){
 			+ "</a></div>" 
 			+"<br>";
 		});
-		h
 		  search_pageNav.go(parseInt($('#sure_page').val()),data[1]);/*$('#sure_page').val()蛋疼的传到后方是String类型导致+法计算的时候它直接按照String来连接了*/
 		  var back_home = "<ul class='breadcrumb'>"
 		  + "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"
@@ -503,14 +509,13 @@ $(document).ready(function() {
 						textStatus) {
 					$.each(data, function(commentIndex, comment) {
                   $('#hot_resource').append("<li class='item'>" + 
-                		  "<img class='icon left' src='word.png' />" + 
+                		  "<img class='icon left' src='/public/images/"+comment.picture+"' />" + 
                 		  "<div class='detail left'>" + 
                 		  "<h3>"+data[commentIndex].realName+"</h3>" +
-                		  "<p><span class='tips'>" + data[commentIndex].uploadname + "</span>"+
-                				  "<span class='tips'>"+data[commentIndex].uploaddate+"</span></p></div>" + 
-                		  "<a href='ViewResource/viewDownloadsDetails?hashName="+ data[commentIndex].hashName +
-                				  "'><img class='icon right' src='/public/images/down.png'/><a>" + 
-                		  "<img class='icon right' src='/public/images/like.png'/></li>"
+                		  "<p><span class='tips'>上传者：" + data[commentIndex].uploadname + "</span>"+
+                				  "<span class='tips'>时间："+data[commentIndex].uploaddate+"</span></p></div>" + 
+                		  "<a title='进入下载界面' href='ViewResource/viewDownloadsDetails?hashName="+ data[commentIndex].hashName +
+                				  "'><img class='icon right' src='/public/images/down.png'/><a> </li>" 
                   );
 					});
 				}, "json");
@@ -567,9 +572,11 @@ $(document).ready(function() {
      /*左侧滑块事件*/
      $("#left_active").click(function(){
     		if($("#left_side").hasClass("open")){
-    			$("#left_side").animate({width: '20px'}).removeClass("open");
+    			$("#left_side").animate({width: '26px'}).removeClass("open");
+    			$("i").removeClass(" icon-chevron-left").addClass("icon-chevron-right");
     		}else{
     		$("#left_side").animate({width: '400px'}).addClass("open");
+    		$("i").removeClass(" icon-chevron-right").addClass("icon-chevron-left");
     		}
     	});
      </script>

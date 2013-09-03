@@ -53,6 +53,7 @@ $(function () {
 //        // Set the following option to true, to prepend files instead:
 //        prependFiles: false,
         add: function (e, data) {
+        	 $('#share_button').fadeOut(1);
         	var uploadFile = data.files[0];
         	if (!(/(zip)|(rar)$/i).test(uploadFile.name)) {
         		alert("文件类型错误");

@@ -1,0 +1,24 @@
+#{extends 'main.html' /} #{set title:'index.html' /}
+<link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <form class="form-horizontal" action="@{Admin.editHelp()}">
+  <input type="hidden" value="${seek_Help.id}" name="id">
+  <input type="hidden" value="${page}" name="page">
+  <div class="control-group">
+    <label class="control-label" for="seek_user">寻求人</label>
+    <div class="controls">
+    <input type="text" id="seek_user" name="seek_user" value=${seek_Help.seek_user}>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="seek_content">寻求内容</label>
+    <div class="controls">
+    <input type="text" id="seek_content" name="seek_content" value=${seek_Help.seek_content}>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">提交</button>
+    </div>
+  </div>
+</form>

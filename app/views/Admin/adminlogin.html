@@ -1,0 +1,77 @@
+ #{extends 'main.html' /} #{set title:'index.html' /}
+<link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<style type="text/css">
+body{
+ padding:40px;
+}
+iframe{
+width:100%;
+scrolling :no;
+overflow: hidden;
+ border : 0;
+ max-height:100%;
+}
+#iframe_contain{
+width:800px;
+margin: 0px auto;
+ position: relative;
+ overflow: hidden;
+}
+
+</style>
+<div class="navbar navbar-fixed-top navbar-inverse">
+ <div class="navbar-inner">
+    <a class="brand" href="#">Title</a>
+    <ul class="nav">
+      <li><a href="@{Admin.admin_resource}" target="info_view">管理资源</a></li>
+      <li><a href="@{Admin.admin_help}" target="info_view">管理求助</a></li>
+      <li><a href="@{Admin.admin_user}" target="info_view">管理用户</a></li>
+      <li><a href="@{Admin.admin_subject}" target="info_view">管理学科</a></li>
+      <li><a href="@{Admin.admin_institute}" target="info_view">管理学院</a></li>
+    </ul>
+  </div>
+</div>
+<div id="iframe_contain">
+<iframe name="info_view" id="info_view" src="@{Admin.welcome()}" onload="AutoIframe();">
+</iframe>
+</div>
+
+<script type="text/javascript">
+
+function AutoIframe()
+{
+    if(document.readyState!='complete')
+    {
+        setTimeout( function(){AutoIframe();},25 );
+        return;
+    }
+    else{
+       var ifobj=document.getElementById("info_view");
+       ifobj.height= ifobj.contentWindow.document.body.scrollHeight;
+    }
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

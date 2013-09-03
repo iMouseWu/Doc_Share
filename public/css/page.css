@@ -141,27 +141,28 @@ body {
 	font-size: 2em;
 }
 .resources{
-	margin-top: 50px;
+	margin-top: 30px;
 	width: 700px;
 	list-style: none;
 }
 .item{
-	height: 100px;
+	height: 60px;
 	margin-top: 10px;
 	border-bottom: 1px solid #CCC;
 }
 .detail {
 	font-family: arial,sans-serif;
 	text-align: center;
-	margin: 10px 120px 0 ;
+	margin: 6px 120px 0 ;
 }
 .detail h3{
 	font-size: 1.5em;
+	line-height:0;
+	margin:5px;
 }
 .icon{
-	margin: 6px;
+	margin: 0px;
 }
-
 
 #footer {
 	position: relative;
@@ -179,16 +180,17 @@ body {
 	top: 0px;
 	right:0px;
 	height: 100%;
-	width: 20px;
-	background: green;
+	width: 26px;
+	z-index:50;
+	background: none repeat scroll 0% 0% rgb(255, 255, 255);
+	cursor: pointer;
 }
 #left_side{
 	position: fixed;
 	top: 30px;
 	left:0px;
 	height: 100%;
-	width: 20px;
-	background: red;
+	width: 26px;
 }
 #left_content{
     position: absolute;
@@ -198,4 +200,26 @@ body {
 	width: 400px;
 	background: #E6E6E6;
 	}
+p{
+	margin: 20px 0px 10px;
+}	
+#wantfooter {
+	position: relative;
+	top: 20px;
+	margin: 0 auto;
+	padding-top: 10px;
+	width: 900px; height: 150px;
+	border-top: 1px solid #d4d4d5;
+	color: #ccc;
+	font-family: "Î¢ÈíÑÅºÚ";
+	font-size: 1em;
+}
+#arrows{
+	position: absolute;
+	right:0px;
+	top:260px;
+	width:16px;
+	height:80px;
+	background:#B2F3C4;
 	
+}

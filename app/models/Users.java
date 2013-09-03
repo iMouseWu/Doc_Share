@@ -8,6 +8,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "db_user")
 public class Users extends Model {
+	public String nickname;
 	public String username;
 	public String password;
 	public String institute;

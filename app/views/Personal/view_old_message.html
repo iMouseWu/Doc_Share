@@ -1,9 +1,21 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
-<ul>
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <style type="text/css">
+ #content{
+ margin:100px;
+ }
+</style>
+<div id="content">
+问答:
+<table class="table">
     #{list items:re_list, as:'oldmessage' }
-        <li>${oldmessage.raw()}</li>
+        <tr><td>${oldmessage.raw()}</td></tr>
     #{/list}
+    </table>
+    分享：
+    <table class="table">
     #{list items:share_list, as:'oldmessage' }
-        <li>${oldmessage.raw()}</li>
+        <tr><td>${oldmessage.raw()}</td></tr>
     #{/list}
-</ul>
+    </table>
+</div>
