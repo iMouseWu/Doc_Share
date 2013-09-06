@@ -1,12 +1,87 @@
 #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+<link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<style type="text/css">
+#content{
+ margin:100px;
+ }
+#linkgroup{
+ width:150px;
+ }
+ iframe{
+ position: absolute;
+ top:100px;
+ left:300px;
+ border : 0;
+ scrolling :no;
+ width:800px;
+ height:500px;
+ }
+ #addfriend{
+ height:20px;
+ overflow: hidden;
+ }
+ .group_text{
+ width:50px;
+ }
+ #add_header{
+ cursor: pointer;
+ }
+ .right{float: right;}
+</style>
 
+<div id="content">
  <div id="linkgroup">
+ <ul class="nav nav-tabs nav-stacked">
+ <li><a href="@{Personal.view_linkman_bygroup}" target="linkname">allfriend</a></li>
  #{list items:group_list,as:'linkgroup' }
-    <a href="@{Personal.view_linkman_bygroup}?group_id=${linkgroup.id}" target="linkname">${linkgroup.firend_group}</a><br>
+ <li>
+ %{
+ if((linkgroup.firend_group).equals("friend")){
+ }%
+    <a href="@{Personal.view_linkman_bygroup}?group_id=${linkgroup.id}" target="linkname">
+    ${linkgroup.firend_group}</a>
+    %{
+    }else{
+    }%
+    <a href="@{Personal.view_linkman_bygroup}?group_id=${linkgroup.id}" target="linkname">
+    ${linkgroup.firend_group}<i class="icon-remove right" onclick="removegroup(${linkgroup.id});"></i></a>
+     %{
+    }
+    }%
+    </li>
  #{/list}
+ <li>
+ <div id="addfriend">
+ <div id="add_header">
+ <i class="icon-plus"></i>添加分组
  </div>
-<iframe name="linkname"></iframe>
+ <div id="add_form">
 <form action=@{Personal.addGroup}>
-<input type="text" name="newgroup">
-<input type="submit">
+<input type="text" name="newgroup" class="group_text">
+<input type="submit" class="btn btn-success" value="添加">
 </form>
+</div>
+</div></li>
+ </ul>
+ </div>
+<iframe name="linkname" src="@{Personal.view_linkman_bygroup}"></iframe>
+</div>
+ <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script type="text/javascript">
+$("#add_header").click(function(){
+	if($("#addfriend #add_header i").hasClass("icon-plus")){
+	$("#addfriend").animate({
+		height: '55px'
+	});
+	$("#addfriend #add_header i").removeClass("icon-plus").addClass("icon-minus");
+	}else{
+		$("#addfriend").animate({
+			height: '20px'
+		});
+	$("#addfriend #add_header i").removeClass("icon-minus").addClass("icon-plus");
+	}
+});
+function removegroup(id){
+	window.location.href = "@{Personal.deleteGroup}?id=" + id;
+}
+</script>

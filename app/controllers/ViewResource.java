@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import play.mvc.Before;
 import tools.Assist;
 
 import com.google.gson.Gson;
@@ -23,6 +24,13 @@ import models.Ask_Tips;
 import models.Share_Tips;
 
 public class ViewResource extends BaseCore {
+	@Before(only={"viewInsMostDown","viewLinkname"})
+	static void checksession() {
+		if (session.get("user") == null) {
+			String tipinfo = "请登录";
+			Application.index(tipinfo);
+		}
+	}
 	/* 显示相应资源下载页面 */
 	public static void viewDownloadsDetails(String hashName) {
 		List<Filename> list = Filename.find("hashName = ?", hashName).fetch();

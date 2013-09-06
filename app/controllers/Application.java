@@ -21,12 +21,12 @@ import com.sun.org.apache.xpath.internal.operations.And;
 import models.*;
 
 public class Application extends BaseCore {
-
-	public static void index(String user) {
+	
+	public static void index(String tipinfo) {
 		String username = "";
 		String password = "";
 		username = session.get("user");
 		password = session.get("password");
-		render(user,username,password);
+		render(tipinfo,username,password);
 	}
 }

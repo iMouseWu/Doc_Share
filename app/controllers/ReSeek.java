@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jaxen.function.StringFunction;
 
+import play.mvc.Before;
 import models.Re_Seek_Help;
 import models.Seek_Help;
 import models.Ask_Tips;
@@ -14,7 +15,13 @@ public class ReSeek extends BaseCore {
 	/*
 	 * re_seek_content:回复内容 seek_id:seek内容的id号
 	 */
-
+	@Before
+	static void checksession() {
+		if (session.get("user") == null) {
+			String tipinfo = "请登录";
+			Application.index(tipinfo);
+		}
+	}
 	public static void AddReSeek(String re_seek_content,long seek_id,int nowpage){
 		Ask_Tips tips = new Ask_Tips();
 		/*把回复信息加入回复数据表中*/

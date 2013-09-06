@@ -15,10 +15,17 @@ import com.google.gson.Gson;
 import models.Filename;
 import play.Play;
 import play.libs.Files;
+import play.mvc.Before;
 import play.mvc.Controller;
 
 public class Uploads extends BaseCore{
-	
+	@Before
+	static void checksession() {
+		if (session.get("user") == null) {
+			String tipinfo = "请登录";
+			Application.index(tipinfo);
+		}
+	}
 	/* 上传功能 */
 	public static void uploads(File upfile, String institute_sel, String subject_sel,String intro_sel) {
 		/* 获取文件哈希码 */

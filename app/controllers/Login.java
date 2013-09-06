@@ -24,5 +24,11 @@ public class Login extends BaseCore{
 			ViewResource.viewInsMostDown();
 		}
 	}
+	/*退出登录*/
+	public static void exitLogin(){
+		session.clear();
+		System.out.println(session.get("user"));
+		Application.index("");
+	}
 
 }

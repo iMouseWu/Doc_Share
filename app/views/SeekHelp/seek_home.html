@@ -26,8 +26,10 @@ left:550px;
 		<li class="navTag"><a class="navLink" href="http://go.zjut.com/">导航</a></li>
 	</ol>
 	<ol class="right">
-		<li class="signin"><!-- <input type="button" class="topbtn" name="login" value="登陆"/> -->登录</li>
-		<li class="navTag"><a class="navLink" href="http://user.zjut.com/">注册</a></li>
+	    <li class='navTag'><a href=@{Application.index()}>首页</a></li>
+		<li class='navTag'><a href=@{Personal.view_personalinfo}?iframe_info=/Personal/view_message>你有${size}条消息</a></li>
+		<li class='navTag'><a href=@{Personal.view_personalinfo}>个人中心</a></li>
+		<li class='navTag'><a href=@{Login.exitLogin}>退出</a></li>
 	</ol>
 </div>
 <div class="wrapper">
@@ -69,7 +71,6 @@ if(i % 3 == 0){
 			<div class="wantItemFoot">
 				<div class="left">
 					<a class="aNoLine">
-						<img class="ava left" src="ava.png">
 						<span class="name left" title="小黄鸡">小黄鸡</span>
 					</a>
 					<span class="time left">8-25 15:41</span>

@@ -15,6 +15,8 @@ import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
+import play.mvc.Before;
+
 import com.google.gson.Gson;
 
 import models.Filename;
@@ -27,6 +29,13 @@ import models.Share_Tips;
 import models.Users;
 
 public class Personal extends BaseCore {
+	@Before
+	static void checksession() {
+		if (session.get("user") == null) {
+			String tipinfo = "请登录";
+			Application.index(tipinfo);
+		}
+	}
 	public static void view_personalinfo(String iframe_info) {
 		render(iframe_info);
 	}
@@ -177,10 +186,19 @@ public class Personal extends BaseCore {
 		render(group_list);
 	}
 	public static void view_linkman_bygroup(long group_id) {
+		if(group_id != 0){
+			/*如果是初始状态那么sign就是0，用来显示所有好友,并且移动按钮灰显，否则就是1*/
+			int sign = 1;
 		List<LinkMan> list = LinkMan.find("linkgroup_id = ?",group_id).fetch();
 		List<Linkgroup> group_list = Linkgroup
 				.find("select  u from Linkgroup u where u.id != ?",group_id).fetch();
-		render(list, group_list);
+		render(list, group_list,sign);
+	}else{
+		List<LinkMan> list = LinkMan.findAll();
+		int sign = 0;
+	/*如果是全部好友的话就返回sign=0*/
+		render(list,sign);
+	}
 	}
 	public static void moveFriend(Long[] move_linkname_id, long to_group_id) {
 		for(long linkname_id : move_linkname_id){
@@ -202,6 +220,62 @@ public class Personal extends BaseCore {
 		linkgroup.host_name = session.get("user");
 		linkgroup.firend_group = newgroup;
 		dao.AddResources.addGroup(linkgroup);
+		view_link_group();
+	}
+	public static void view_addLinkMan(){
+		/*返回好友组别*/
+		List<Linkgroup> list = Linkgroup.find("host_name = ?", session.get("user")).fetch();
+		   render(list);
+	}
+	public static void serachLinkMan(String number){
+		List<Users> list = Users.find("username = ?", number).fetch();
+		response.contentType = "application/json";
+		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		Gson gson = new Gson();
+		String stringToJson = gson.toJson(list);
+		renderText(stringToJson);
+	}
+	public static void addLinkMan(long user_id,long group_id){
+		Users users = Users.findById(user_id);
+		List<LinkMan> list = LinkMan.find("friend_name = ? And linkgroup.host_name = ?", users.nickname,session.get("user")).fetch();
+		System.out.println(list.size());
+		if(list.size() == 1){
+			/*如果联系人已经存在的话就返回0*/
+			renderText(0);
+		}else{
+		Linkgroup linkgroup =new Linkgroup();
+		linkgroup.id = group_id;
+		LinkMan linkMan = new LinkMan();
+		linkMan.friend_name = users.nickname;
+		linkMan.linkgroup = linkgroup;
+		linkMan.save();
+		/*成功就返回1*/
+		renderText(1);
+		}
+	}
+	public static void deleteFriend(Long[] move_linkname_id) {
+		for(long linkname_id : move_linkname_id){
+			LinkMan linkMan = LinkMan.findById(linkname_id);
+			linkMan.delete();
+		}
+		response.contentType = "application/json";
+		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		Gson gson = new Gson();
+		String stringToJson = gson.toJson(move_linkname_id);
+		renderText(stringToJson);
+	}
+	public static void deleteGroup(long id){
+		List<Linkgroup> list = Linkgroup.find("firend_group = ? And host_name = ?","friend",session.get("user")).fetch();
+		Long friend_id = list.get(0).id;
+		List<LinkMan> list2 = LinkMan.find("linkgroup.id = ?", id).fetch();
+		for(LinkMan linkMan : list2){
+			Linkgroup linkgroup = new Linkgroup();
+			linkgroup.id = friend_id;
+			linkMan.linkgroup = linkgroup;
+			linkMan.save();
+		}
+		Linkgroup linkgroup = Linkgroup.findById(id);
+		linkgroup.delete();
 		view_link_group();
 	}
 }

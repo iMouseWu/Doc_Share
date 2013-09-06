@@ -35,8 +35,10 @@
 		} else {
 			$("#top_information").empty();
 			$("#top_information").append("<li class='navTag'><a href='#' onclick='uploadframe();'>我要上传</a></li>"
-					+ "<li class='navTag'><a href='Personal/view_personalinfo?iframe_info=./view_message'>你有"+responseJson[1]+"条消息</a></li>"
-					+ "<li class='navTag'><a href='Personal/view_personalinfo?iframe_info=./view_myresources'>个人中心</a></li>");
+					+ "<li class='navTag'><a href='/Personal/view_personalinfo?iframe_info=/Personal/view_message'>你有"+responseJson[1]+"条消息</a></li>"
+					+ "<li class='navTag'><a href='/Personal/view_personalinfo'>个人中心</a></li>"
+					+ "<li class='navTag'><a href='/Login/exitLogin'>退出</a></li>"
+			);
 			$.each(responseJson[0], function(commentIndex, comment) {
 			$("#suggestorlogin").empty();
 			if(commentIndex%2 == 0) 
@@ -62,16 +64,25 @@
 		}
 	}
 	/*如果session里面有值的话就自动登录,即存放session的隐藏域不为空值*/
-//	$(function(){
-//		var username = $('#session_username').val();
-//		var password = $('#session_password').val();
-//		if(username != ""){
-//			$('#login').hide();
-//			$.getJSON('ViewResource/viewInsMostDown',function(data){
-//				showResponse(data);
-//			});
-//		}
-//	});
+	$(function(){
+		var username = $('#session_username').val();
+		var password = $('#session_password').val();
+		var tipinfo = $("#tipinfo").val();
+		if(username != ""){
+			$('#login').hide();
+			$("#header").animate({
+				height: '420px'
+			});
+			$.getJSON('ViewResource/viewInsMostDown',function(data){
+				showResponse(data);
+			});
+		}else if(tipinfo == "请登录"){
+			$("#header").animate({
+				height: '420px'
+			});
+		}else{
+		}
+	});
 	function uploadframe(){
 		$('#share_button').hide();
 		jQuery.noConflict();

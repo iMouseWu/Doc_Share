@@ -4,11 +4,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import play.mvc.Before;
 import sun.text.resources.FormatData;
 import models.Filename;
 import models.Rescomment;
 
 public class Evaluate extends BaseCore{
+	@Before
+	static void checksession() {
+		if (session.get("user") == null) {
+			String tipinfo = "请登录";
+			Application.index(tipinfo);
+		}
+	}
 	/* 评分系统 */
 	public static void addScore(float score, String hashName,String res_comment) {
 		List<Filename> list = Filename.find("hashName = ?", hashName).fetch();

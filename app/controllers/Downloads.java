@@ -12,8 +12,8 @@ public class Downloads extends BaseCore{
 	@Before
 	static void checksession() {
 		if (session.get("user") == null) {
-			String user = "请登录";
-			Application.index(user);
+			String tipinfo = "请登录";
+			Application.index(tipinfo);
 		}
 	}
 	public static void addCount(String institute, String hashName,

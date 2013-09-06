@@ -1,0 +1,89 @@
+ #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <style type="text/css">
+#content{
+ margin:100px;
+ }
+ td{
+ width:100px;
+ }
+ .click_div{
+ cursor: pointer;
+ }
+ </style>
+ <!-- 添加好友至哪组 -->
+ <div class="modal hide fade" id="groupinfo">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>添加好友</h3>
+  </div>
+  <form id="add_linkman" action="@{Personal.addLinkMan}">
+  <!-- 隐藏域储存添加联系人ID -->
+ <input type="hidden" id="hidden_linkman_id" name="user_id">
+  <div class="modal-body">
+  <select id="group_select" name="group_id">
+  #{list items:list,as:'group' }
+<option value="${group.id}">${group.firend_group}</option>
+#{/list}
+</select>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <input type="submit" value="提交">
+  </div>
+  </form>
+</div>
+ <div id="content">
+ <div id="header">
+ <form action="@{Personal.serachLinkMan()}" id="search_linkman">
+ 学号:<input type="text" name="number">
+ <input type="submit" value="查找">
+ </form>
+ </div>
+ <div id="control">
+ <table class="table">
+ <thead></thead>
+ <tbody></tbody>
+ </table>
+ </div>
+ </div>
+ <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+ <script src="http://code.jquery.com/jquery.js"></script>
+ <script src="/public/javascripts/bootstrap.min.js"></script>
+ <script src="/public/javascripts/jquery.form.min.js"></script>
+ <script type="text/javascript">
+ /*增加好友*/
+ $(document).ready(function() {
+		$('#add_linkman').ajaxForm({
+			dataType : 'json',
+			success : add_response
+		});
+	});
+ function add_response(data){
+	 if(data == 0){
+		 alert("联系人已经存在");
+	 }
+	 $('#groupinfo').modal('hide');
+ }
+ 
+/*  提交搜索条件，并且从服务端获取分组信息*/
+ $(document).ready(function() {
+		$('#search_linkman').ajaxForm({
+			dataType : 'json',
+			success : response
+		});
+	});
+	function response(data){
+		$.each(data, function(commentIndex, comment) {
+		$(".table thead").empty();
+		$(".table tbody").empty();
+		$(".table thead").append("<tr><td>学号</td><td>昵称</td></tr>");
+		$(".table tbody").append("<tr><td>"+comment.username+"</td><td>"
+				+ comment.nickname+"</td><td><div class='click_div' onclick='addLinkman(" + comment.id + ")'><i class='icon-plus-sign'></i>添加</td></div></tr>");
+		});
+	}
+	function addLinkman(id){
+		$("#hidden_linkman_id").val(id);
+		$('#groupinfo').modal('show');
+	}
+ </script>

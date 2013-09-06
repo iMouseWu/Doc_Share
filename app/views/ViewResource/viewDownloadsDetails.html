@@ -1,28 +1,126 @@
 #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
-
-<h1>文件名 ${filename.realName}</h1>
-<h1>上传日期${filename.uploaddate}</h1>
-<h1>上传者 ${filename.uploadname}</h1>
-<h1>
-	<a href="@{DownLoads.addCount}${downLoadRoute}" onclick="doit();">下载地址</a>
-</h1>
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <style type="text/css">
+ #main{
+ margin: 80px 0px 0px 300px;
+ }
+ table .right{
+ text-align:right;
+ }
+ .td_name{
+ height:30px;
+ width:70px;
+  }
+  .table td{
+   border-top:0px;
+  }
+  .table th{
+   border-top:0px;
+  }
+ th{
+ text-align:left;
+ height:30px;
+ font-size:20px;
+ width:50px;
+ }
+ #star img{
+ margin-right:5px;
+ }
+ th img{
+ height:25px; 
+ }
+ .table{
+ width:550px;
+ margin-bottom: 5px;
+ 
+ }
+ #resource_intro h5{
+ background: url("/public/images/tit_bg_1.gif") repeat-x scroll center top transparent;
+ }
+ #comment_view h5{
+ background: url("/public/images/tit_bg_1.gif") repeat-x scroll center top transparent;
+ }
+ #resource_intro{
+ width:550px;
+ border: 1px solid rgb(221, 221, 221);
+ margin: 0px 0px 5px;
+ padding: 0px 10px;
+ }
+ #resource_intro p{
+ margin: 0px 10px 10px 0;
+ }
+ .table_bottom{
+ border-bottom: 1px solid rgb(221, 221, 221);
+ }
+ #res_comment{
+ resize:none;
+ width : 200px;
+ height : 50px;
+ enable : ture;
+ maxlength :30;
+ }
+ #comment_view{
+ width:550px;
+ border: 1px solid rgb(221, 221, 221);
+ margin: 0px 0px 5px;
+ padding: 0px 10px;
+ }
+ #comment_view .table td{
+ height:20px;
+ padding: 4px;
+ }
+ #comment_view .table{
+ margin-buttom: 12px;
+ }
+ </style>
+ <div id="main">
+ <div id="content">
+ <table class="table">
+<tr><th colspan=2><img  src="/public/images/${filename.picture}">${filename.realName}</th></tr>
+<tr><td class="td_name">上传日期:</td><td>${filename.uploaddate}</td></tr>
+<tr><td class="td_name">上传者:</td><td> ${filename.uploadname}</td></tr>
+<tr><td class="td_name">下载次数:</td><td> ${filename.downcount}</td></tr>
+<tr><td class="td_name">评分:</td><td> ${filename.avescore}</td></tr>
+<tr><td colspan=2 class="table_bottom"><a href="@{DownLoads.addCount}${downLoadRoute}" onclick="doit();">下载</a></td></tr>
+</table>
+<div id="resource_intro">
+<h5>资源简介</h5>
+<p>${filename.intro}</p>
+</div>
+</div>
 <div id="comment">
 </div>
 <div id="comment_view">
+<h5>资源评论</h5>
+
 #{list items:rescomments, as:'Rescomment' }
-${Rescomment.comment} ${Rescomment.comment_date} ${Rescomment.comment_user}
+<table class="table">
+<tr><td>${Rescomment.comment_user}</td><td class="right">${Rescomment.comment_date} </td></tr>
+<tr><td>${Rescomment.comment} </td></tr>
+</table>
    #{/list}
+   
 </div>
+</div>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/jquery.form.min.js"></script>
 <script type="text/javascript">
 	function doit() {
-		var html = "<form action='@{Evaluate.addScore()}' id='scoreForm'>"
-				+ "<input type='text' name='score'>"
-				+ "<input type='submit' value='提交'>"
-				+"<input type='textarea' name='res_comment'>"
-				+ "<input type='hidden' value='${filename.hashName}' name='hashName'>"
+	var html = '<div id="star"><img src="/public/images/unchoose.png">'+
+		'<img src="/public/images/unchoose.png">'+
+		'<img src="/public/images/unchoose.png">'+
+		'<img src="/public/images/unchoose.png">'+
+		'<img src="/public/images/unchoose.png"></div>';
+		 html += "<form action='@{Evaluate.addScore()}' id='scoreForm'>"
+				+ "<input type='hidden' name='score' id='score'>"
+				+ "<textarea rows='3' name='res_comment' id='res_comment'></textarea>"
+				+ "<input type='hidden' value='${filename.hashName}' name='hashName'><br>"
+				+ "<input type='submit' class='btn btn-warning' value='提交'>"
 				+ "</form>";
 		$('#comment').html(html);
 		ajaxform();
+		bindevent();
 	}
 	 function ajaxform() {
 		$('#scoreForm').ajaxForm({
@@ -33,6 +131,26 @@ ${Rescomment.comment} ${Rescomment.comment_date} ${Rescomment.comment_user}
 	function showResponse(){
 		$('#comment').html('谢谢你得评价');
 	}
+
+	 
+	function bindevent(){
+		$("#star img").mouseover(function(){
+	     	$(this).attr("src","/public/images/choose.png");
+	     	$(this).prevAll().attr("src","/public/images/choose.png");
+	     	$(this).nextAll().attr("src","/public/images/unchoose.png");
+	     });
+	$("#star img").toggle(
+			function(){
+		     	$("#star img").unbind("mouseover");
+		     	$("#score").val($(this).prevAll().length+1);
+		     },
+		     function(){
+		    	 $("#star img").mouseover(function(){
+		 	     	$(this).attr("src","/public/images/choose.png");
+		 	     	$(this).prevAll().attr("src","/public/images/choose.png");
+		 	     	$(this).nextAll().attr("src","/public/images/unchoose.png");
+		 	     });
+		     }
+		     );
+	}
 </script>
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="/public/javascripts/jquery.form.min.js"></script>

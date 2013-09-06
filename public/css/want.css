@@ -1,7 +1,7 @@
 .wantContent {
 	position: relative;
 	margin: 0 auto;
-	width: 1000px;
+	width: 1080px;;
 	overflow: hidden;
 }
 .wantHot {
@@ -15,7 +15,7 @@
 	
 }
 .wantCommon {
-	width: 300px;
+	width: 280px;
 }
 .wantItem {
 	list-style: none;
@@ -28,7 +28,7 @@
 }
 .wantItemCommon {
 	width:280px;
-	margin: 15px 15px 15px 15px; 
+	margin: 15px 0px 0px;
 }
 .wantItemHot {
 	width: 300px;
@@ -84,4 +84,8 @@
 }
 .wantItemHeader h4{
 	margin: 0 0 0 0;
+}
+ul{
+	padding: 0px;
+margin: 0px 40px;
 }

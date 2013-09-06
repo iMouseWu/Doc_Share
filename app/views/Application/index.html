@@ -180,6 +180,7 @@ display:none;
 <!--隐藏域， 如果session有值的话，用来存放session的值即用户名和密码 -->
 <input type="hidden" value="${username}" id="session_username">
 <input type="hidden" value="${password}" id="session_password">
+<input type="hidden" value="${tipinfo}" id="tipinfo">
 
 <!-- ***************************************************************************************** -->
 <!-- 首页顶端导航 -->
@@ -208,8 +209,8 @@ display:none;
 			<!-- 左上角空白处用来画logo，我画的不好，可以让美工试试 -->
 			</div>
 			<div class="search right">
-				<input type="text" class="span left" placeholder="搜点什么试试" />
-				<input type="button" class="btn btn-primary" value="搜索"/>&nbsp; &nbsp;
+<!-- <!-- 				<input type="text" class="span left" placeholder="搜点什么试试" /> -->  
+<!-- 				<input type="button" class="btn btn-primary" value="搜索"/>&nbsp; &nbsp; -->
 				<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区问问看!</a>
 			</div>
 		</div>
@@ -386,7 +387,7 @@ display:none;
 	function share_response(){
 		alert("分享成功");
 		jQuery.noConflict();
-		$('#linkman').modal('hide')
+		$('#linkman').modal('hide');
 	}
 	
  
