@@ -86,7 +86,7 @@ public class Personal extends BaseCore {
 	/*
 	 * seek_id:消息对应的id值 page:对应显示的页数
 	 */
-	public static void view_old_message(long seek_id, int page) {
+	public static void view_old_message( int page) {
 		// /*1.需要把该seek_id对应的tips都要把状态改为已读 *
 		// *2.需要把特定的该seek_id对应的回复的div显示出现，其它的隐藏
 		// *3.需要知道该seek_id对应的再第几页，并且定位到该页，然后将滚轮也定位到这里！
@@ -104,27 +104,33 @@ public class Personal extends BaseCore {
 		// re_list.add(map);
 		// }
 		// render(re_list,seek_id);
-		List<String> re_list = new ArrayList<String>();
-		List<String> share_list = new ArrayList<String>();
+		List<Map> re_list = new ArrayList<Map>();
+		List<Map> share_list = new ArrayList<Map>();
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",
 				session.get("user")).fetch();
 		for (Seek_Help seek_Help : seek_list) {
 			List<Ask_Tips> tips_list = Ask_Tips.find(
 					"tip_from_id = ? And tip_status = ?", seek_Help.id, 0)
 					.fetch();
-			for (Ask_Tips tips : tips_list) {
-				String messageString = tips.tip_from_name + "回答了"
-						+ seek_Help.seek_content + "问题：" + tips.tip_content;
-				re_list.add(messageString);
+			for (Ask_Tips ask_tips : tips_list) {
+				Map askMap = new HashedMap();
+				askMap.put("ask_tips", ask_tips);
+				String messageString = ask_tips.tip_from_name + "回答了"
+						+ seek_Help.seek_content + "问题：" + ask_tips.tip_content;
+				askMap.put("message", messageString);
+				re_list.add(askMap);
 			}
 		}
 		List<Share_Tips> share_tips_list = Share_Tips.find("tip_to_name",
 				session.get("user")).fetch();
 		for (Share_Tips share_Tips : share_tips_list) {
+			Map shareMap = new HashedMap();
+			shareMap.put("share_Tips", share_Tips);
 			String message = share_Tips.tip_content;
-			share_list.add(message);
+			shareMap.put("message", message);
+			share_list.add(shareMap);
 		}
-		render(re_list, share_list);
+		render(re_list, share_list,page);
 	}
 
 	public static void Remove_Tips(long id) {
@@ -277,5 +283,15 @@ public class Personal extends BaseCore {
 		Linkgroup linkgroup = Linkgroup.findById(id);
 		linkgroup.delete();
 		view_link_group();
+	}
+	public static void delete_asktips(int page,long id){
+		Ask_Tips ask_Tips = Ask_Tips.findById(id);
+		ask_Tips.delete();
+		view_old_message(page);
+	}
+	public static void delete_sharetips(int page,long id){
+		Share_Tips share_Tips = Share_Tips.findById(id);
+		share_Tips.delete();
+		view_old_message(page);
 	}
 }

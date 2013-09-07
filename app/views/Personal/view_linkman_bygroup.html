@@ -23,12 +23,21 @@
 <td class="move_td">删除好友：<input type="button" class="btn btn-info" value="delete" onclick="submit_form(1)"></td>
 </tr>
 </table>
+<table class="table">
+<thead><tr><td>昵称</td></tr></thead>
+<tbody>
 #{list items:list,as:'LinkMan' }
+<tr>
+<td>
 <label class="checkbox" id= "checkbox_${LinkMan.id}">
   <input type="checkbox"  id="linkid_${LinkMan.id}" name="move_linkname_id" value="${LinkMan.id}">
   ${LinkMan.friend_name}
 </label>
+</td>
+</tr>
 #{/list}
+</tbody>
+</table>
 </form>
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="/public/javascripts/bootstrap.min.js"></script>

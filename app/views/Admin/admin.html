@@ -1,0 +1,32 @@
+  #{extends 'main.html' /} #{set title:'index.html' /}
+ <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+  <style type="text/css">
+  #login{
+  width:400px;
+  height:500px;
+  margin:100px auto;
+  }
+  </style>
+  <div id="login">
+  
+  <form class="form-horizontal" action="@{Admin.adminlogin()}">
+  <div class="control-group">
+    <label class="control-label" for="username">用户名</label>
+    <div class="controls">
+      <input type="text" id="username" name="username" placeholder="用户名">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="password">密码</label>
+    <div class="controls">
+      <input type="password" id="password" name="password" placeholder="密码">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">Sign in</button>
+    </div>
+  </div>
+</form>
+  
+  </div>

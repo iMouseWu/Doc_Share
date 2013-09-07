@@ -41,9 +41,10 @@
 			);
 			$.each(responseJson[0], function(commentIndex, comment) {
 			$("#suggestorlogin").empty();
+			/*推荐资源,这里的css在want.css,index.htm or page.css里面*/
 			if(commentIndex%2 == 0) 
 				html+= '<ul class="suggestColumn suggestCommon">';
-			html+='<li class="suggestItem suggestItemCommon"><div class="wantItemHeader"><h3 class="left">'+comment.realName+'</h3></div><br><br><div class="suggestItemBody">简介:'+comment.intro+'</div>'
+			html+='<li class="suggestItem suggestItemCommon"><div class="wantItemHeader"><a href="ViewResource/viewDownloadsDetails?hashName='+ comment.hashName +'"><h3 class="left">'+comment.realName+'</h3></a></div><br><br><div class="suggestItemBody">简介:'+comment.intro+'</div>'
 			html+='<div class="right operation"><span class="tips">'+comment.uploaddate+'</span><span class="tips">'+comment.uploadname+'</span></div></li>';
 			if(commentIndex%2 != 0)
 				html+='</ul>';
@@ -51,13 +52,13 @@
 			$("#suggestorlogin").html(html);
 			/*联系人的分组显示*/
 			$.each(responseJson[2],function(commentIndex,map){
-				$('#modal-body').append("<label class='checkbox'>"+
-						  "<input type='checkbox' id='group_" + map.group_id + "' onclick='group_click("+ map.group_id +");' name='group_name' value='"+ map.group +"'><a href='#' onclick='friend_state("+ map.group_id +");'>"+ map.group + "</a>" +
-				  "</label>");
-				$('#modal-body').append("<div id='div_group_" + map.group_id + "'></div>");
+				$('#modal-body').append("<p><i class='icon-plus' id='friendi' onclick='friend_state("+ map.group_id +");'></i>"+ map.group
+						  + "<input type='checkbox' id='group_" + map.group_id + "' onclick='group_click("+ map.group_id +");' name='group_name' value='"+ map.group +"'>" +
+						  "</p>");
+				$('#modal-body').append("<div id='div_group_" + map.group_id + "' class='friend_name'></div>");
 				$.each(map.linkman,function(Index,LinkMane){
 					$("#div_group_" + map.group_id).append("<label class='checkbox'>"+
-							  "<input type='checkbox' name='linkname' class='div_firend_"+ map.group_id + "' value='"+LinkMane.friend_name+"'>"+LinkMane.friend_name+
+							  "<input type='checkbox' name='linkname' class='div_firend_"+ map.group_id + " ' value='"+LinkMane.friend_name+"'>"+LinkMane.friend_name+
 							  "</label>"); 
 				});
 				});

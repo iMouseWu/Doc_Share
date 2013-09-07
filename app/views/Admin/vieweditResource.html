@@ -13,14 +13,22 @@
   <div class="control-group">
     <label class="control-label" for="institute">学院</label>
     <div class="controls">
-      <input type="text" id="institute" name="institute" value=${filename.institute}>
+    <select id="select_institute" name="institute">
+    #{list items:list_institute, as:'Institute' }
+        <option>${Institute.institute}</option>
+    #{/list}
+</select>
     </div>
   </div>
   
   <div class="control-group">
     <label class="control-label" for="subject">学科</label>
     <div class="controls">
-      <input type="text" id="subject" name="subject" value=${filename.subject}>
+      <select id="select_subject" name="subject">
+  #{list items:list_suject, as:'Suject' }
+        <option>${Suject.subject}</option>
+    #{/list}
+</select>
     </div>
   </div>
   
@@ -30,3 +38,11 @@
     </div>
   </div>
 </form>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#select_institute").val("${filename.institute}");
+	$("#select_subject").val("${filename.subject}");
+});
+
+</script>

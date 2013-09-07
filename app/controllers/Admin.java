@@ -6,6 +6,8 @@ import java.util.List;
 import play.Play;
 import play.db.jpa.JPABase;
 import play.libs.Files;
+import play.mvc.Before;
+import models.AdminLogin;
 import models.Filename;
 import models.Institute;
 import models.Instituteinfo;
@@ -14,10 +16,33 @@ import models.Seek_Help;
 import models.Users;
 
 public class Admin extends BaseCore {
+	@Before(unless={"admin","adminlogin"})
+	 static void checkAuthentification() {
+	  if(session.get("username") == null || session.get("password") == null) 
+		  admin();
+	    }
 	
-	public static void adminlogin(){
+	public static void admin(){
+		if(session.get("username") == null || session.get("password") == null)
 		render();
+		else 
+	    render("Admin/adminlogin.html");
 	}
+	 
+	/*admin登录验证*/
+	public static void adminlogin(String username,String password){
+		List<AdminLogin> list = AdminLogin.find("username = ? And password = ?", username,password).fetch();
+		if(list.size() == 0){
+			admin();
+		}
+		else{
+			AdminLogin adminLogin = list.get(0);
+			session.put("username", username);
+			session.put("password", password);
+			render();
+		}
+	}
+	/*欢迎界面*/
 	public static void welcome(){
 		render();
 	}
@@ -39,8 +64,10 @@ public class Admin extends BaseCore {
 	
 	/*跳转到资源修改界面*/
 	public static void vieweditResource(int page,long id){
+		List<Institute> list_institute = Institute.findAll();
+		List<Instituteinfo> list_suject = Instituteinfo.findAll();
 		Filename filename = Filename.findById(id);
-		render(filename,page);
+		render(list_institute,list_suject,filename,page);
 	}
 	
 	/*修改资源*/

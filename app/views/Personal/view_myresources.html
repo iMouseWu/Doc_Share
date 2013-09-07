@@ -1,6 +1,12 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
  <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
  <style type="text/css">
+ .icon-plus{
+ cursor: pointer;
+ }
+ .friend_name{
+ margin:0 0 0 15px;
+ }
  #content{
  margin:100px;
  }
@@ -103,10 +109,10 @@ function share_begin(hashName,realName){
 $(function(){
 	$.get("@{ViewResource.viewLinkname()}",function(data,textStatus){
 		$.each(data,function(commentIndex,map){
-		$('#modal-body').append("<label class='checkbox'>"+
-				  "<input type='checkbox' id='group_" + map.group_id + "' onclick='group_click("+ map.group_id +");' name='group_name' value='"+ map.group +"'><a href='#' onclick='friend_state("+ map.group_id +");'>"+ map.group + "</a>" +
-		  "</label>");
-		$('#modal-body').append("<div id='div_group_" + map.group_id + "'></div>");
+		$('#modal-body').append("<p><i class='icon-plus' onclick='friend_state("+ map.group_id +");'></i>"+ map.group
+				  + "<input type='checkbox' id='group_" + map.group_id + "' onclick='group_click("+ map.group_id +");' name='group_name' value='"+ map.group +"'>" +
+		  "</p>");
+		$('#modal-body').append("<div id='div_group_" + map.group_id + "' class='friend_name'></div>");
 		$.each(map.linkman,function(Index,LinkName){
 			$("#div_group_" + map.group_id).append("<label class='checkbox'>"+
 					  "<input type='checkbox' name='linkname' class='div_firend_"+ map.group_id + "' value='"+LinkName.friend_name+"'>"+LinkName.friend_name+
