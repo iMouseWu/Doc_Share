@@ -1,6 +1,35 @@
 #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
- <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
  <style type="text/css">
+ .home{
+position: absolute;
+line-height: 32px;
+left: 50px;
+font-size: 20px;
+font-weight: bold;
+color: rgb(204, 204, 204);
+text-shadow: -1px -1px 2px rgb(17, 17, 17), 1px 1px 2px rgb(239, 239, 239);
+top: 12px;
+
+}
+ .homeicon{
+width:100px;
+cursor: pointer;
+}
+ .icon{
+position: absolute;
+left: 35px;
+top: 17px;
+}
+ #header{
+height: 45px;
+position: absolute;
+top: 0px;
+left: 0px;
+width: 100%;
+background: none repeat scroll 0% 0% #aaa;
+box-shadow: 0px 2px 10px rgb(51, 51, 51), 0px 2px 2px rgb(170, 170, 170);
+ }
  #main{
  margin: 80px 0px 0px 300px;
  }
@@ -35,10 +64,10 @@
  
  }
  #resource_intro h5{
- background: url("/public/images/tit_bg_1.gif") repeat-x scroll center top transparent;
+ background: url("@{'/public/images/tit_bg_1.gif'}") repeat-x scroll center top transparent;
  }
  #comment_view h5{
- background: url("/public/images/tit_bg_1.gif") repeat-x scroll center top transparent;
+ background: url("@{'/public/images/tit_bg_1.gif'}") repeat-x scroll center top transparent;
  }
  #resource_intro{
  width:550px;
@@ -73,10 +102,21 @@
  margin-buttom: 12px;
  }
  </style>
+ <div id="header">
+<!-- 返回首页 -->
+ <div class="homeicon" onclick="backhome();">
+ <div class="icon">
+ <i class="icon-home icon-white"></i>
+ </div>
+ <div class="home">
+ 首页
+ </div>
+ </div>
+ </div>
  <div id="main">
  <div id="content">
  <table class="table">
-<tr><th colspan=2><img  src="/public/images/${filename.picture}">${filename.realName}</th></tr>
+<tr><th colspan=2><img  src="@{'/public/images'}/${filename.picture}">${filename.realName}</th></tr>
 <tr><td class="td_name">上传日期:</td><td>${filename.uploaddate}</td></tr>
 <tr><td class="td_name">上传者:</td><td> ${filename.uploadname}</td></tr>
 <tr><td class="td_name">下载次数:</td><td> ${filename.downcount}</td></tr>
@@ -103,15 +143,15 @@
 </div>
 </div>
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="/public/javascripts/jquery.form.min.js"></script>
+<script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery.form.min.js'}"></script>
 <script type="text/javascript">
 	function doit() {
-	var html = '<div id="star"><img src="/public/images/unchoose.png">'+
-		'<img src="/public/images/unchoose.png">'+
-		'<img src="/public/images/unchoose.png">'+
-		'<img src="/public/images/unchoose.png">'+
-		'<img src="/public/images/unchoose.png"></div>';
+	var html = "<div id='star'><img src=\"@{'/public/images/unchoose.png'}\">"+
+		"<img src=\"@{'/public/images/unchoose.png'}\">"+
+		"<img src=\"@{'/public/images/unchoose.png'}\">"+
+		"<img src=\"@{'/public/images/unchoose.png'}\">"+
+		"<img src=\"@{'/public/images/unchoose.png'}\"></div>";
 		 html += "<form action='@{Evaluate.addScore()}' id='scoreForm'>"
 				+ "<input type='hidden' name='score' id='score'>"
 				+ "<textarea rows='3' name='res_comment' id='res_comment'></textarea>"
@@ -135,9 +175,9 @@
 	 
 	function bindevent(){
 		$("#star img").mouseover(function(){
-	     	$(this).attr("src","/public/images/choose.png");
-	     	$(this).prevAll().attr("src","/public/images/choose.png");
-	     	$(this).nextAll().attr("src","/public/images/unchoose.png");
+	     	$(this).attr("src","@{'/public/images/choose.png'}");
+	     	$(this).prevAll().attr("src","@{'/public/images/choose.png'}");
+	     	$(this).nextAll().attr("src","@{'/public/images/unchoose.png'}");
 	     });
 	$("#star img").toggle(
 			function(){
@@ -146,11 +186,14 @@
 		     },
 		     function(){
 		    	 $("#star img").mouseover(function(){
-		 	     	$(this).attr("src","/public/images/choose.png");
-		 	     	$(this).prevAll().attr("src","/public/images/choose.png");
-		 	     	$(this).nextAll().attr("src","/public/images/unchoose.png");
+		 	     	$(this).attr("src","@{'/public/images/choose.png'}");
+		 	     	$(this).prevAll().attr("src","@{'/public/images/choose.png'}");
+		 	     	$(this).nextAll().attr("src","@{'/public/images/unchoose.png'}");
 		 	     });
 		     }
 		     );
+	}
+	function backhome(){
+		window.location.href='@{Application.index()}';
 	}
 </script>

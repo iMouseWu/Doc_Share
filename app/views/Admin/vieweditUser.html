@@ -1,5 +1,5 @@
  #{extends 'main.html' /} #{set title:'index.html' /}
- <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
  <form class="form-horizontal" action="@{Admin.editUser()}">
   <input type="hidden" value="${users.id}" name="id">
   <input type="hidden" value="${page}" name="page">

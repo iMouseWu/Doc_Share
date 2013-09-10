@@ -1,5 +1,5 @@
  #{extends 'main.html' /} #{set title:'index.html' /}
- <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
  <style>
  body{
  padding:40px;
@@ -73,5 +73,24 @@
  </tbody>
 
 </table>
+<div id="pagination_contain">
+ <div class="pagination pagination-small">
+  <ul id="pagenumber">
+  </ul>
 </div>
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+</div>
+</div>
+<script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
+<script src="@{'/public/javascripts/paging.js'}"></script>
+<script type="text/javascript">
+function pHtml(a,b,c){
+	$("#pagenumber").append("<li><a href='@{Admin.admin_help()}?page="+a+"'>"+(c||a)+"</a></li>");
+}
+function pHtml2(a){
+	$("#pagenumber").append("<li><span class='cPageNum'>"+a+"</span></li>");
+}
+var paging = new paging();
+$(document).ready(function() {
+	paging.go(${page},${allpage});
+});
+</script>

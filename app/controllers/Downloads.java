@@ -1,9 +1,11 @@
 package controllers;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import play.Play;
 import play.mvc.Before;
 import models.Filename;
 
@@ -22,9 +24,11 @@ public class Downloads extends BaseCore{
 		Filename filename = list.get(0);
 		filename.downcount = filename.downcount + 1;
 		filename.save();
-		String msg = URLEncoder.encode(institute, "UTF-8");
-		String sub = URLEncoder.encode(subject, "UTF-8");
-		redirect("/public/resourse/" + msg + "/" + sub + "/" + hashName);
+//		String msg = URLEncoder.encode(institute, "UTF-8");
+//		String sub = URLEncoder.encode(subject, "UTF-8");
+		String path = "/public/resourse/" + institute + "/" + subject + "/" + hashName;
+		File file = Play.getFile(path);
+		renderBinary(file);
 	}
 
 

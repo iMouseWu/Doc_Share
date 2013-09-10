@@ -36,6 +36,9 @@ public class Personal extends BaseCore {
 			Application.index(tipinfo);
 		}
 	}
+	public static void welcome(){
+		render();
+	}
 	public static void view_personalinfo(String iframe_info) {
 		render(iframe_info);
 	}
@@ -140,10 +143,22 @@ public class Personal extends BaseCore {
 		view_message();
 	}
 
-	public static void view_myresources() {
-		List<Filename> file_list = Filename.find("uploadname = ?",
+	public static void view_myresources(int page) {
+		List<Filename> file_list_number = Filename.find("uploadname = ?",
 				session.get("user")).fetch();
-		render(file_list);
+		if(page == 0){
+			page = 1;
+		}
+		int allpage;
+		int count = file_list_number.size();
+		if(count % 10 == 0){
+			allpage = count / 10;
+		}else{
+			allpage = count / 10 + 1;
+		}
+		List<Filename> file_list = Filename.find("uploadname = ?",
+				session.get("user")).from((page - 1) * 10).fetch(10);
+		render(file_list,allpage,page);
 	}
 
 	public static void Remove_Share_Tips(long id) {

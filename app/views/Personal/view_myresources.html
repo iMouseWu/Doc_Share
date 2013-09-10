@@ -1,5 +1,5 @@
  #{extends 'main.html' /} #{set title:'viewDownloads.html' /}
- <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
  <style type="text/css">
  .icon-plus{
  cursor: pointer;
@@ -10,7 +10,8 @@
  #content{
  margin:100px;
  }
- #main{
+ 
+ .main{
  margin-top:10px;
  border:1px solid gray;
  }
@@ -19,6 +20,9 @@
  }
  .right{
  text-align:right;
+ }
+ #pagination_contain{
+ margin: 0px 0px 10px 25px;
  }
  </style>
 <!--  联系人显示 -->
@@ -42,7 +46,7 @@
 <div id="content">
 <ul>
     #{list items:file_list, as:'filename' }
-    <div id="main">
+    <div class="main">
         
         <table>
         <div id=div_${filename.id}>
@@ -60,12 +64,29 @@
 </div>
     #{/list}
 </ul>
+<div id="pagination_contain">
+ <div class="pagination pagination-small">
+  <ul id="pagenumber">
+  </ul>
+</div>
+</div>
 </div>
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="/public/javascripts/bootstrap.min.js"></script>
- <script src="/public/javascripts/jquery-1.6.4.min.js"></script>
- <script src="/public/javascripts/jquery.form.min.js"></script>
+<script src="@{'/public/javascripts/bootstrap.min.js'}"></script>
+ <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
+ <script src="@{'/public/javascripts/jquery.form.min.js'}"></script>
+ <script src="@{'/public/javascripts/paging.js'}"></script>
 <script type="text/javascript">
+function pHtml(a,b,c){
+	$("#pagenumber").append("<li><a href='@{Personal.view_myresources}?page="+a+"'>"+(c||a)+"</a></li>");
+}
+function pHtml2(a){
+	$("#pagenumber").append("<li><span class='cPageNum'>"+a+"</span></li>");
+}
+var paging = new paging();
+$(document).ready(function() {
+	paging.go(${page},${allpage});
+});
 /*这里用jquery会出现问题所以只能用js来实现组选了*/
 function group_click(group_id){
 	var test = document.getElementById("group_" + group_id).checked;

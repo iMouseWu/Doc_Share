@@ -1,5 +1,5 @@
   #{extends 'main.html' /} #{set title:'index.html' /}
- <link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+ <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
  <style>
  body{
  padding:40px;
@@ -17,18 +17,35 @@
  margin: 50px 20px 20px;
  }
  #top_search{
- margin: 0px auto;
  position: relative;
  overflow: hidden;
  width :500px;
  }
  .search_td{
- width:200px
+ width:50px;
  }
  .search_table{
  max-width: 100%;
+ width:200px;
+ }
+ .add_table{
+ border-left:1px #DDD solid;
+ max-width: 100%;
+ width:200px;
+ }
+ #top{
+ width:100%;
+ }
+ #top_add{
+ position: absolute;
+ left:300px;
+ top:40px;
+ }
+ input{
+ width:100px;
  }
  </style>
+ <div id="top">
    <div id="top_search">
  <form action="@{Admin.searchInstitute()}">
  <table class="search_table">
@@ -37,10 +54,26 @@
  <td class="search_td left"><input type="text" name="serach_institute"></td>
  </tr>
  <tr><td ></td>
- <td><button type="submit" class="pull-right">提交</button></td>
+ <td><button type="submit" class="pull-right">搜索</button></td>
  </tr>
  </table>
  </form>
+ </div>
+ 
+ <div id="top_add">
+ <form action="@{Admin.addInstitute()}">
+ <table class="add_table">
+ <tr>
+ <th class="search_td right" >学院:</th>
+ <td class="search_td left"><input type="text" name="add_institute"></td>
+ </tr>
+ <tr><td ></td>
+ <td><button type="submit" class="pull-right">增加</button></td>
+ </tr>
+ </table>
+ </form>
+ </div>
+ 
  </div>
  
  <div id="tableview">
@@ -61,5 +94,24 @@
   #{/list}
  </tbody>
 </table>
+<div id="pagination_contain">
+ <div class="pagination pagination-small">
+  <ul id="pagenumber">
+  </ul>
 </div>
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+</div>
+</div>
+<script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
+<script src="@{'/public/javascripts/paging.js'}"></script>
+<script type="text/javascript">
+function pHtml(a,b,c){
+	$("#pagenumber").append("<li><a href='@{Admin.admin_institute()}?page="+a+"'>"+(c||a)+"</a></li>");
+}
+function pHtml2(a){
+	$("#pagenumber").append("<li><span class='cPageNum'>"+a+"</span></li>");
+}
+var paging = new paging();
+$(document).ready(function() {
+	paging.go(${page},${allpage});
+});
+</script>

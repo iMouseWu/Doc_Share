@@ -1,12 +1,12 @@
  #{extends 'main.html' /} #{set title:'index.html' /}
 <!-- <link rel="stylesheet" href="/public/css/style.css"> -->
-<link rel="stylesheet" href="/public/css/bootstrap-image-gallery.min.css">
-<link rel="stylesheet" href="/public/css/jquery.fileupload-ui.css">
-<link href="/public/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
-<link rel="stylesheet" href="/public/css/resource_hot.css">
-<link type="text/css" href="/public/css/index.css" rel="stylesheet"/>
-<link type="text/css" href="/public/css/page.css" rel="stylesheet"/>
-<link type="text/css" href="/public/css/want.css" rel="stylesheet"/>
+<link rel="stylesheet" href="@{'/public/css/bootstrap-image-gallery.min.css'}">
+<link rel="stylesheet" href="@{'/public/css/jquery.fileupload-ui.css'}">
+<link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="@{'/public/css/resource_hot.css'}">
+<link type="text/css" href="@{'/public/css/index.css'}" rel="stylesheet"/>
+<link type="text/css" href="@{'/public/css/page.css'}" rel="stylesheet"/>
+<link type="text/css" href="@{'/public/css/want.css'}" rel="stylesheet"/>
 <style type="text/css">
 .friend_name{
  margin:0 0 0 15px;
@@ -363,24 +363,24 @@ display:none;
 </div>
 <!-- ******************************************************************** -->
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="/public/javascripts/bootstrap.min.js"></script>
-<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
-<script src="/public/javascripts/pagenav1.1.min.js"></script>
-<script src="/public/javascripts/seach_paging.js"></script>
-<script src="/public/javascripts/jquery.form.min.js"></script>
-<script src="/public/js/vendor/jquery.ui.widget.js"></script>
-<script src="/public/js/tmpl.min.js"></script>
-<script src="/public/js/load-image.js"></script>
-<script src="/public/js/canvas-to-blob.min.js"></script>
+<script src="@{'/public/javascripts/bootstrap.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
+<script src="@{'/public/javascripts/pagenav1.1.min.js'}"></script>
+<script src="@{'/public/javascripts/seach_paging.js'}"></script>
+<script src="@{'/public/javascripts/jquery.form.min.js'}"></script>
+<script src="@{'/public/js/vendor/jquery.ui.widget.js'}"></script>
+<script src="@{'/public/js/tmpl.min.js'}"></script>
+<script src="@{'/public/js/load-image.js'}"></script>
+<script src="@{'/public/js/canvas-to-blob.min.js'}"></script>
 <!-- <script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script> -->
-<script src="/public/js/jquery.iframe-transport.js"></script>
-  <script src="/public/js/jquery.fileupload.js"></script> 
-  <script src="/public/js/jquery.fileupload-fp.js"></script> 
+<script src="@{'/public/js/jquery.iframe-transport.js'}"></script>
+  <script src="@{'/public/js/jquery.fileupload.js'}"></script> 
+  <script src="@{'/public/js/jquery.fileupload-fp.js'}"></script> 
 <!-- <script src="/public/js/jquery.fileupload-ui.js"></script> -->
- <script src="/public/js/locale.js"></script>
- <script src="/public/js/main.js"></script>
- <script src="/public/javascripts/studentlogin.js"></script>
- <script type="text/javascript" src="/public/javascripts/login.js"></script>
+ <script src="@{'/public/js/locale.js'}"></script>
+ <script src="@{'/public/js/main.js'}"></script>
+ <script src="@{'/public/javascripts/studentlogin.js'}"></script>
+ <script type="text/javascript" src="@{'/public/javascripts/login.js'}"></script>
 <script type="text/javascript">
 
 /*异步提交form分享表单*/
@@ -516,13 +516,13 @@ $(document).ready(function() {
 						textStatus) {
 					$.each(data, function(commentIndex, comment) {
                   $('#hot_resource').append("<li class='item'>" + 
-                		  "<img class='icon left' src='/public/images/"+comment.picture+"' />" + 
+                		  "<img class='icon left' src=\""+"@{'/public/images/'}"+"/"+ comment.picture +"\"}/>" + 
                 		  "<div class='detail left'>" + 
                 		  "<h3>"+data[commentIndex].realName+"</h3>" +
                 		  "<p><span class='tips'>上传者：" + data[commentIndex].uploadname + "</span>"+
                 				  "<span class='tips'>时间："+data[commentIndex].uploaddate+"</span></p></div>" + 
                 		  "<a title='进入下载界面' href='ViewResource/viewDownloadsDetails?hashName="+ data[commentIndex].hashName +
-                				  "'><img class='icon right' src='/public/images/down.png'/><a> </li>" 
+                				  "'><img class='icon right' src=\"@{'/public/images/down.png'}\"/></a> </li>" 
                   );
 					});
 				}, "json");
@@ -586,4 +586,48 @@ $(document).ready(function() {
     		$("i").removeClass(" icon-chevron-right").addClass("icon-chevron-left");
     		}
     	});
+     /*学生登录异步提交，并且显示该学生所在学院的热门资源*/
+ 	$(document).ready(function() {
+ 		$('#loginForms').ajaxForm({
+ 			success : showResponse,
+ 			datatype : 'json'
+ 		});
+ 	});
+ 	
+ 	function showResponse(responseJson) {
+ 		var html = "";
+ 		if (responseJson == null) {
+ 			alert("用户名或者密码错误");
+ 		} else {
+ 			$("#top_information").empty();
+ 			$("#top_information").append("<li class='navTag'><a href='#' onclick='uploadframe();'>我要上传</a></li>"
+ 					+ "<li class='navTag'><a href=\"@{Personal.view_personalinfo()}?iframe_info=@{Personal.view_message()}\">你有"+responseJson[1]+"条消息</a></li>"
+ 					+ "<li class='navTag'><a href=\"@{Personal.view_personalinfo()}?iframe_info=@{Personal.welcome()}\">个人中心</a></li>"
+ 					+ "<li class='navTag'><a href=\"@{Login.exitLogin()}\">退出</a></li>"
+ 			);
+ 			$.each(responseJson[0], function(commentIndex, comment) {
+ 			$("#suggestorlogin").empty();
+ 			/*推荐资源,这里的css在want.css,index.htm or page.css里面*/
+ 			if(commentIndex%2 == 0) 
+ 				html+= '<ul class="suggestColumn suggestCommon">';
+ 			html+='<li class="suggestItem suggestItemCommon"><div class="wantItemHeader"><a href="@{ViewResource.viewDownloadsDetails()}?hashName='+ comment.hashName +'"><h3 class="left">'+comment.realName+'</h3></a></div><br><br><div class="suggestItemBody">简介:'+comment.intro+'</div>'
+ 			html+='<div class="right operation"><span class="tips">'+comment.uploaddate+'</span><span class="tips">'+comment.uploadname+'</span></div></li>';
+ 			if(commentIndex%2 != 0)
+ 				html+='</ul>';
+ 			});
+ 			$("#suggestorlogin").html(html);
+ 			/*联系人的分组显示*/
+ 			$.each(responseJson[2],function(commentIndex,map){
+ 				$('#modal-body').append("<p><i class='icon-plus' id='friendi' onclick='friend_state("+ map.group_id +");'></i>"+ map.group
+ 						  + "<input type='checkbox' id='group_" + map.group_id + "' onclick='group_click("+ map.group_id +");' name='group_name' value='"+ map.group +"'>" +
+ 						  "</p>");
+ 				$('#modal-body').append("<div id='div_group_" + map.group_id + "' class='friend_name'></div>");
+ 				$.each(map.linkman,function(Index,LinkMane){
+ 					$("#div_group_" + map.group_id).append("<label class='checkbox'>"+
+ 							  "<input type='checkbox' name='linkname' class='div_firend_"+ map.group_id + " ' value='"+LinkMane.friend_name+"'>"+LinkMane.friend_name+
+ 							  "</label>"); 
+ 				});
+ 				});
+ 		}
+ 	}
      </script>

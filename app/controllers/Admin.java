@@ -18,12 +18,12 @@ import models.Users;
 public class Admin extends BaseCore {
 	@Before(unless={"admin","adminlogin"})
 	 static void checkAuthentification() {
-	  if(session.get("username") == null || session.get("password") == null) 
+	  if(session.get("adminusername") == null || session.get("adminpassword") == null) 
 		  admin();
 	    }
 	
 	public static void admin(){
-		if(session.get("username") == null || session.get("password") == null)
+		if(session.get("adminusername") == null || session.get("adminpassword") == null)
 		render();
 		else 
 	    render("Admin/adminlogin.html");
@@ -36,9 +36,8 @@ public class Admin extends BaseCore {
 			admin();
 		}
 		else{
-			AdminLogin adminLogin = list.get(0);
-			session.put("username", username);
-			session.put("password", password);
+			session.put("adminusername", username);
+			session.put("adminpassword", password);
 			render();
 		}
 	}
@@ -59,7 +58,7 @@ public class Admin extends BaseCore {
 			allpage = count / 10 + 1;
 		}
 		List<Filename> filelist = Filename.all().from((page - 1) * 10).fetch(10);
-		render(filelist,page);
+		render(filelist,page,allpage);
 	}
 	
 	/*跳转到资源修改界面*/
@@ -106,14 +105,16 @@ public class Admin extends BaseCore {
 		if(page == 0){
 			page = 1;
 		}
-		int count = (int)Filename.count();
+		List<Filename> filelist_number = Filename.find("realName = ?", serach_name).fetch();
+		int count = filelist_number.size();
+		List<Filename> filelist = Filename.find("realName = ?", serach_name).from((page - 1) * 10).fetch(10);
+		
 		if(count % 10 == 0){
 			allpage = count / 10;
 		}else{
 			allpage = count / 10 + 1;
 		}
-		List<Filename> filelist = Filename.find("realName = ?", serach_name).from((page - 1) * 10).fetch(10);
-		renderTemplate("Admin/admin_resource.html",filelist,page);
+		renderTemplate("Admin/admin_resource.html",allpage,filelist,page);
     }
 /*******************************************求助的增删改除******************************************/
 	public static void admin_help(int page){
@@ -128,7 +129,7 @@ public class Admin extends BaseCore {
 			allpage = count / 10 + 1;
 		}
 		List<Seek_Help> filelist = Seek_Help.all().from((page - 1) * 10).fetch(10);
-		render(filelist,page);
+		render(filelist,page,allpage);
 	}
 	
 	/*跳转帮助修改界面*/
@@ -158,14 +159,15 @@ public class Admin extends BaseCore {
 		if(page == 0){
 			page = 1;
 		}
-		int count = (int)Seek_Help.count();
+		List<Seek_Help> filelist_number = Seek_Help.find("seek_user = ?", serach_name).fetch();
+		int count = filelist_number.size();
+		List<Seek_Help> filelist = Seek_Help.find("seek_user = ?", serach_name).from((page - 1) * 10).fetch(10);
 		if(count % 10 == 0){
 			allpage = count / 10;
 		}else{
 			allpage = count / 10 + 1;
 		}
-		List<Seek_Help> filelist = Seek_Help.find("seek_user = ?", serach_name).from((page - 1) * 10).fetch(10);
-		renderTemplate("Admin/admin_help.html",filelist,page);
+		renderTemplate("Admin/admin_help.html",filelist,page,allpage);
     }
     
 /*************************************************用户的增删改除**********************************************/
@@ -181,7 +183,7 @@ public class Admin extends BaseCore {
 			allpage = count / 10 + 1;
 		}
 		List<Users> filelist = Users.all().from((page - 1) * 10).fetch(10);
-		render(filelist,page);
+		render(filelist,page,allpage,allpage);
 	}
 	
 	/*跳转用户信息修改界面*/
@@ -220,14 +222,15 @@ public class Admin extends BaseCore {
 		if(page == 0){
 			page = 1;
 		}
-		int count = (int)Users.count();
+		List<Users> filelist_number = Users.find("username = ?", serach_username).fetch();
+		int count = filelist_number.size();
+		List<Users> filelist = Users.find("username = ?", serach_username).from((page - 1) * 10).fetch(10);
 		if(count % 10 == 0){
 			allpage = count / 10;
 		}else{
 			allpage = count / 10 + 1;
 		}
-		List<Users> filelist = Users.find("username = ?", serach_username).from((page - 1) * 10).fetch(10);
-		renderTemplate("Admin/admin_user.html",filelist,page);
+		renderTemplate("Admin/admin_user.html",filelist,page,allpage);
     }
 /*************************************************学科的增删改除*********************************************/
 	public static void admin_subject(int page){
@@ -242,7 +245,8 @@ public class Admin extends BaseCore {
 		allpage = count / 10 + 1;
 		}
 		List<Instituteinfo> filelist = Instituteinfo.all().from((page - 1) * 10).fetch(10);
-		render(filelist,page);
+		List<Institute> listinstitute = Institute.findAll();
+		render(filelist,page,listinstitute,allpage);
 	}
 	
 	/*跳转学科信息修改界面*/
@@ -295,14 +299,25 @@ public class Admin extends BaseCore {
 		if(page == 0){
 			page = 1;
 		}
-		int count = (int)Instituteinfo.count();
+		List<Instituteinfo> filelist_number = Instituteinfo.find("subject = ?", serach_subject).fetch();
+		int count = filelist_number.size();
+		List<Instituteinfo> filelist = Instituteinfo.find("subject = ?", serach_subject).from((page - 1) * 10).fetch(10);
 		if(count % 10 == 0){
 			allpage = count / 10;
 		}else{
 			allpage = count / 10 + 1;
 		}
-		List<Instituteinfo> filelist = Instituteinfo.find("subject = ?", serach_subject).from((page - 1) * 10).fetch(10);
-		renderTemplate("Admin/admin_subject.html",filelist,page);
+		renderTemplate("Admin/admin_subject.html",filelist,page,allpage);
+    }
+    /*增加学科*/
+    public static void addSubject(String institute,String subject){
+    	Instituteinfo instituteinfo  = new Instituteinfo();
+    	instituteinfo.institute = institute;
+    	instituteinfo.subject = subject;
+    	instituteinfo.save();
+    	File file = Play.getFile("/public/resourse/" + institute + "/" + subject);
+    	file.mkdir();
+    	admin_subject(0);
     }
     
 /*********************************************学院的增删改除*****************************************/
@@ -318,7 +333,7 @@ public class Admin extends BaseCore {
 			allpage = count / 10 + 1;
 		}
 		List<Institute> filelist = Institute.all().from((page - 1) * 10).fetch(10);
-		render(filelist,page);
+		render(filelist,page,allpage);
 	}
 	
 	/*跳转学院信息修改界面*/
@@ -371,14 +386,25 @@ public class Admin extends BaseCore {
 		if(page == 0){
 			page = 1;
 		}
-		int count = (int)Seek_Help.count();
+		List<Institute> filelist_number = Institute.find("institute = ?", serach_institute).fetch(10);
+		int count = filelist_number.size();
+		List<Institute> filelist = Institute.find("institute = ?", serach_institute).from((page - 1) * 10).fetch(10);
 		if(count % 10 == 0){
 			allpage = count / 10;
 		}else{
 			allpage = count / 10 + 1;
 		}
-		List<Institute> filelist = Institute.find("institute = ?", serach_institute).from((page - 1) * 10).fetch(10);
-		renderTemplate("Admin/admin_institute.html",filelist,page);
+		
+		renderTemplate("Admin/admin_institute.html",filelist,page,allpage);
+    }
+    /*增加学院*/
+    public static void addInstitute(String add_institute){
+    	Institute institute =new Institute();
+    	institute.institute = add_institute;
+    	institute.save();
+    	File file = Play.getFile("/public/resourse/" + add_institute);
+    	file.mkdir();
+    	admin_institute(0);
     }
     
 }
