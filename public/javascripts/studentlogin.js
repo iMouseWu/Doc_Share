@@ -19,38 +19,6 @@
 	function friend_state(group_id){
 		 $("#div_group_" + group_id).toggle();
 	}
-
-
-	/*如果session里面有值的话就自动登录,即存放session的隐藏域不为空值*/
-	$(function(){
-		var username = $('#session_username').val();
-		var password = $('#session_password').val();
-		var tipinfo = $("#tipinfo").val();
-		if(username != ""){
-			$('#login').hide();
-			$("#header").animate({
-				height: '420px'
-			});
-			$.getJSON('ViewResource/viewInsMostDown',function(data){
-				showResponse(data);
-			});
-		}else if(tipinfo == "请登录"){
-			$("#header").animate({
-				height: '420px'
-			});
-		}else{
-		}
-	});
-	function uploadframe(){
-		$('#share_button').hide();
-		jQuery.noConflict();
-		$('#uploadssurface').modal();
-	}
-	
-	
-	
-	
-	
 	
 	
 	

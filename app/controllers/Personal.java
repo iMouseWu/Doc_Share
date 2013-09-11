@@ -172,7 +172,8 @@ public class Personal extends BaseCore {
 	public static void share_resource(String[] linkname, String hashName,
 			String realName, String share_content) throws EmailException,
 			UnsupportedEncodingException {
-		String content = "这是我上传的文件 ：<a href='/ViewResource/viewDownloadsDetails?hashName="
+		if(linkname != null){
+		String content = "这是我上传的文件 ：<a href='ViewResource/viewDownloadsDetails?hashName="
 				+ hashName + "'>" + realName + "</a><br>备注:" + share_content;
 		Date date = new Date();
 		/* 构建邮件发送端,目测一个Email对象只能发送一次 */
@@ -201,7 +202,7 @@ public class Personal extends BaseCore {
 			email.send();
 		}
 	}
-
+	}
 	public static void view_link_group() {
 		List<Linkgroup> group_list = Linkgroup.find("host_name= ?",session.get("user")).fetch();
 		render(group_list);

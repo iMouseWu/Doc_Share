@@ -224,7 +224,7 @@ display:none;
 		<!-- 登录块和显示推荐资源 -->
 		<div id="suggestorlogin">
 		<div class="login" id="login">
-		<form action="Login/LoginCheck" id="loginForms">
+		<form action="@{Login.LoginCheck()}" id="loginForms">
 			<div class="lineRow"><input type="text" class="span" name="username" placeholder="学号/工号"/></div>
 			<div class="lineRow"><input type="password" class="span" name="password" placeholder="密码"/></div>
 			<div class="lineRow"><input type="submit" class="btn left" name="login" value="登陆"/><span class="tips left">忘记密码</span></div>
@@ -248,13 +248,13 @@ display:none;
 
 <!-- ***************************************************************************************** -->
 <!-- 上传对话框 -->
-<div id="uploadssurface" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="uploadssurface" class="modal hide fade"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">上传</h3>
   </div>
   <div class="modal-body">
- <form id="fileupload" action="Uploads/uploads" method="POST" enctype="multipart/form-data">
+ <form id="fileupload" action="@{Uploads.uploads()}" method="POST" enctype="multipart/form-data">
     学院：
   <select name="institute_sel" id="institute_sel">
   </select>
@@ -334,7 +334,7 @@ display:none;
 
 <!-- 相应学院科目资源搜索框 -->
 <div id="search_sure">
-<form id="search_sure_form" action="Search/search_sure_res">
+<form id="search_sure_form" action="@{Search.search_sure_res()}">
 <input type="text" name="sure_name" style="width:100px;">
 <input type="hidden" name="sure_subject"  id="sure_subject">
 <input type="hidden" name="sure_institute" id="sure_institute">
@@ -419,12 +419,14 @@ function share_begin(){
 	});
 	function sure_Response(data){
 		var html = '';
-		$.each(data[0], function(commentIndex, comment) {
+		if(data != "1"){
+		    $.each(data[0], function(commentIndex, comment) {
 			html += "<div class='resource_name'><a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
 			+ comment.realName 
 			+ "</a></div>" 
 			+"<br>";
 		});
+	}
 		  search_pageNav.go(parseInt($('#sure_page').val()),data[1]);/*$('#sure_page').val()蛋疼的传到后方是String类型导致+法计算的时候它直接按照String来连接了*/
 		  var back_home = "<ul class='breadcrumb'>"
 		  + "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"
@@ -438,6 +440,7 @@ function share_begin(){
 	
 /*返回主界面*/
 function back_home(){
+	$('#search_sure').show();
 	$('#downmes').fadeOut("slow");
 }
 /*返回资源界面*/
@@ -630,4 +633,29 @@ $(document).ready(function() {
  				});
  		}
  	}
+ 	/*如果session里面有值的话就自动登录,即存放session的隐藏域不为空值*/
+	$(function(){
+		var username = $('#session_username').val();
+		var password = $('#session_password').val();
+		var tipinfo = $("#tipinfo").val();
+		if(username != ""){
+			$('#login').hide();
+			$("#header").animate({
+				height: '420px'
+			});
+			$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
+				showResponse(data);
+			});
+		}else if(tipinfo == "请登录"){
+			$("#header").animate({
+				height: '420px'
+			});
+		}else{
+		}
+	});
+	function uploadframe(){
+		$('#share_button').hide();
+		jQuery.noConflict();
+		$('#uploadssurface').modal();
+	}
      </script>

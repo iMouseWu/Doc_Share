@@ -39,7 +39,7 @@ public class Search extends BaseCore {
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		Gson gson = new Gson();
 		if (list.size() == 0) {
-			renderText("");
+			renderText("1");
 		} else {
 			String listToJson = gson.toJson(reJsonList);
 			renderText(listToJson);
