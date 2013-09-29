@@ -100,7 +100,6 @@
  <tr>
   <td>${Instituteinfo.institute}</td>
   <td>${Instituteinfo.subject}</td>
-  <td><a href="@{Admin.deleteSubject(page,Instituteinfo.id)}">删除</a></td>
   <td><a href="@{Admin.vieweditSubject(page,Instituteinfo.id)}">编辑</a></td>
   </tr>
   #{/list}
@@ -125,5 +124,14 @@ function pHtml2(a){
 var paging = new paging();
 $(document).ready(function() {
 	paging.go(${page},${allpage});
+	if(${statue} == 1){
+		alert("操作成功");
+	}
+	else if(${statue} == 2){
+		alert("命名重复");
+	}
+	else if(${statue} == 3){
+		alert("学科名不能为空");
+	}
 });
 </script>

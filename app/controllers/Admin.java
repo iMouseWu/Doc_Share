@@ -232,8 +232,12 @@ public class Admin extends BaseCore {
 		}
 		renderTemplate("Admin/admin_user.html",filelist,page,allpage);
     }
+    /**
+     * @statue为状态码，0为刚进入页面，1为操作成功，2为命名重复，3为命名空值。
+     * 
+     * /
 /*************************************************学科的增删改除*********************************************/
-	public static void admin_subject(int page){
+	public static void admin_subject(int statue,int page){
 		if(page == 0){
 			page = 1;
 		}
@@ -246,7 +250,7 @@ public class Admin extends BaseCore {
 		}
 		List<Instituteinfo> filelist = Instituteinfo.all().from((page - 1) * 10).fetch(10);
 		List<Institute> listinstitute = Institute.findAll();
-		render(filelist,page,listinstitute,allpage);
+		render(filelist,page,listinstitute,allpage,statue);
 	}
 	
 	/*跳转学科信息修改界面*/
@@ -257,6 +261,10 @@ public class Admin extends BaseCore {
 	
 	/*修改学科信息*/
     public static void editSubject(long id,int page,String subject){
+    	if(subject.equals("")){
+    		int statue = 3;
+        	admin_subject(statue,page);
+    	}else{
     	Instituteinfo instituteinfo = Instituteinfo.findById(id);
     	List<Filename> list = Filename.find("subject = ?", instituteinfo.subject).fetch();
     	for(Filename filename : list){
@@ -268,31 +276,29 @@ public class Admin extends BaseCore {
     	String newpath = "/public/resourse/" + instituteinfo.institute + "/" + subject;
     	File oldFile = Play.getFile(oldpath);
     	File newFile = Play.getFile(newpath);
-    	oldFile.renameTo(newFile);
-    	
-    	
-    	
-    	
+    	boolean result = oldFile.renameTo(newFile);	
     	/*需要判断是否修改成功(因为会发生重命名的现象)*/
-    	
-    	
-    	
-    	
-    	
-    	instituteinfo.subject = subject;
-    	instituteinfo.save();
-    	admin_subject(page);
-    }
+    	if(result == false){
+    		int statue = 2;
+    		admin_subject(statue,page);
+    	}else{
+    		int statue = 1;
+    		instituteinfo.subject = subject;
+        	instituteinfo.save();
+        	admin_subject(statue,page);
+    	}
+    	}
+    	}
     
-    /*删除学科*/
-    public static void deleteSubject(int page,long id){
-    	Instituteinfo instituteinfo = Instituteinfo.findById(id);
-    	instituteinfo.delete();
-    	
-    	/*需要删除文件夹，还需要删除数据库里面的文件*/
-    	
-    	admin_subject(page);
-    }
+//    /*删除学科*/
+//    public static void deleteSubject(int page,long id){
+//    	Instituteinfo instituteinfo = Instituteinfo.findById(id);
+//    	instituteinfo.delete();
+//    	
+//    	/*需要删除文件夹，还需要删除数据库里面的文件*/
+//    	
+//    	admin_subject(page);
+//    }
     /*查找学科*/
     public static void searchSubject(int page,String serach_subject){
     	int allpage;
@@ -311,17 +317,34 @@ public class Admin extends BaseCore {
     }
     /*增加学科*/
     public static void addSubject(String institute,String subject){
-    	Instituteinfo instituteinfo  = new Instituteinfo();
-    	instituteinfo.institute = institute;
-    	instituteinfo.subject = subject;
-    	instituteinfo.save();
-    	File file = Play.getFile("/public/resourse/" + institute + "/" + subject);
-    	file.mkdir();
-    	admin_subject(0);
+    	int statue;
+    	if(subject.equals("")){
+    		statue = 3;
+    		admin_subject(statue,0);
+    	}else{
+    		
+	    	File file = Play.getFile("/public/resourse/" + institute + "/" + subject);
+	    	boolean result = file.mkdir();
+    		if(result == false){
+    			statue = 2;
+    	    	admin_subject(statue,0);
+    		}else{
+    			Instituteinfo instituteinfo  = new Instituteinfo();
+    	    	instituteinfo.institute = institute;
+    	    	instituteinfo.subject = subject;
+    	    	instituteinfo.save();
+    			statue = 1;
+    	    	admin_subject(statue,0);
+    		}
+    	}
     }
-    
+    /**
+     * @statue为状态码，0为刚进入页面，1为操作成功，2为命名重复，3为命名空值。
+     * 
+     * /
 /*********************************************学院的增删改除*****************************************/
-	public static void admin_institute(int page){
+   
+	public static void admin_institute(int statue,int page){
 		if(page == 0){
 			page = 1;
 		}
@@ -333,7 +356,7 @@ public class Admin extends BaseCore {
 			allpage = count / 10 + 1;
 		}
 		List<Institute> filelist = Institute.all().from((page - 1) * 10).fetch(10);
-		render(filelist,page,allpage);
+		render(filelist,page,allpage,statue);
 	}
 	
 	/*跳转学院信息修改界面*/
@@ -344,6 +367,10 @@ public class Admin extends BaseCore {
 	
     /*修改学院信息*/
     public static void editInstitute(long id,int page,String institute){
+    	if(institute.equals("")){
+    		int statue = 3;
+    		admin_institute(statue,page);
+    	}else{
     	Institute _institute = Institute.findById(id);
     	List<Filename> list = Filename.find("institute = ?", _institute.institute).fetch();
     	for(Filename filename : list){
@@ -355,31 +382,28 @@ public class Admin extends BaseCore {
     	String newpath = "/public/resourse/" + institute ;
     	File oldFile = Play.getFile(oldpath);
     	File newFile = Play.getFile(newpath);
-    	oldFile.renameTo(newFile);
-    	
-    	
-    	
-    	
+    	boolean result = oldFile.renameTo(newFile);	
     	/*需要判断是否修改成功(因为会发生重命名的现象)*/
-    	
-    	
-    	
-    	
-    	
-    	_institute.institute = institute;
-    	_institute.save();
-    	admin_institute(page);
+    	if(result == false){
+    		int statue = 2;
+    		admin_institute(statue,page);
+    	}else{
+    		int statue = 1;
+    		_institute.institute = institute;
+        	_institute.save();
+        	admin_institute(statue,page);
+    	}
+    	}
     }
    
-   /*删除学院*/
-    public static void deleteInstitute(int page,long id){
-    	Institute institute = Institute.findById(id);
-    	institute.delete();
-    	
-    	/*需要删除文件夹，还需要删除数据库里面的文件*/
-    	
-    	admin_subject(page);
-    }
+//   /*删除学院*/
+//    public static void deleteInstitute(int page,long id){
+//    	Institute institute = Institute.findById(id);
+//    	institute.delete();
+//    	int statue = 1;
+//    	/*需要删除文件夹，还需要删除数据库里面的文件*/
+//    	admin_institute(statue,page);
+//    }
     /*查找学院*/
     public static void searchInstitute(int page,String serach_institute){
     	int allpage;
@@ -399,12 +423,25 @@ public class Admin extends BaseCore {
     }
     /*增加学院*/
     public static void addInstitute(String add_institute){
+    	int statue;
+    	if(add_institute.equals("")){
+    		statue = 3;
+    		admin_institute(statue,0);
+    	}else{
     	Institute institute =new Institute();
     	institute.institute = add_institute;
     	institute.save();
     	File file = Play.getFile("/public/resourse/" + add_institute);
-    	file.mkdir();
-    	admin_institute(0);
+    	boolean result = file.mkdir();
+    	if(result == true){
+    		statue = 1;
+    		admin_institute(statue,0);
+    	}else{
+    		statue = 2;
+    		admin_institute(statue,0);
+    	}
+    	
+    	}
     }
     
 }

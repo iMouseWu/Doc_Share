@@ -88,7 +88,6 @@
   #{list items:filelist, as:'Institute' }
  <tr>
   <td>${Institute.institute}</td>
-  <td><a href="@{Admin.deleteInstitute(page,Institute.id)}">删除</a></td>
   <td><a href="@{Admin.vieweditInstitute(page,Institute.id)}">编辑</a></td>
   </tr>
   #{/list}
@@ -113,5 +112,14 @@ function pHtml2(a){
 var paging = new paging();
 $(document).ready(function() {
 	paging.go(${page},${allpage});
+	if(${statue} == 1){
+		alert("操作成功");
+	}
+	else if(${statue} == 2){
+		alert("命名重复");
+	}
+	else if(${statue} == 3){
+		alert("学院名不能为空");
+	}
 });
 </script>
