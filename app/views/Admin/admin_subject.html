@@ -46,7 +46,7 @@
  </style>
  <div>
  <div id="top_search">
- <form action="@{Admin.searchSubject()}">
+ #{form @Admin.searchSubject(),method:'POST'}
  <table class="search_table">
  <tr>
  <th class="search_td right" >名称:</th>
@@ -56,11 +56,11 @@
  <td><button type="submit" class="pull-right">搜索</button></td>
  </tr>
  </table>
- </form>
+ #{/form}
  </div>
  
  <div id="top_add">
- <form action="@{Admin.addSubject()}">
+ #{form @Admin.addSubject(),method:'POST'}
  <table class="add_table">
  <tr>
  <th class="search_td right" >学院:</th>
@@ -83,7 +83,7 @@
  <td><button type="submit" class="pull-right">增加</button></td>
  </tr>
  </table>
- </form>
+ #{/form}
  </div>
  </div>
    <div id="tableview">

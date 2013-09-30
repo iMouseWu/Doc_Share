@@ -40,7 +40,7 @@
   }
  </style>
  <div id="top_search">
- <form action="@{Admin.searchHelp()}">
+ #{form @Admin.searchHelp(),method:'POST'}
  <table class="search_table">
  <tr>
  <th class="search_td right" >寻求人:</th>
@@ -50,7 +50,7 @@
  <td><button type="submit" class="pull-right">搜索</button></td>
  </tr>
  </table>
- </form>
+ #{/form}
  </div>
    <div id="tableview">
  <table class="table table-condensed">

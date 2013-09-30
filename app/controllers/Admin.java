@@ -313,7 +313,8 @@ public class Admin extends BaseCore {
 		}else{
 			allpage = count / 10 + 1;
 		}
-		renderTemplate("Admin/admin_subject.html",filelist,page,allpage);
+		int statue = 0;
+		renderTemplate("Admin/admin_subject.html",filelist,page,allpage,statue);
     }
     /*增加学科*/
     public static void addSubject(String institute,String subject){
@@ -418,8 +419,8 @@ public class Admin extends BaseCore {
 		}else{
 			allpage = count / 10 + 1;
 		}
-		
-		renderTemplate("Admin/admin_institute.html",filelist,page,allpage);
+		int statue = 0;
+		renderTemplate("Admin/admin_institute.html",filelist,page,allpage,statue);
     }
     /*增加学院*/
     public static void addInstitute(String add_institute){
@@ -428,12 +429,12 @@ public class Admin extends BaseCore {
     		statue = 3;
     		admin_institute(statue,0);
     	}else{
-    	Institute institute =new Institute();
-    	institute.institute = add_institute;
-    	institute.save();
     	File file = Play.getFile("/public/resourse/" + add_institute);
     	boolean result = file.mkdir();
     	if(result == true){
+    		Institute institute =new Institute();
+        	institute.institute = add_institute;
+        	institute.save();
     		statue = 1;
     		admin_institute(statue,0);
     	}else{

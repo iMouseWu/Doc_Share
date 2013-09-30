@@ -47,7 +47,7 @@
  </style>
  <div id="top">
    <div id="top_search">
- <form action="@{Admin.searchInstitute()}">
+   #{form @Admin.searchInstitute(),method:'POST'}
  <table class="search_table">
  <tr>
  <th class="search_td right" >学院:</th>
@@ -57,11 +57,11 @@
  <td><button type="submit" class="pull-right">搜索</button></td>
  </tr>
  </table>
- </form>
+ #{/form}
  </div>
  
  <div id="top_add">
- <form action="@{Admin.addInstitute()}">
+ #{form @Admin.addInstitute(),method:'POST'}
  <table class="add_table">
  <tr>
  <th class="search_td right" >学院:</th>
@@ -71,7 +71,7 @@
  <td><button type="submit" class="pull-right">增加</button></td>
  </tr>
  </table>
- </form>
+ #{/form}
  </div>
  
  </div>

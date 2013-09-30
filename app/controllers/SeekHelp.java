@@ -26,7 +26,7 @@ public class SeekHelp extends BaseCore {
 			allpage = (allcount/9) + 1;
 		}
 //		List<SeekAndRe_view> sar_list = new ArrayList<SeekAndRe_view>();
-		List<Seek_Help> list = Seek_Help.find("seek_statue = ? order by id desc" , 1).from((page-1)*9).fetch(9);
+		List<Seek_Help> list = Seek_Help.find("seek_status = ? order by id desc" , 1).from((page-1)*9).fetch(9);
 		
 		/*获取用户的信息，获取后天提醒的消息数*/
 		/*回答的消息数目*/

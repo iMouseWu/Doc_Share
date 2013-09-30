@@ -224,11 +224,11 @@ display:none;
 		<!-- 登录块和显示推荐资源 -->
 		<div id="suggestorlogin">
 		<div class="login" id="login">
-		<form action="@{Login.LoginCheck()}" id="loginForms">
+		#{form @Login.LoginCheck(),id:'loginForms',method:'POST'}
 			<div class="lineRow"><input type="text" class="span" name="username" placeholder="学号/工号"/></div>
 			<div class="lineRow"><input type="password" class="span" name="password" placeholder="密码"/></div>
 			<div class="lineRow"><input type="submit" class="btn left" name="login" value="登陆"/><span class="tips left">忘记密码</span></div>
-		</form>
+		#{/form}
 		</div>
 		</div>
 	</div>
@@ -254,7 +254,7 @@ display:none;
     <h3 id="myModalLabel">上传</h3>
   </div>
   <div class="modal-body">
- <form id="fileupload" action="@{Uploads.uploads()}" method="POST" enctype="multipart/form-data">
+  #{form @Uploads.uploads(),method:'POST',id:'fileupload',enctype:'multipart/form-data',method:'POST'}
     学院：
   <select name="institute_sel" id="institute_sel">
   </select>
@@ -276,7 +276,7 @@ display:none;
           <div id="submit"></div>
           <!-- 过程提示 -->
           <div id="progress_prompt"></div>
-    </form>
+          #{/form}
     <!-- 分享按钮 -->
           <div id="share_button">
           <button class="btn btn-primary" onclick="share_begin();">分享</button>
@@ -298,7 +298,7 @@ display:none;
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h6 id="myModalLabel">联系人</h6>
     </div>
-    <form id="share_form" action="@{Personal.share_resource()}">
+    #{form @Personal.share_resource(),id:'share_form',method:'POST'}
     <input type="hidden" name="hashName" id="share_hashName">
     <input type="hidden" name="realName" id="share_realName">
     <div class="modal-body" id="modal-body">
@@ -308,7 +308,7 @@ display:none;
   <textarea rows='2' name='share_content' id="share_content"></textarea>
   <input type="submit" value="提交">
   </div>
-  </form>
+  #{/form}
 </div>
 
 <!-- ******************************************************************************** -->
@@ -334,13 +334,14 @@ display:none;
 
 <!-- 相应学院科目资源搜索框 -->
 <div id="search_sure">
-<form id="search_sure_form" action="@{Search.search_sure_res()}">
+#{form @Search.search_sure_res(),method:'POST',id:'search_sure_form'}
 <input type="text" name="sure_name" style="width:100px;">
 <input type="hidden" name="sure_subject"  id="sure_subject">
 <input type="hidden" name="sure_institute" id="sure_institute">
 <input type="hidden" name="sure_page" id="sure_page" value="1">
 <button type="submit" class="btn btn-info  btn-small">搜索</button>
-</form></div>
+#{/form}
+</div>
 
 <!-- 分页显示 -->
 <!-- <div id="test" style="height:70px;padding:30px 10px;"></div> -->

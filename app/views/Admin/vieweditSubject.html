@@ -5,7 +5,7 @@
 padding: 40px;
 }
   </style>
- <form class="form-horizontal" action="@{Admin.editSubject()}">
+  #{form @Admin.editSubject() method:'POST',class:'form-horizontal'}
   <input type="hidden" value="${instituteinfo.id}" name="id">
   <input type="hidden" value="${page}" name="page">
   <div class="control-group">
@@ -27,4 +27,4 @@ padding: 40px;
       <button type="submit" class="btn">提交</button>
     </div>
   </div>
-</form>
+#{/form}

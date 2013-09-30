@@ -56,10 +56,10 @@
  <i class="icon-plus"></i>添加分组
  </div>
  <div id="add_form">
-<form action=@{Personal.addGroup}>
+ #{form @Personal.addGroup(),method:'POST'}
 <input type="text" name="newgroup" class="group_text">
 <input type="submit" class="btn btn-success" value="添加">
-</form>
+#{/form}
 </div>
 </div></li>
  </ul>

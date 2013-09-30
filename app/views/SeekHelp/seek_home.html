@@ -82,12 +82,12 @@ if(i % 3 == 0){
 				</div>
 				</div>
 				<div id="div_${Seek_Help.id}" class="reply">
-					    <form id="" action="@{ReSeek.AddReSeek()}">
+				#{form @ReSeek.AddReSeek(),method:'POST'}
                         <input type="text" name="re_seek_content" class="input-medium">
                         <input type="hidden" value="${page}" name="nowpage">
                         <input type="hidden" name="seek_id" value="${Seek_Help.id}">
                          <button type="submit" class="btn">发送</button>
-                        </form>
+                         #{/form}
                     </div>
 		</li>
 %{

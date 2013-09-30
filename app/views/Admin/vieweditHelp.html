@@ -1,6 +1,6 @@
 #{extends 'main.html' /} #{set title:'index.html' /}
 <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
- <form class="form-horizontal" action="@{Admin.editHelp()}">
+#{form @Admin.editHelp(),class:'form-horizontal',method:'POST'}
   <input type="hidden" value="${seek_Help.id}" name="id">
   <input type="hidden" value="${page}" name="page">
   <div class="control-group">
@@ -21,4 +21,4 @@
       <button type="submit" class="btn">提交</button>
     </div>
   </div>
-</form>
+#{/form}

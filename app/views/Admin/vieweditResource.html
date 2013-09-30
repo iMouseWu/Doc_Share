@@ -5,7 +5,7 @@
 padding: 40px;
 }
   </style>
-<form class="form-horizontal" action="@{Admin.editResource()}">
+  #{form @Admin.editResource(),method:'POST',class:'form-horizontal'}
   <input type="hidden" value="${filename.id}" name="id">
   <input type="hidden" value="${page}" name="page">
   <div class="control-group">
@@ -42,7 +42,7 @@ padding: 40px;
       <button type="submit" class="btn">修改</button>
     </div>
   </div>
-</form>
+  #{/form}
 <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
 <script type="text/javascript">
 $(document).ready(function() {

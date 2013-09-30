@@ -9,7 +9,7 @@
   </style>
   <div id="login">
   
-  <form class="form-horizontal" action="@{Admin.adminlogin()}">
+  #{form @Admin.adminlogin(),method:'POST',class:'form-horizontal'}
   <div class="control-group">
     <label class="control-label" for="username">用户名</label>
     <div class="controls">
@@ -27,6 +27,6 @@
       <button type="submit" class="btn">Sign in</button>
     </div>
   </div>
-</form>
+  #{/form}
   
   </div>
