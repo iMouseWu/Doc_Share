@@ -11,12 +11,14 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.ThisExpression;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import models.Filename;
 import play.Play;
 import play.libs.Files;
 import play.mvc.Before;
 import play.mvc.Controller;
+import tools.StaticPath;
 
 public class Uploads extends BaseCore{
 	@Before
@@ -39,9 +41,14 @@ public class Uploads extends BaseCore{
 		/*获取扩展名，不包括点*/
 		String fileextexceptdoc = allfilename.substring(allfilename.lastIndexOf(".")+1);
 		/* 构成hash路径名 */
+//		String path = StaticPath.path + institute_sel + "/" + subject_sel + "/"
+//				+ hash + fileext;
+//		Files.copy(upfile, new File(path));
+		
 		String path = "/public/resourse/" + institute_sel + "/" + subject_sel + "/"
 				+ hash + fileext;
 		Files.copy(upfile, Play.getFile(path));
+		
 		/* 获取当前日期 */
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 Date date = new Date();

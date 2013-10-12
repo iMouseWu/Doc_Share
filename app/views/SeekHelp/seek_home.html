@@ -14,6 +14,17 @@ position: relative;
 width:500px;
 left:550px;
 }
+#addhelp{
+width:400px;
+position: relative;
+margin:0 auto;
+border:solid 1px rgb(200,200,200);
+padding:5px;
+}
+textarea{
+ resize:none;
+width:300px;
+}
 </style>
 <div id="topBar">
 	<ol class="left">
@@ -38,9 +49,8 @@ left:550px;
 			<div class="left logo">
 			<!-- 左上角空白处用来画logo，我画的不好，可以让美工试试 -->
 			</div>
-			<div class="search right">
-				<input type="text" class="span left" placeholder="搜点什么试试" />
-				<input type="button" class="btn right" value="搜索"/>
+				<div class="search right">
+				<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区问问看!</a>
 			</div>
 		</div>
 		<div class="login">
@@ -64,21 +74,18 @@ if(i % 3 == 0){
 }%
  <li class="wantItem wantItemCommon">
 			<div class="wantItemHeader">
-				<h4 class="left">${Seek_Help.seek_content}</h4>
-				<span class="right"><a>1396</a>人想要</span>
+				<h4 class="left">${Seek_Help.seek_title}</h4>
 				</div>
-			<div class="wantItemBody">&nbsp;&nbsp;&nbsp;&nbsp;老子真的想要一辆车老子真的想要一辆车老子真的想要一辆车</div>
+			<div class="wantItemBody">&nbsp;&nbsp;&nbsp;&nbsp;${Seek_Help.seek_content}</div>
 			<div class="wantItemFoot">
 				<div class="left">
 					<a class="aNoLine">
-						<span class="name left" title="小黄鸡">小黄鸡</span>
+						<span class="name left" title="作者">${Seek_Help.seek_user}</span>
 					</a>
-					<span class="time left">8-25 15:41</span>
+					<span class="time left">${Seek_Help.seek_date}</span>
 				</div>
 				<div class="right operation">
-					<a class="aNoLine pureBtn">同求</a>
 					<a class="aNoLine pureBtn" onclick="reply(${Seek_Help.id});">私信</a>
-					<a class="aNoLine pureBtn">我有</a>
 				</div>
 				</div>
 				<div id="div_${Seek_Help.id}" class="reply">
@@ -109,9 +116,16 @@ i++;
   <ul id="pagenumber">
   </ul>
 </div>
+<!-- 新增Help -->
+<div id="addhelp">
+#{form @SeekHelp.addhelp(), method:'GET', id:'helpForm'}
+主题:<input type="text" name="seek_title"><br>
+内容:<textarea name="comment_help" rows="4"></textarea><br>
+  <input type="submit" value="提交" class="btn" >
+#{/form}
+</div>
 <div id="wantfooter">
 	<p class="left">Copyright © 2013 <a class="navLink" href="http://www.zjut.com">浙江工业大学-精弘网络</a></p>
-	<p class="right">Design by <a class="navLink" href="http://www.hellohjk.com">HJK</a></p>
 </div>
 <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
 <script src="@{'/public/javascripts/seek_paging.js'}"></script>

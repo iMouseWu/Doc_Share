@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import play.Play;
@@ -12,6 +14,7 @@ import models.Filename;
 import models.Institute;
 import models.Instituteinfo;
 import models.LinkMan;
+import models.Other_tips;
 import models.Seek_Help;
 import models.Users;
 
@@ -72,6 +75,14 @@ public class Admin extends BaseCore {
 	/*修改资源*/
 	public static void editResource(String realname,String institute,String subject,long id,int page){
 		Filename filename = Filename.findById(id);
+//		String oldpath = StaticPath.path + filename.institute + "/" + filename.subject + "/"
+//                          + filename.hashName;
+//		String newpath = StaticPath.path + institute + "/" + subject + "/"
+//                          + filename.hashName;
+//		File oldFile = new File(oldpath);
+//		File newFile = new File(newpath);
+//		Files.copy(oldFile,newFile);
+//		oldFile.delete();
 		String oldpath = "/public/resourse/" + filename.institute + "/" + filename.subject + "/"
 				+ filename.hashName;
 		String newpath = "/public/resourse/" + institute + "/" + subject + "/"
@@ -90,6 +101,7 @@ public class Admin extends BaseCore {
 	
 	 /*删除资源*/
     public static void deleteResource(int page,long id){
+    	Other_tips other_tips = new Other_tips();
     	Filename filename = Filename.findById(id);
     	String path = "/public/resourse/" + filename.institute + "/" + filename.subject + "/"
 				+ filename.hashName;
@@ -97,6 +109,15 @@ public class Admin extends BaseCore {
     	filename.delete();
     	/*删除文件夹文件*/
     	Play.getFile(path).delete();
+    	/*通知站内信的形式作者*/
+    	String content = "对不起，你上传" + filename.realName + "文件涉嫌违规，已被管理员删除。如果什么问题请联系管理员处理.谢谢.";
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date date = new Date();
+    	other_tips.tip_content = content;
+    	other_tips.tip_date = formatter.format(date);
+    	other_tips.tip_status = 1;
+    	other_tips.to_name = filename.uploadname;
+    	other_tips.save();
     	admin_resource(page);
     }
     /*资源搜索*/
@@ -195,11 +216,8 @@ public class Admin extends BaseCore {
 	/*修改用户信息*/
     public static void editUser(long id,int page,String username,String password,String mailaddress,String mailpassword,String institute){
 	Users users = Users.findById(id);
-	users.institute = institute;
 	users.username = username;
-	users.password = password;
 	users.mailaddress = mailaddress;
-	users.mailpassword = mailpassword;
 	users.save();
 	admin_user(page);
     }
@@ -272,6 +290,12 @@ public class Admin extends BaseCore {
     		dao.AddResources.addFile(filename);
     	}
     	/*学科信息修改以后，需要修改原来数据库的文件的信息，还要修改文件夹的名字*/
+//		String oldpath = StaticPath.path + filename.institute + "/" + filename.subject + "/"
+//      + filename.hashName;
+//      String newpath = StaticPath.path + institute + "/" + subject + "/"
+//      + filename.hashName;
+//      File oldFile = new File(oldpath);
+//      File newFile = new File(newpath);
     	String oldpath = "/public/resourse/" + instituteinfo.institute + "/" + instituteinfo.subject;
     	String newpath = "/public/resourse/" + instituteinfo.institute + "/" + subject;
     	File oldFile = Play.getFile(oldpath);
@@ -323,7 +347,9 @@ public class Admin extends BaseCore {
     		statue = 3;
     		admin_subject(statue,0);
     	}else{
-    		
+//          String newpath = StaticPath.path + institute + "/" + subject + "/"
+//          + filename.hashName;
+//          File file = new File(newpath);
 	    	File file = Play.getFile("/public/resourse/" + institute + "/" + subject);
 	    	boolean result = file.mkdir();
     		if(result == false){
@@ -379,6 +405,12 @@ public class Admin extends BaseCore {
     		dao.AddResources.addFile(filename);
     	}
     	/*学科信息修改以后，需要修改原来数据库的文件的信息，还要修改文件夹的名字*/
+//		String oldpath = StaticPath.path + filename.institute + "/" + filename.subject + "/"
+//      + filename.hashName;
+//      String newpath = StaticPath.path + institute + "/" + subject + "/"
+//      + filename.hashName;
+//      File oldFile = new File(oldpath);
+//      File newFile = new File(newpath);
     	String oldpath = "/public/resourse/" + _institute.institute ;
     	String newpath = "/public/resourse/" + institute ;
     	File oldFile = Play.getFile(oldpath);
@@ -429,6 +461,10 @@ public class Admin extends BaseCore {
     		statue = 3;
     		admin_institute(statue,0);
     	}else{
+ 
+//      String newpath = StaticPath.path + institute + "/" + subject + "/"
+//      + filename.hashName;
+//      File file = new File(newpath);
     	File file = Play.getFile("/public/resourse/" + add_institute);
     	boolean result = file.mkdir();
     	if(result == true){
@@ -441,8 +477,6 @@ public class Admin extends BaseCore {
     		statue = 2;
     		admin_institute(statue,0);
     	}
-    	
     	}
     }
-    
 }

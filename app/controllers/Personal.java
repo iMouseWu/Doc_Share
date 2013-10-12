@@ -2,6 +2,7 @@ package controllers;
 
 import groovy.ui.SystemOutputInterceptor;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,17 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
 import play.mvc.Before;
+import tools.StaticPath;
 
 import com.google.gson.Gson;
 
 import models.Filename;
 import models.LinkMan;
 import models.Linkgroup;
+import models.Other_tips;
 import models.Re_Seek_Help;
 import models.Seek_Help;
 import models.Ask_Tips;
@@ -71,8 +75,16 @@ public class Personal extends BaseCore {
 			share_mapMap.put("tips_id", share_Tips.id);
 			share_message_list.add(share_mapMap);
 		}
+		List<Map> other_list = new ArrayList<Map>();
+		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", session.get("user"),0).fetch();
+		for(Other_tips other_tips : other_tips_list){
+			Map otherMap = new HashedMap();
+			otherMap.put("message",other_tips.tip_content);
+			otherMap.put("tips_id", other_tips.id);
+			other_list.add(otherMap);
+		}
 
-		render(re_list, share_message_list);
+		render(re_list, share_message_list,other_list);
 	}
 
 	// List<Tips> tips_list =
@@ -109,6 +121,8 @@ public class Personal extends BaseCore {
 		// render(re_list,seek_id);
 		List<Map> re_list = new ArrayList<Map>();
 		List<Map> share_list = new ArrayList<Map>();
+		List<Map> other_list = new ArrayList<Map>();
+		
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",
 				session.get("user")).fetch();
 		for (Seek_Help seek_Help : seek_list) {
@@ -124,8 +138,8 @@ public class Personal extends BaseCore {
 				re_list.add(askMap);
 			}
 		}
-		List<Share_Tips> share_tips_list = Share_Tips.find("tip_to_name",
-				session.get("user")).fetch();
+		List<Share_Tips> share_tips_list = Share_Tips.find("tip_to_name = ? And tip_status = ?",
+				session.get("user"),0).fetch();
 		for (Share_Tips share_Tips : share_tips_list) {
 			Map shareMap = new HashedMap();
 			shareMap.put("share_Tips", share_Tips);
@@ -133,7 +147,14 @@ public class Personal extends BaseCore {
 			shareMap.put("message", message);
 			share_list.add(shareMap);
 		}
-		render(re_list, share_list,page);
+		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", session.get("user"),0).fetch();
+		for(Other_tips other_tips : other_tips_list){
+			Map otherMap = new HashedMap();
+			otherMap.put("message",other_tips.tip_content);
+			otherMap.put("Other_tips", other_tips);
+			other_list.add(otherMap);
+		}
+		render(re_list, share_list,other_list,page);
 	}
 
 	public static void Remove_Tips(long id) {
@@ -168,6 +189,12 @@ public class Personal extends BaseCore {
 		tips.save();
 		view_message();
 	}
+	public static void Remove_Other_Tips(long id){
+		Other_tips tips = (Other_tips)Other_tips.find("id = ?", id).fetch().get(0);
+		tips.tip_status = 0;
+		tips.save();
+		view_message();
+	}
 
 	public static void share_resource(String[] linkname, String hashName,
 			String realName, String share_content) throws EmailException,
@@ -195,8 +222,9 @@ public class Personal extends BaseCore {
 			email.setHostName("smtp.qq.com");
 			email.setSmtpPort(25);
 			email.setAuthenticator(new DefaultAuthenticator(
-					hostuser.mailaddress, hostuser.mailpassword));
+					hostuser.mailaddress, session.get("password")));
 			email.setFrom(hostuser.mailaddress);
+			/*防止乱码*/
 			email.setHtmlMsg(new String(content.getBytes("utf-8"), "iso-8859-1"));
 			email.addTo(linkuser.mailaddress);
 			email.send();
@@ -309,5 +337,25 @@ public class Personal extends BaseCore {
 		Share_Tips share_Tips = Share_Tips.findById(id);
 		share_Tips.delete();
 		view_old_message(page);
+	}
+	public static void delete_othertips(int page,long id){
+		Other_tips other_tips = Other_tips.findById(id);
+		other_tips.delete();
+		view_old_message(page);
+	}
+	public static void modifyNickNameandMail(String nickname,String[] mailbool) throws HttpException, IOException{
+		Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
+		users.nickname = nickname;
+		users.save();
+		if(mailbool == null || mailbool.length == 0){
+			redirect(StaticPath.VALADATE_URL);
+		}else{
+			redirect("http://user.zjut.com/");
+		}
+	}
+	public static void modifyNickName(String nickname) throws HttpException, IOException{
+		Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
+		users.nickname = nickname;
+		redirect(StaticPath.VALADATE_URL);
 	}
 }

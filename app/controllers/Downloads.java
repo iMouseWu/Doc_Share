@@ -28,6 +28,9 @@ public class Downloads extends BaseCore{
 //		String sub = URLEncoder.encode(subject, "UTF-8");
 		String path = "/public/resourse/" + institute + "/" + subject + "/" + hashName;
 		File file = Play.getFile(path);
+		
+	//	String path = StaticPath.path + institute_sel + "/" + subject_sel + "/"
+//				+ hash + fileext;
 		renderBinary(file);
 	}
 

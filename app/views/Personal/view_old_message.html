@@ -16,12 +16,22 @@
     #{/list}
     </table>
   <hr>
-    分享：
+    分享:
     <table class="table">
     #{list items:share_list, as:'map' }
         <tr>
-        <td>${oldmessage.raw()}</td>
+        <td>${map.message.raw()}</td>
         <td><a href="@{Personal.delete_sharetips}?page=${page}&id=${map.share_Tips.id}">删除</a></td>
+        </tr>
+    #{/list}
+    </table>
+    <hr>
+    其他:
+    <table class="table">
+    #{list items:other_list, as:'map' }
+        <tr>
+        <td>${map.message.raw()}</td>
+        <td><a href="@{Personal.delete_othertips}?page=${page}&id=${map.shareMap.id}">删除</a></td>
         </tr>
     #{/list}
     </table>

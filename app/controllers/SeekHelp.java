@@ -49,7 +49,7 @@ public class SeekHelp extends BaseCore {
 		render(list,allpage,page,seek_id,size);
 	}
 	/*增加寻求帮助信息*/
-	public static void addhelp(String comment_help){
+	public static void addhelp(String comment_help,String seek_title){
 		 Seek_Help seek_Help = new Seek_Help();
 		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 		 Date date = new Date();
@@ -57,6 +57,7 @@ public class SeekHelp extends BaseCore {
 		seek_Help.seek_date = formatter.format(date);
 		seek_Help.seek_status = 1;
 		seek_Help.seek_user = session.get("user");
+		seek_Help.seek_title = seek_title;
 		dao.AddResources.addSeek_Help(seek_Help);
 		seek_home(1,0);
 	}

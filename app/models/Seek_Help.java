@@ -15,6 +15,7 @@ import play.db.jpa.Model;
 public class Seek_Help extends Model {
 	public String seek_user;
 	public String seek_content;
+	public String seek_title;
 	public String seek_date;
 	public int seek_status;/*0代表取消发布，1带表发布*/
 //	@OneToMany(fetch=FetchType.LAZY,mappedBy="seek_Help", cascade=CascadeType.ALL)

@@ -7,7 +7,7 @@
 
 </style>
 <div id="content">
-问答：
+问答:
 <table class="table">
  #{list items:re_list, as:'map' }
         <tr><td>${map.message.raw()}</td><td><a href="@{Personal.Remove_Tips()}?id=${map.tips_id}">标记为已读</a></td></tr>
@@ -17,6 +17,13 @@
 分享:
 <table class="table">
 #{list items:share_message_list, as:'map' }
+   <tr><td>${map.message.raw()}</td><td><a href="@{Personal.Remove_Share_Tips()}?id=${map.tips_id}">标记为已读</a></td></tr>
+    #{/list}
+    </table>
+    <hr>
+    其他:
+    <table class="table">
+#{list items:other_list, as:'map' }
    <tr><td>${map.message.raw()}</td><td><a href="@{Personal.Remove_Share_Tips()}?id=${map.tips_id}">标记为已读</a></td></tr>
     #{/list}
     </table>

@@ -1,14 +1,19 @@
 package controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+
+import org.apache.commons.httpclient.HttpException;
 
 import play.mvc.Before;
 import tools.Assist;
+import tools.GetClass;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -86,13 +91,15 @@ public class ViewResource extends BaseCore {
 		renderText(listToJson);
 	}
 	/* 根据登陆者的当前学期的课表显示推荐资源，并且获取该用户的信息（e.g.还有几条消息没有读取） */
-	public static void viewInsMostDown() {
+	public static void viewInsMostDown(String username,String password) throws HttpException, IOException {
 		List re_list = new ArrayList();
 		Gson gson = new Gson();
-		String info = "[{'classname':'高数'},{'classname':'会计学'}]";
+		String info = "[{'classname':'高等数学'},{'classname':'会计学'}]";
 		List<AllClass> list = gson.fromJson(info,
 				new TypeToken<List<AllClass>>() {
 				}.getType());
+		TreeSet<String> treeset = GetClass.getUserClass(username,password);
+		System.out.println(treeset);
 		List<Filename> alllistname = new ArrayList<Filename>();
 		for (AllClass allClass : list) {
 			List<Filename> listname = Filename.find("subject = ?",

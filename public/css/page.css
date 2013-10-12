@@ -72,9 +72,8 @@ body {
 }
 .login {
 	position: relative;
-	top: 50px;
 	width: 300px; height: 180px;
-	margin: 30px auto;
+	margin: 0px auto;
 }
 .contain {
 	position: relative;
