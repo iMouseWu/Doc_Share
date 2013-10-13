@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import models.Filename;
+import models.Users;
 import play.Play;
 import play.libs.Files;
 import play.mvc.Before;
@@ -53,7 +54,7 @@ public class Uploads extends BaseCore{
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 Date date = new Date();
 		/* 获取上传者的姓名 */
-		String user = session.get("user");
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
 		if(intro_sel.equals("")){
 			intro_sel = "暂无简介";
 		}

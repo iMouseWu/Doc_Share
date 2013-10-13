@@ -10,6 +10,7 @@ import play.mvc.Before;
 import models.Re_Seek_Help;
 import models.Seek_Help;
 import models.Ask_Tips;
+import models.Users;
 
 public class ReSeek extends BaseCore {
 	/*
@@ -43,10 +44,11 @@ public class ReSeek extends BaseCore {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		List<Seek_Help> se_list = Seek_Help.find("id = ?",seek_id).fetch();
-		if(!se_list.get(0).seek_user.equals(session.get("user"))){
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		if(!se_list.get(0).seek_user.equals(user)){
 		tips.tip_date = formatter.format(date);
 		tips.tip_status = 1;
-		tips.tip_from_name = session.get("user");
+		tips.tip_from_name = user;
 		tips.tip_content = re_seek_content;
 		tips.tip_from_id = seek_id;
 		dao.AddResources.addAsk_Tips(tips);

@@ -23,10 +23,12 @@ import models.Filename;
 import models.Instituteinfo;
 import models.LinkMan;
 import models.Linkgroup;
+import models.Other_tips;
 import models.Rescomment;
 import models.Seek_Help;
 import models.Ask_Tips;
 import models.Share_Tips;
+import models.Users;
 
 public class ViewResource extends BaseCore {
 	@Before(only={"viewInsMostDown","viewLinkname"})
@@ -116,7 +118,8 @@ public class ViewResource extends BaseCore {
 		}  
 		/*获取用户的信息，获取后天提醒的消息数*/
 		/*回答的消息数目*/
-		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
+		String user1 = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", user1).fetch();
 		int size = 0 ;
 		for(Seek_Help seek_Help : se_list){
 		List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?",seek_Help.id,1).fetch();
@@ -125,6 +128,10 @@ public class ViewResource extends BaseCore {
 		/*分享的消息数目*/
 		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ?", session.get("user")).fetch();
 		size += share_list.size();
+		/*获取其他消息数目*/
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		List<Other_tips> other_tips = Other_tips.find("to_name = ?", user).fetch();
+		size += other_tips.size();
 		/*获取好友列表*/
 		List<Map> linkman_group_list = new ArrayList<Map>();
 		List<Linkgroup> group_list = Linkgroup.find("host_name= ?",session.get("user")).fetch();

@@ -72,15 +72,19 @@ public class Login extends BaseCore{
 			  }else{
 				/*数据库中已经有该用户名的数据了，如果是第二次登陆，那么就把isfirst改成1*/
 				Users users = userlist.get(0);
+				/*如果用户的statue的值为1就禁止登陆*/
+				if(users.statue.equals("1")){
+					renderText("forbid");
+				}else{
 				if(users.isfirst.equals("0")){
 					users.isfirst = "1";
 					users.save();
 				}
 				session.put("user", username);
 				session.put("password",password);
-				System.out.println(123456);
 				ViewResource.viewInsMostDown(username,password);
 			}
+			  }
 		}else{
 			/*返回的是错误的信息*/
 			/*密码错误*/
@@ -125,7 +129,8 @@ public class Login extends BaseCore{
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();}
+			e.printStackTrace();
+			}
 		return mapjson;
 	}
 }

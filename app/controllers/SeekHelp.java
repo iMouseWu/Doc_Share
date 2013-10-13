@@ -30,7 +30,8 @@ public class SeekHelp extends BaseCore {
 		
 		/*获取用户的信息，获取后天提醒的消息数*/
 		/*回答的消息数目*/
-		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", session.get("user")).fetch();
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", user).fetch();
 		int size = 0 ;
 		for(Seek_Help seek_Help : se_list){
 		List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?",seek_Help.id,1).fetch();
@@ -56,7 +57,8 @@ public class SeekHelp extends BaseCore {
 		seek_Help.seek_content = comment_help;
 		seek_Help.seek_date = formatter.format(date);
 		seek_Help.seek_status = 1;
-		seek_Help.seek_user = session.get("user");
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		seek_Help.seek_user = user;
 		seek_Help.seek_title = seek_title;
 		dao.AddResources.addSeek_Help(seek_Help);
 		seek_home(1,0);

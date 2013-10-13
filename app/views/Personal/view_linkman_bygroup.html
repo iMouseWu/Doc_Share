@@ -24,16 +24,17 @@
 </tr>
 </table>
 <table class="table">
-<thead><tr><td>昵称</td></tr></thead>
+<thead><tr><td>昵称</td><td>用户名</td></tr></thead>
 <tbody>
-#{list items:list,as:'LinkMan' }
+#{list items:re_list,as:'map' }
 <tr>
 <td>
-<label class="checkbox" id= "checkbox_${LinkMan.id}">
-  <input type="checkbox"  id="linkid_${LinkMan.id}" name="move_linkname_id" value="${LinkMan.id}">
-  ${LinkMan.friend_name}
+<label class="checkbox" id= "checkbox_${map.linkman.id}">
+  <input type="checkbox"  id="linkid_${map.linkman.id}" name="move_linkname_id" value="${map.linkman.id}">
+  ${map.linkma.friend_name}
 </label>
 </td>
+<td>${map.username}</td>
 </tr>
 #{/list}
 </tbody>

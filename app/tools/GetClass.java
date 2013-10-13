@@ -50,7 +50,6 @@ public class GetClass {
 		String jsonString = in.readLine();
 		Gson gson = new Gson();
 		Map map = gson.fromJson(jsonString,new TypeToken<Map>(){}.getType());
-		System.out.println(map.get("status"));
 		if(map.get("status") != null && map.get("status").equals("error")){
 			return tr;
 		}else{

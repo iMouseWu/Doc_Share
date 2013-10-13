@@ -376,7 +376,7 @@ margin-top : 20px;
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h3>请添加昵称</h3>
   </div>
-  #{form @Personal.modifyNickNameandMail() , method:'POST',id:'modifynikename'}
+  #{form @Personal.modifyNickNameandMail() , method:'POST',id:'modifynikenameandmail'}
   <div class="modal-body">
   请输入你的昵称:<input type="text" name="nickname">
   <label class="checkbox">
@@ -577,28 +577,28 @@ $(document).ready(function() {
 			});
 	
 	/*异步搜索*/
-	$(document).ready(function() {
-		$('#searchForm').ajaxForm({
-			success : showSearchRes,
-			datatype : 'json'
-		});
-	});
+// 	$(document).ready(function() {
+// 		$('#searchForm').ajaxForm({
+// 			success : showSearchRes,
+// 			datatype : 'json'
+// 		});
+// 	});
 
-	function showSearchRes(responseJson) {
-		var html = "";
-		if ((typeof (responseJson[0].institute)) == "undefined") {
-			/*
-			*/
-		} else {
-			$.each(responseJson, function(commentIndex, comment) {
-				html += "<a href=ViewResource/viewDownloadsDetails?hashName="+responseJson[commentIndex].hashName + ">" 
-				+ responseJson[commentIndex].realName 
-				+ "</a>" 
-				+"<br>";
-			});
-		}
-		$('#searchres').html(html);
-	}
+// 	function showSearchRes(responseJson) {
+// 		var html = "";
+// 		if ((typeof (responseJson[0].institute)) == "undefined") {
+// 			/*
+// 			*/
+// 		} else {
+// 			$.each(responseJson, function(commentIndex, comment) {
+// 				html += "<a href=ViewResource/viewDownloadsDetails?hashName="+responseJson[commentIndex].hashName + ">" 
+// 				+ responseJson[commentIndex].realName 
+// 				+ "</a>" 
+// 				+"<br>";
+// 			});
+// 		}
+// 		$('#searchres').html(html);
+// 	}
 	
 	/*上传列表框二级联动*/
 	$(document).ready(function(){
@@ -646,7 +646,9 @@ $(document).ready(function() {
  		var html = "";
  		if (responseJson == null) {
  			alert("用户名或者密码错误");
- 		} else if( eval(responseJson).info == "通行证（学号）不存在或者未注册，如未注册，请注册后重新登陆"){
+ 		} else if(responseJson == "forbid"){
+ 			alert("对不起你被禁止登陆，如有问题请联系精宏网络");
+ 		}else if( eval(responseJson).info == "通行证（学号）不存在或者未注册，如未注册，请注册后重新登陆"){
  			alert("通行证（学号）不存在或者未注册，如未注册，请注册后重新登陆");
  		}else if(eval(responseJson).info == "addtwo"){
  			$.noConflict();
@@ -710,5 +712,67 @@ $(document).ready(function() {
 		$('#share_button').hide();
 		jQuery.noConflict();
 		$('#uploadssurface').modal();
+	}
+	/*异步修改昵称*/
+	$(document).ready(function() {
+		$('#modifynikename').ajaxForm({
+			success : modifynn_response
+		});
+	});
+	function modifynn_response(data){
+		if(data == "0")
+		{
+		alert("修改昵称成功");
+		jQuery.noConflict();
+		$('#modifynnandmail').modal('hide');
+		$('#login').hide();
+		$("#header").animate({
+			height: '420px'
+		});
+		$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
+			showResponse(data);
+		});
+		}else if(data == "1"){
+			alert("昵称重复");
+		}else if(data == "2"){
+			alert("昵称为空");
+		}
+	}
+	/*异步修改昵称和邮箱*/
+		$(document).ready(function() {
+		$('#modifynikenameandmail').ajaxForm({
+			success : modifynnandmai_response
+		});
+	});
+	function modifynnandmai_response(data){
+		if(data == "0")
+			{
+			alert("修改昵称成功");
+			jQuery.noConflict();
+			$('#modifynnandmail').modal('hide');
+			$('#login').hide();
+			$("#header").animate({
+				height: '420px'
+			});
+			$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
+				showResponse(data);
+			});
+			}else if(data == "1"){
+				alert("昵称重复");
+				
+			}else if(data == "2"){
+				alert("昵称为空");
+			}else{
+				jQuery.noConflict();
+				$('#modifynnandmail').modal('hide');
+				$('#login').hide();
+				$("#header").animate({
+					height: '420px'
+				});
+				$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
+					showResponse(data);
+				});
+				window.open(data);
+			}
 	}
      </script>

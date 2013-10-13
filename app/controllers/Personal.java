@@ -41,15 +41,23 @@ public class Personal extends BaseCore {
 		}
 	}
 	public static void welcome(){
-		render();
+		Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
+		String nickname = users.nickname;
+		String username = session.get("user");
+		String backurl = "";
+		if(users.mailaddress == null){
+			backurl = "http://user.zjut.com/";
+		}
+		render(backurl,nickname,username);
 	}
 	public static void view_personalinfo(String iframe_info) {
 		render(iframe_info);
 	}
 	public static void view_message() {
 		List<Map> re_list = new ArrayList<Map>();
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
 		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",
-				session.get("user")).fetch();
+				user).fetch();
 		for (Seek_Help seek_Help : seek_list) {
 			List<Ask_Tips> tips_list = Ask_Tips.find(
 					"tip_from_id = ? And tip_status = ?", seek_Help.id, 1)
@@ -76,7 +84,8 @@ public class Personal extends BaseCore {
 			share_message_list.add(share_mapMap);
 		}
 		List<Map> other_list = new ArrayList<Map>();
-		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", session.get("user"),0).fetch();
+		String user1 = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", user1,1).fetch();
 		for(Other_tips other_tips : other_tips_list){
 			Map otherMap = new HashedMap();
 			otherMap.put("message",other_tips.tip_content);
@@ -122,9 +131,8 @@ public class Personal extends BaseCore {
 		List<Map> re_list = new ArrayList<Map>();
 		List<Map> share_list = new ArrayList<Map>();
 		List<Map> other_list = new ArrayList<Map>();
-		
-		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",
-				session.get("user")).fetch();
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",user).fetch();
 		for (Seek_Help seek_Help : seek_list) {
 			List<Ask_Tips> tips_list = Ask_Tips.find(
 					"tip_from_id = ? And tip_status = ?", seek_Help.id, 0)
@@ -147,7 +155,8 @@ public class Personal extends BaseCore {
 			shareMap.put("message", message);
 			share_list.add(shareMap);
 		}
-		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", session.get("user"),0).fetch();
+		String user2 = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
+		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", user2,0).fetch();
 		for(Other_tips other_tips : other_tips_list){
 			Map otherMap = new HashedMap();
 			otherMap.put("message",other_tips.tip_content);
@@ -165,8 +174,9 @@ public class Personal extends BaseCore {
 	}
 
 	public static void view_myresources(int page) {
+		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
 		List<Filename> file_list_number = Filename.find("uploadname = ?",
-				session.get("user")).fetch();
+				user).fetch();
 		if(page == 0){
 			page = 1;
 		}
@@ -178,7 +188,7 @@ public class Personal extends BaseCore {
 			allpage = count / 10 + 1;
 		}
 		List<Filename> file_list = Filename.find("uploadname = ?",
-				session.get("user")).from((page - 1) * 10).fetch(10);
+				user).from((page - 1) * 10).fetch(10);
 		render(file_list,allpage,page);
 	}
 
@@ -240,9 +250,17 @@ public class Personal extends BaseCore {
 			/*如果是初始状态那么sign就是0，用来显示所有好友,并且移动按钮灰显，否则就是1*/
 			int sign = 1;
 		List<LinkMan> list = LinkMan.find("linkgroup_id = ?",group_id).fetch();
+		List<Map> re_list = new ArrayList<Map>();
+		for(LinkMan linkMan: list){
+			Map map= new HashMap();
+			map.put("linkman", linkMan);
+			String user = ((Users)Users.find("nickname = ?", linkMan.friend_name).fetch().get(0)).username;
+			map.put("username", user);
+			re_list.add(map);
+		}
 		List<Linkgroup> group_list = Linkgroup
 				.find("select  u from Linkgroup u where u.id != ?",group_id).fetch();
-		render(list, group_list,sign);
+		render(re_list, group_list,sign);
 	}else{
 		List<LinkMan> list = LinkMan.findAll();
 		int sign = 0;
@@ -288,7 +306,6 @@ public class Personal extends BaseCore {
 	public static void addLinkMan(long user_id,long group_id){
 		Users users = Users.findById(user_id);
 		List<LinkMan> list = LinkMan.find("friend_name = ? And linkgroup.host_name = ?", users.nickname,session.get("user")).fetch();
-		System.out.println(list.size());
 		if(list.size() == 1){
 			/*如果联系人已经存在的话就返回0*/
 			renderText(0);
@@ -343,19 +360,49 @@ public class Personal extends BaseCore {
 		other_tips.delete();
 		view_old_message(page);
 	}
+	/*如果返回1，昵称重复
+	 *如果返回2，昵称为空
+	 *如果返回0，没有选择修改邮箱，修改昵称成功
+	 *如果返回字符串。选择了激活邮箱，并且修改昵称成功
+	 * */
 	public static void modifyNickNameandMail(String nickname,String[] mailbool) throws HttpException, IOException{
-		Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
-		users.nickname = nickname;
-		users.save();
-		if(mailbool == null || mailbool.length == 0){
-			redirect(StaticPath.VALADATE_URL);
+		if(nickname == null){
+			renderText("2");
+		}else if(mailbool != null && mailbool.length !=0){
+			Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
+			List<Users> list_user = Users.find("nickname = ?", nickname).fetch();
+			if(list_user != null && list_user.size() != 0){
+				renderText("1");
+			}else{
+				users.nickname = nickname;
+				users.save();
+				renderText(StaticPath.VALADATE_URL);
+			}
 		}else{
-			redirect("http://user.zjut.com/");
+		Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
+		List<Users> list_user = Users.find("nickname = ?", nickname).fetch();
+		if(list_user != null && list_user.size() != 0){
+			renderText("1");
+		}else{
+			users.nickname = nickname;
+			users.save();
+			renderText("0");
+		}
 		}
 	}
 	public static void modifyNickName(String nickname) throws HttpException, IOException{
+		if(nickname == null){
+			renderText("2");
+		}else{
 		Users users = (Users)Users.find("username = ?", session.get("user")).fetch().get(0);
-		users.nickname = nickname;
-		redirect(StaticPath.VALADATE_URL);
+		List<Users> list_user = Users.find("nickname = ?", nickname).fetch();
+		if(list_user != null && list_user.size() != 0){
+			renderText("1");
+		}else{
+			users.nickname = nickname;
+			users.save();
+			renderText("0");
+		}
+		}
 	}
 }

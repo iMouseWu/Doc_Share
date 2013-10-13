@@ -1,14 +1,50 @@
  #{extends 'main.html' /} #{set title:'index.html' /}
+ <link href="@{'/public/stylesheets/bootstrap.min.css'}" rel="stylesheet" media="screen">
  <style type="text/css">
- #images_contain{
-margin: 0 auto;
+ #contain{
  position: relative;
  overflow: hidden;
- width:450px;
- height:420px;
+ margin: 100px;
+}
+.mail_statue{
+margin:0 0 50px 0;
 }
  </style>
  
- <div id="images_contain">
-<img src="@{'/public/images/mitu.jpg'}">
+ <div id="contain">
+ #{form @Personal.modifyNickName(), method:'POST', id:'modifyForm'}
+ <table class=table>
+<tr><td>学号:</td><td>${username}</td><td>昵称:</td><td><input type="text" value="${nickname}" name="nickname"></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+ </table>
+ <div class="mail_statue">
+ 是否已经激活(@stu.zjut.edu.cn)邮箱：
+ #{if backurl == '' }
+ 已经激活
+#{/if}
+#{else}
+否<a href="${backurl}" target="_blank">点此激活</a>
+#{/else}
 </div>
+<input type="submit" class="btn" value="提交">
+#{/form}
+</div>
+<script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery.form.min.js'}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+		$('#modifyForm').ajaxForm({
+			success : share_response
+		});
+	});
+	function share_response(data){
+		if(data == "0")
+		{
+		alert("修改昵称成功");
+		}else if(data == "1"){
+			alert("昵称重复");
+		}else if(data == "2"){
+			alert("昵称为空");
+		}
+	}
+</script>

@@ -103,7 +103,7 @@ public class Admin extends BaseCore {
     public static void deleteResource(int page,long id){
     	Other_tips other_tips = new Other_tips();
     	Filename filename = Filename.findById(id);
-    	String path = "/public/resourse/" + filename.institute + "/" + filename.subject + "/"
+    	String path = "/public/resourse/" + filename.institute         + "/" + filename.subject + "/"
 				+ filename.hashName;
     	/*删除数据库信息*/
     	filename.delete();
@@ -111,6 +111,7 @@ public class Admin extends BaseCore {
     	Play.getFile(path).delete();
     	/*通知站内信的形式作者*/
     	String content = "对不起，你上传" + filename.realName + "文件涉嫌违规，已被管理员删除。如果什么问题请联系管理员处理.谢谢.";
+    	/*通过站内信的形式通知作者*/
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	Date date = new Date();
     	other_tips.tip_content = content;
@@ -119,6 +120,7 @@ public class Admin extends BaseCore {
     	other_tips.to_name = filename.uploadname;
     	other_tips.save();
     	admin_resource(page);
+    	/*通过邮件通知作者*/
     }
     /*资源搜索*/
     public static void searchResource(int page,String serach_name){
@@ -214,10 +216,10 @@ public class Admin extends BaseCore {
 	}
 	
 	/*修改用户信息*/
-    public static void editUser(long id,int page,String username,String password,String mailaddress,String mailpassword,String institute){
+    public static void editUser(long id,int page,String nickname,String statue){
 	Users users = Users.findById(id);
-	users.username = username;
-	users.mailaddress = mailaddress;
+	users.nickname = nickname;
+	users.statue = statue;
 	users.save();
 	admin_user(page);
     }

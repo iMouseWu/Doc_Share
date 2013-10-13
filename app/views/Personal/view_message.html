@@ -24,7 +24,7 @@
     其他:
     <table class="table">
 #{list items:other_list, as:'map' }
-   <tr><td>${map.message.raw()}</td><td><a href="@{Personal.Remove_Share_Tips()}?id=${map.tips_id}">标记为已读</a></td></tr>
+   <tr><td>${map.message.raw()}</td><td><a href="@{Personal.Remove_Other_Tips}?id=${map.tips_id}">标记为已读</a></td></tr>
     #{/list}
     </table>
     </div>
