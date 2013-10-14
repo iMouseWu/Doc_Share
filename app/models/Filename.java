@@ -10,6 +10,7 @@ public class Filename extends Model {
 	public String institute;
 	public int downcount;
 	public String uploadname;
+	public String uploadno;
 	public String uploaddate;
 	public String subject;
 	public float avescore;

@@ -40,6 +40,11 @@
  #modal-body{
  height:300px;
  }
+ .pagination{
+margin-right: auto; 
+margin-left: auto;
+width:auto;
+}
  </style>
 <!--  联系人显示 -->
 <div id="linkman" class="modal hide fade">
@@ -47,17 +52,17 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h6 id="myModalLabel">联系人</h6>
     </div>
-    {form @Personal.share_resource(),id:'share_form',method:'POST'}
+    #{form @Personal.share_resource(),id:'share_form',method:'POST'}
     <input type="hidden" name="hashName" id="share_hashName">
     <input type="hidden" name="realName" id="share_realName">
     <div class="modal-body" id="modal-body">
     
     </div>
   <div class="modal-footer">
-  <textarea rows='2' name='share_content' id="share_content"></textarea>
+  留言：<textarea rows='2' name='share_content' id="share_content"></textarea>
   <input type="submit" value="提交">
   </div>
-  {/form}
+  #{/form}
 </div>
 <div id="content">
 <ul>
@@ -81,7 +86,7 @@
     #{/list}
 </ul>
 <div id="pagination_contain">
- <div class="pagination pagination-small">
+ <div class="pagination pagination-small" style="display:table;">
   <ul id="pagenumber">
   </ul>
 </div>

@@ -3,6 +3,7 @@ package controllers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -96,16 +97,16 @@ public class ViewResource extends BaseCore {
 	public static void viewInsMostDown(String username,String password) throws HttpException, IOException {
 		List re_list = new ArrayList();
 		Gson gson = new Gson();
-		String info = "[{'classname':'高等数学'},{'classname':'会计学'}]";
-		List<AllClass> list = gson.fromJson(info,
-				new TypeToken<List<AllClass>>() {
-				}.getType());
+//		String info = "[{'classname':'高等数学'},{'classname':'会计学'}]";
+//		List<AllClass> list = gson.fromJson(info,
+//				new TypeToken<List<AllClass>>() {
+//				}.getType());
 		TreeSet<String> treeset = GetClass.getUserClass(username,password);
-		System.out.println(treeset);
+		List<String> list = new ArrayList(Arrays.asList(treeset.toArray()));
 		List<Filename> alllistname = new ArrayList<Filename>();
-		for (AllClass allClass : list) {
+		for (String  allClass : list) {
 			List<Filename> listname = Filename.find("subject = ?",
-					allClass.classname).fetch();
+					allClass).fetch();
 			for (Filename a : listname) {
 				alllistname.add(a);
 			}
@@ -118,19 +119,17 @@ public class ViewResource extends BaseCore {
 		}  
 		/*获取用户的信息，获取后天提醒的消息数*/
 		/*回答的消息数目*/
-		String user1 = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Seek_Help> se_list = Seek_Help.find("seek_user = ?", user1).fetch();
+		List<Seek_Help> se_list = Seek_Help.find("seek_no = ?", session.get("user")).fetch();
 		int size = 0 ;
 		for(Seek_Help seek_Help : se_list){
 		List<Ask_Tips> tips_list = Ask_Tips.find("tip_from_id = ? And tip_status = ?",seek_Help.id,1).fetch();
 		size += tips_list.size();
 		}
 		/*分享的消息数目*/
-		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ?", session.get("user")).fetch();
+		List<Share_Tips> share_list = Share_Tips.find("tip_to_name = ? And tip_status = ?", session.get("user"),1).fetch();
 		size += share_list.size();
 		/*获取其他消息数目*/
-		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Other_tips> other_tips = Other_tips.find("to_name = ?", user).fetch();
+		List<Other_tips> other_tips = Other_tips.find("to_no = ? And tip_status = ?", session.get("user"),1).fetch();
 		size += other_tips.size();
 		/*获取好友列表*/
 		List<Map> linkman_group_list = new ArrayList<Map>();

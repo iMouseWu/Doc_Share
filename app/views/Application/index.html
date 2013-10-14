@@ -353,9 +353,8 @@ margin-top : 20px;
 
 <!-- 分页显示 -->
 <!-- <div id="test" style="height:70px;padding:30px 10px;"></div> -->
-<!-- <div id="pageNav"></div> -->
 <div id="pagination_contain">
- <div class="pagination pagination-small">
+ <div class="pagination pagination-small" style="display:table;">
   <ul id="pagenumber">
   </ul>
 </div>
@@ -387,7 +386,6 @@ margin-top : 20px;
   
   <div class="modal-footer">
   <input type="submit" value="下一步" class="btn btn-primary">
-    <a href="#" class="btn">关闭</a>
   </div>
   #{/form}
 </div>
@@ -404,7 +402,6 @@ margin-top : 20px;
   </div>
   <div class="modal-footer">
   <input type="submit" value="下一步" class="btn btn-primary">
-    <a href="#" class="btn">关闭</a>
   </div>
 </div>
 #{/form}
@@ -682,7 +679,7 @@ $(document).ready(function() {
  				$('#modal-body').append("<div id='div_group_" + map.group_id + "' class='friend_name'></div>");
  				$.each(map.linkman,function(Index,LinkMane){
  					$("#div_group_" + map.group_id).append("<label class='checkbox'>"+
- 							  "<input type='checkbox' name='linkname' class='div_firend_"+ map.group_id + " ' value='"+LinkMane.friend_name+"'>"+LinkMane.friend_name+
+ 							  "<input type='checkbox' name='linkname' class='div_friend_"+ map.group_id + "' value='"+LinkMane.friend_name+"'>"+LinkMane.friend_name+
  							  "</label>"); 
  				});
  				});
@@ -724,7 +721,7 @@ $(document).ready(function() {
 		{
 		alert("修改昵称成功");
 		jQuery.noConflict();
-		$('#modifynnandmail').modal('hide');
+		$('#modifynn').modal('hide');
 		$('#login').hide();
 		$("#header").animate({
 			height: '420px'

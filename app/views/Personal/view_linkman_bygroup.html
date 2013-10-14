@@ -31,10 +31,10 @@
 <td>
 <label class="checkbox" id= "checkbox_${map.linkman.id}">
   <input type="checkbox"  id="linkid_${map.linkman.id}" name="move_linkname_id" value="${map.linkman.id}">
-  ${map.linkma.friend_name}
+  ${map.linkman.friend_name}
 </label>
 </td>
-<td>${map.username}</td>
+<td>${map.linkman.friend_no}</td>
 </tr>
 #{/list}
 </tbody>
@@ -57,15 +57,20 @@ function submit_form(sign){
 
 $(document).ready(function() {
 	$('#dofirend').ajaxForm({
-		dataType : 'json',
-		success : move_response
+		success : move_response,
+		dataType : 'json'
 	});
 });
 function move_response(data){
+	if(data == "a"){
+		alert("不能为空");
+	}else{
 	$.each(data,function(commentIndex, comment){
-		$("#checkbox_"+comment).remove();
+		$("#checkbox_"+comment).parent().parent().remove();
 	});
+	}
 }
+
 
 $(document).ready(function(){
 	if(${sign} == 0){

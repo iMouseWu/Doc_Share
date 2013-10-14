@@ -8,6 +8,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "db_ask_tips")
 public class Ask_Tips extends Model{
+	public String tip_from_no;
 	public String tip_from_name;
 	public String tip_content;
 	public String tip_date;

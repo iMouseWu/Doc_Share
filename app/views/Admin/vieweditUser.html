@@ -51,6 +51,36 @@ padding: 40px;
 #{/else}
     </div>
   </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="mailaddress">角色</label>
+    <div class="controls">
+    #{if users.authority == "0" }
+    <select name="authority">
+  <option value="0" selected>普通用户</option>
+  <option value="1">管理员</option>
+  <option value="2">超级用户</option>
+</select>
+#{/if}
+
+#{elseif users.authority == "1"}
+   <select name="authority">
+  <option value="0">普通用户</option>
+  <option value="1" selected>管理员</option>
+  <option value="2">超级用户</option>
+</select>
+#{/elseif}
+
+#{else}
+   <select name="authority">
+  <option value="0">普通用户</option>
+  <option value="1">管理员</option>
+  <option value="2" selected>超级用户</option>
+</select>
+#{/else}
+    </div>
+  </div>
+  
   <div class="control-group">
     <div class="controls">
       <button type="submit" class="btn">提交</button>

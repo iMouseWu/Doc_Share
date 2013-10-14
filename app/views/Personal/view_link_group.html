@@ -84,4 +84,9 @@ $("#add_header").click(function(){
 function removegroup(id){
 	window.location.href = "@{Personal.deleteGroup}?id=" + id;
 }
+$(document).ready(function(){
+	if(${sign} == 1){
+		alert("分组名重复");
+	}
+});
 </script>

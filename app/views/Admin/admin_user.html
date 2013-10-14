@@ -28,6 +28,11 @@
  .search_table{
  max-width: 100%;
  }
+ .pagination{
+margin-right: auto; 
+margin-left: auto;
+width:auto;
+}
  </style>
  <div id="top_search">
  #{form @Admin.searchUser(),method:'POST'}
@@ -50,6 +55,7 @@
   <td>昵称</td>
   <td>邮件地址</td>
   <td>登陆状态</td>
+  <td>角色</td>
   </tr>
  </thead>
  
@@ -73,15 +79,28 @@
     允许登陆
 #{/else}
  </td>
-  <td><a href="@{Admin.deleteUser(page,Users.id)}">删除</a></td>
+  <td>
+  #{if Users.authority == "0"}
+    普通用户
+#{/if}
+ 
+#{elseif Users.authority == "1"}
+   管理员
+#{/elseif}
+ 
+#{else}
+    超级用户
+#{/else}
+  </td>
   <td><a href="@{Admin.vieweditUser(page,Users.id)}">编辑</a></td>
   </tr>
   #{/list}
+  
+  
  </tbody>
-
 </table>
 <div id="pagination_contain">
- <div class="pagination pagination-small">
+ <div class="pagination pagination-small" style="display:table;">
   <ul id="pagenumber">
   </ul>
 </div>
@@ -99,5 +118,8 @@ function pHtml2(a){
 var paging = new paging();
 $(document).ready(function() {
 	paging.go(${page},${allpage});
+	if(${backnum} == 1){
+		alert("对不起你没有权限");
+	}
 });
 </script>

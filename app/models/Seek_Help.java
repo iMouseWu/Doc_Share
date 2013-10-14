@@ -13,6 +13,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "db_seekhelp")
 public class Seek_Help extends Model {
+	public String seek_no;
 	public String seek_user;
 	public String seek_content;
 	public String seek_title;

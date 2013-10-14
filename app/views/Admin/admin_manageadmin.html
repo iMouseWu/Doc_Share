@@ -39,25 +39,42 @@
  max-width: 100%;
   }
  </style>
- <div id="top_search">
- #{form @Admin.searchHelp(),method:'POST'}
+ <div id="top">
+   <div id="top_search">
+   #{form @Admin.searchAdmin(),method:'POST'}
  <table class="search_table">
  <tr>
- <th class="search_td right" >å¯»æ±‚äºº:</th>
- <td class="search_td left"><input type="text" name="serach_name"></td>
+ <th class="search_td right" >Ñ§ºÅ:</th>
+ <td class="search_td left"><input type="text" name="serach_admin"></td>
  </tr>
  <tr><td ></td>
- <td><button type="submit" class="pull-right">æœç´¢</button></td>
+ <td><button type="submit" class="pull-right">ËÑË÷</button></td>
  </tr>
  </table>
  #{/form}
  </div>
+ 
+ <div id="top_add">
+ #{form @Admin.addAdmin(),method:'POST'}
+ <table class="add_table">
+ <tr>
+ <th class="search_td right" >Ñ§Ôº:</th>
+ <td class="search_td left"><input type="text" name="add_institute"></td>
+ </tr>
+ <tr><td ></td>
+ <td><button type="submit" class="pull-right">Ôö¼Ó</button></td>
+ </tr>
+ </table>
+ #{/form}
+ </div>
+ </div>
+ 
    <div id="tableview">
  <table class="table table-condensed">
   <thead>
   <tr>
-  <td>å¯»æ±‚äºº</td>
-  <td>å¯»æ±‚å†…å®¹</td>
+  <td>Ñ°ÇóÈË</td>
+  <td>Ñ°ÇóÄÚÈİ</td>
   </tr>
  </thead>
  
@@ -66,8 +83,8 @@
  <tr>
   <td>${Seek_Help.seek_user}</td>
   <td>${Seek_Help.seek_content}</td>
-  <td><a onclick="if(window.confirm('ç¡®è®¤åˆ é™¤ï¼Ÿ')==true){window.location.href='@{Admin.deleteHelp(page,Seek_Help.id)}'}" href="#">åˆ é™¤</a></td>
-  <td><a href="@{Admin.vieweditHelp(page,Seek_Help.id)}">ç¼–è¾‘</a></td>
+  <td><a onclick="if(window.confirm('È·ÈÏÉ¾³ı£¿')==true){window.location.href='@{Admin.deleteHelp(page,Seek_Help.id)}'}" href="#">É¾³ı</a></td>
+  <td><a href="@{Admin.vieweditHelp(page,Seek_Help.id)}">±à¼­</a></td>
   </tr>
   #{/list}
  </tbody>

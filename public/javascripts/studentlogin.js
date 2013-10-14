@@ -3,8 +3,8 @@
 		var test = document.getElementById("group_" + group_id).checked;
 		selElements = document.getElementsByTagName("input"); 
 		if(test == true){
-			for (var i = 0; i < selElements.length; i++) {  
-		        if (selElements[i].className == "div_firend_" + group_id) {
+			for (var i = 0; i < selElements.length; i++) {
+		        if (selElements[i].className == "div_friend_" + group_id) {
 		        	selElements[i].checked = true;
 		        }  
 		    }  

@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import tools.StaticPath;
+import models.Linkgroup;
 import models.Users;
 
 public class Login extends BaseCore{
@@ -37,11 +38,19 @@ public class Login extends BaseCore{
 		if(map.get("state").equals("success")){
 			/*判断该用户是否以前登陆过*/
 			if(userlist.size() == 0){
+				/*创建我的好友分组*/
+				Linkgroup linkgroup = new Linkgroup();
+				linkgroup.firend_group = "friend";
+				linkgroup.host_name = session.get("user");
+				linkgroup.save();
+				/*为登陆者初始化信息*/
 				Users users = new Users();
 				users.isfirst = "0";
 				users.statue = "0";
+				users.authority = "0";
 				users.nickname = users.username = username;
-				if(map.get("zjutmail") == null){
+				Map innermap = (Map)map.get("data");
+				if(innermap.get("zjutmail") == null){
 					/*用户中心已经注册，且doc_share是第一次登陆，并且邮箱没有开通（需要修改昵称和是否开通邮箱）*/
 					users.mailaddress = null;
 					users.save();
@@ -56,7 +65,7 @@ public class Login extends BaseCore{
 					renderText(listToJson);
 				}else{
 					/*用户中心已经注册，且doc_share是第一次登陆，并且邮箱开通（需要修改昵称）*/
-					users.mailaddress = (String)map.get("zjutmail");
+					users.mailaddress = (String)innermap.get("zjutmail");
 					users.save();
 					session.put("user", username);
 					session.put("password",password);
@@ -109,6 +118,7 @@ public class Login extends BaseCore{
 		session.clear();
 		Application.index("");
 	}
+	/*mapjson为用户中心API返回的JSON格式*/
 	public static Map ValidateUser(String username,String password){
 		String validateUrl = StaticPath.USERCENTER_API_STUDENT_NUMBER.replace("{0}", username)
 				.replace("{1}", password);

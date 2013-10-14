@@ -69,6 +69,7 @@ public class Uploads extends BaseCore{
 		filedatename.uploaddate = formatter.format(date);
 		filedatename.picture = fileextexceptdoc + ".png";
 		filedatename.intro = intro_sel;
+		filedatename.uploadno = session.get("user");
 		dao.AddResources.addFile(filedatename);
 //		List list = new ArrayList();
 //		list.add(filedatename.id);

@@ -45,7 +45,9 @@ public class Personal extends BaseCore {
 		String nickname = users.nickname;
 		String username = session.get("user");
 		String backurl = "";
-		if(users.mailaddress == null){
+		Map map = Login.ValidateUser(session.get("user"),session.get("password"));
+		Map innermap = (Map)map.get("data");
+		if(innermap.get("zjutmail") == null){
 			backurl = "http://user.zjut.com/";
 		}
 		render(backurl,nickname,username);
@@ -55,16 +57,15 @@ public class Personal extends BaseCore {
 	}
 	public static void view_message() {
 		List<Map> re_list = new ArrayList<Map>();
-		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",
-				user).fetch();
+		List<Seek_Help> seek_list = Seek_Help.find("seek_no = ?",
+				session.get("user")).fetch();
 		for (Seek_Help seek_Help : seek_list) {
 			List<Ask_Tips> tips_list = Ask_Tips.find(
 					"tip_from_id = ? And tip_status = ?", seek_Help.id, 1)
 					.fetch();
 			for (Ask_Tips tips : tips_list) {
 				Map list_map = new HashedMap();
-				String message = tips.tip_from_name + "回答了"
+				String message = "学号为:" + tips.tip_from_no + tips.tip_from_name + "回答了"
 						+ seek_Help.seek_content + "问题：" + tips.tip_content;
 				list_map.put("message", message);
 				list_map.put("tips_id", tips.id);
@@ -72,7 +73,7 @@ public class Personal extends BaseCore {
 			}
 		}
 		List<Share_Tips> share_list = Share_Tips.find(
-				"tip_to_name = ?And tip_status = ?", session.get("user"), 1)
+				"tip_to_name = ? And tip_status = ?", session.get("user"), 1)
 				.fetch();
 		List<Map> share_message_list = new ArrayList<Map>();
 		Map share_mapMap = new HashMap();
@@ -84,8 +85,7 @@ public class Personal extends BaseCore {
 			share_message_list.add(share_mapMap);
 		}
 		List<Map> other_list = new ArrayList<Map>();
-		String user1 = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", user1,1).fetch();
+		List<Other_tips> other_tips_list = Other_tips.find("to_no = ? And tip_status = ?", session.get("user"),1).fetch();
 		for(Other_tips other_tips : other_tips_list){
 			Map otherMap = new HashedMap();
 			otherMap.put("message",other_tips.tip_content);
@@ -131,8 +131,7 @@ public class Personal extends BaseCore {
 		List<Map> re_list = new ArrayList<Map>();
 		List<Map> share_list = new ArrayList<Map>();
 		List<Map> other_list = new ArrayList<Map>();
-		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Seek_Help> seek_list = Seek_Help.find("seek_user = ?",user).fetch();
+		List<Seek_Help> seek_list = Seek_Help.find("seek_no = ?",session.get("user")).fetch();
 		for (Seek_Help seek_Help : seek_list) {
 			List<Ask_Tips> tips_list = Ask_Tips.find(
 					"tip_from_id = ? And tip_status = ?", seek_Help.id, 0)
@@ -155,8 +154,7 @@ public class Personal extends BaseCore {
 			shareMap.put("message", message);
 			share_list.add(shareMap);
 		}
-		String user2 = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Other_tips> other_tips_list = Other_tips.find("to_name = ? And tip_status = ?", user2,0).fetch();
+		List<Other_tips> other_tips_list = Other_tips.find("to_no = ? And tip_status = ?", session.get("user"),0).fetch();
 		for(Other_tips other_tips : other_tips_list){
 			Map otherMap = new HashedMap();
 			otherMap.put("message",other_tips.tip_content);
@@ -174,9 +172,8 @@ public class Personal extends BaseCore {
 	}
 
 	public static void view_myresources(int page) {
-		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
-		List<Filename> file_list_number = Filename.find("uploadname = ?",
-				user).fetch();
+		List<Filename> file_list_number = Filename.find("uploadno = ?",
+				session.get("user")).fetch();
 		if(page == 0){
 			page = 1;
 		}
@@ -187,8 +184,8 @@ public class Personal extends BaseCore {
 		}else{
 			allpage = count / 10 + 1;
 		}
-		List<Filename> file_list = Filename.find("uploadname = ?",
-				user).from((page - 1) * 10).fetch(10);
+		List<Filename> file_list = Filename.find("uploadno = ?",
+				session.get("user")).from((page - 1) * 10).fetch(10);
 		render(file_list,allpage,page);
 	}
 
@@ -218,32 +215,33 @@ public class Personal extends BaseCore {
 				.find("username = ?", session.get("user")).fetch().get(0);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for (String single_linkname : linkname) {
+			Users users =(Users)Users.find("nickname = ?", single_linkname).fetch().get(0);
 			Share_Tips share_Tips = new Share_Tips();
 			share_Tips.tip_content = content;
 			share_Tips.tip_from_name = session.get("user");
 			share_Tips.tip_status = 1;
-			share_Tips.tip_to_name = single_linkname;
+			share_Tips.tip_to_name = users.username;
 			share_Tips.tip_date = formatter.format(date);
 			dao.AddResources.addShare_Tips(share_Tips);
-			Users linkuser = (Users) Users
-					.find("username = ?", single_linkname).fetch().get(0);
 			/* 发送email */
+			if(users.mailaddress != null){
 			HtmlEmail email = new HtmlEmail();
-			email.setHostName("smtp.qq.com");
+			email.setHostName("smtp.stu.zjut.edu.cn");
 			email.setSmtpPort(25);
 			email.setAuthenticator(new DefaultAuthenticator(
 					hostuser.mailaddress, session.get("password")));
 			email.setFrom(hostuser.mailaddress);
 			/*防止乱码*/
 			email.setHtmlMsg(new String(content.getBytes("utf-8"), "iso-8859-1"));
-			email.addTo(linkuser.mailaddress);
+			email.addTo(users.mailaddress);
 			email.send();
+		}
 		}
 	}
 	}
-	public static void view_link_group() {
+	public static void view_link_group(int sign) {
 		List<Linkgroup> group_list = Linkgroup.find("host_name= ?",session.get("user")).fetch();
-		render(group_list);
+		render(group_list,sign);
 	}
 	public static void view_linkman_bygroup(long group_id) {
 		if(group_id != 0){
@@ -254,8 +252,6 @@ public class Personal extends BaseCore {
 		for(LinkMan linkMan: list){
 			Map map= new HashMap();
 			map.put("linkman", linkMan);
-			String user = ((Users)Users.find("nickname = ?", linkMan.friend_name).fetch().get(0)).username;
-			map.put("username", user);
 			re_list.add(map);
 		}
 		List<Linkgroup> group_list = Linkgroup
@@ -269,6 +265,13 @@ public class Personal extends BaseCore {
 	}
 	}
 	public static void moveFriend(Long[] move_linkname_id, long to_group_id) {
+		if(move_linkname_id == null || move_linkname_id.length == 0){
+			response.contentType = "application/json";
+			response.setHeader("Content-Type", "application/json;charset=UTF-8");
+			Gson gson = new Gson();
+			String back = gson.toJson("a");
+			renderText(back);
+		}else{
 		for(long linkname_id : move_linkname_id){
 			List<LinkMan> link_list = LinkMan.find("id = ?",linkname_id).fetch();
 			LinkMan linkMan = link_list.get(0);
@@ -282,13 +285,19 @@ public class Personal extends BaseCore {
 		Gson gson = new Gson();
 		String stringToJson = gson.toJson(move_linkname_id);
 		renderText(stringToJson);
+		}
 	}
 	public static void addGroup(String newgroup){
+		List<Linkgroup> list = Linkgroup.find("firend_group = ?", newgroup).fetch();
+		if(list.size() == 1){
+			view_link_group(1);
+		}else{
 		Linkgroup linkgroup =new Linkgroup();
 		linkgroup.host_name = session.get("user");
 		linkgroup.firend_group = newgroup;
 		dao.AddResources.addGroup(linkgroup);
-		view_link_group();
+		view_link_group(0);
+		}
 	}
 	public static void view_addLinkMan(){
 		/*返回好友组别*/
@@ -305,7 +314,7 @@ public class Personal extends BaseCore {
 	}
 	public static void addLinkMan(long user_id,long group_id){
 		Users users = Users.findById(user_id);
-		List<LinkMan> list = LinkMan.find("friend_name = ? And linkgroup.host_name = ?", users.nickname,session.get("user")).fetch();
+		List<LinkMan> list = LinkMan.find("friend_no = ? And linkgroup.host_name = ?", users.username,session.get("user")).fetch();
 		if(list.size() == 1){
 			/*如果联系人已经存在的话就返回0*/
 			renderText(0);
@@ -314,6 +323,7 @@ public class Personal extends BaseCore {
 		linkgroup.id = group_id;
 		LinkMan linkMan = new LinkMan();
 		linkMan.friend_name = users.nickname;
+		linkMan.friend_no = users.username;
 		linkMan.linkgroup = linkgroup;
 		linkMan.save();
 		/*成功就返回1*/
@@ -343,7 +353,7 @@ public class Personal extends BaseCore {
 		}
 		Linkgroup linkgroup = Linkgroup.findById(id);
 		linkgroup.delete();
-		view_link_group();
+		view_link_group(0);
 	}
 	public static void delete_asktips(int page,long id){
 		Ask_Tips ask_Tips = Ask_Tips.findById(id);

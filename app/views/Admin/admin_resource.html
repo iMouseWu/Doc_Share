@@ -28,6 +28,11 @@
  .search_table{
  max-width: 100%;
  }
+ .pagination{
+margin-right: auto; 
+margin-left: auto;
+width:auto;
+}
  </style>
  <div id="top_search">
  #{form @Admin.searchResource(),method:'POST'}
@@ -58,7 +63,7 @@
   <td>${Filename.realName}</td>
   <td>${Filename.institute}</td>
   <td>${Filename.subject}</td>
-  <td><a href="@{Admin.deleteResource(page,Filename.id)}">删除</a></td>
+  <td><a onclick="if(window.confirm('确认删除？')==true){window.location.href='@{Admin.deleteResource(page,Filename.id)}'}" href="#">删除</a></td>
   <td><a href="@{Admin.vieweditResource(page,Filename.id)}">编辑</a></td>
   </tr>
   #{/list}
@@ -66,7 +71,7 @@
 
 </table>
 <div id="pagination_contain">
- <div class="pagination pagination-small">
+ <div class="pagination pagination-small" style="display:table;">
   <ul id="pagenumber">
   </ul>
 </div>
