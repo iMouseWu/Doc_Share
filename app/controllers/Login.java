@@ -38,6 +38,8 @@ public class Login extends BaseCore{
 		if(map.get("state").equals("success")){
 			/*判断该用户是否以前登陆过*/
 			if(userlist.size() == 0){
+				session.put("user", username);
+				session.put("password",password);
 				/*创建我的好友分组*/
 				Linkgroup linkgroup = new Linkgroup();
 				linkgroup.firend_group = "friend";
@@ -54,8 +56,6 @@ public class Login extends BaseCore{
 					/*用户中心已经注册，且doc_share是第一次登陆，并且邮箱没有开通（需要修改昵称和是否开通邮箱）*/
 					users.mailaddress = null;
 					users.save();
-					session.put("user", username);
-					session.put("password",password);
 					Map map2 = new HashedMap();
 					map2.put("info", "addtwo");
 					Gson gson = new Gson();
@@ -67,8 +67,6 @@ public class Login extends BaseCore{
 					/*用户中心已经注册，且doc_share是第一次登陆，并且邮箱开通（需要修改昵称）*/
 					users.mailaddress = (String)innermap.get("zjutmail");
 					users.save();
-					session.put("user", username);
-					session.put("password",password);
 					Map map2 = new HashedMap();
 					map2.put("info", "addone");
 					Gson gson = new Gson();

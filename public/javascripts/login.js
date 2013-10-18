@@ -1,12 +1,9 @@
 $(".signin").toggle(function(){
 	$("#header").animate({
-		height: '420px'
+		height: '340px'
 	});
 },function(){
 	$("#header").animate({
-		height: '120px'
+		height: '40px'
 	});
-}
-
-
-);
+});

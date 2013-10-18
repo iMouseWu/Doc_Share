@@ -38,7 +38,11 @@ width:auto;
  #{form @Admin.searchResource(),method:'POST'}
  <table class="search_table">
  <tr>
- <th class="search_td right" >名称:</th>
+ <th class="search_td right" >
+ <select name="sort">
+  <option value="1">按资源名称查找</option>
+  <option value="0">按学号查找</option>
+</select></th>
  <td class="search_td left"><input type="text" name="serach_name"></td>
  </tr>
  <tr><td ></td>
@@ -54,6 +58,7 @@ width:auto;
   <td>名称</td>
   <td>学院</td>
   <td>学科</td>
+  <td>上传者</td>
   </tr>
  </thead>
  
@@ -63,6 +68,7 @@ width:auto;
   <td>${Filename.realName}</td>
   <td>${Filename.institute}</td>
   <td>${Filename.subject}</td>
+  <td>${Filename.uploadno}</td>
   <td><a onclick="if(window.confirm('确认删除？')==true){window.location.href='@{Admin.deleteResource(page,Filename.id)}'}" href="#">删除</a></td>
   <td><a href="@{Admin.vieweditResource(page,Filename.id)}">编辑</a></td>
   </tr>

@@ -30,7 +30,7 @@ left:200px;
 }
 .resource_name{
 position: relative;
-margin: 0 0 0 20px;
+margin: 10px 0 10px 10px;
 }
 #pagination_contain{
 position: absolute;
@@ -39,8 +39,9 @@ top:400px;
 left:0px;
 }
 .suggestItemBody {
-	width: 300px;
+	width: 280px;
 	line-height: 15px;
+	height: 45px;
 }
 .suggestColumn {
 	float: left;
@@ -63,6 +64,9 @@ left:0px;
 .suggestItemCommon {
 	width: 280px;
 	margin: 15px 15px 0 0; 
+}
+.suggestItemHeader h3{
+    margin : 0 0 0 10px;
 }
 #share_content{
  resize:none;
@@ -102,7 +106,7 @@ height : 15px;
 }
 #subject {
 	position: absolute;
-	left: 110px;
+	left: 170px;
 	top: 45px
 }
 #login_uploads {
@@ -178,6 +182,13 @@ background:
 width:100px;
 margin-left : 550px;
 margin-top : 20px;
+    line-height: 0px;
+}
+#hot_resource{
+margin: 5px auto;
+}
+.detail p {
+margin: 10px 0px 10px;
 }
 </style>
 </head>
@@ -200,17 +211,17 @@ margin-top : 20px;
 <!-- 首页顶端导航 -->
 <div id="topBar">
 	<ol class="left">
-		<li class="navTag"><a class="navLink" href="http://www.zjut.com/">精弘网络</a></li>
-		<li class="navTag"><a class="navLink" href="http://bbs.zjut.com/">论坛</a></li>
-		<li class="navTag"><a class="navLink" href="http://pt.zjut.com/">PT</a></li>
-		<li class="navTag"><a class="navLink" href="http://down.zjut.com/">下载站</a></li>
-		<li class="navTag"><a class="navLink" href="http://feel.zjut.com/">电台</a></li>
+		<li class="navTag"><a class="navLink" target="_blank" href="http://www.zjut.com/">精弘网络</a></li>
+		<li class="navTag"><a class="navLink" target="_blank" href="http://bbs.zjut.com/">论坛</a></li>
+		<li class="navTag"><a class="navLink" target="_blank" href="http://pt.zjut.com/">PT</a></li>
+		<li class="navTag"><a class="navLink" target="_blank" href="http://down.zjut.com/">下载站</a></li>
+		<li class="navTag"><a class="navLink" target="_blank" href="http://feel.zjut.com/">电台</a></li>
 		<li class="navTag"><a class="navLink active" href="#">文档</a></li>
 		<li class="navTag"><a class="navLink" href="http://go.zjut.com/">导航</a></li>
 	</ol>
 	<ol class="right" id="top_information">
-		<li class="signin"><!-- <input type="button" class="topbtn" name="login" value="登陆"/> -->登录</li>
-		<li class="navTag">注册</li>
+		<li class="signin">登录</li>
+		<li class="navTag"><a href="http://user.zjut.com/" target="_blank">注册</a></li>
 	</ol>
 </div>
 
@@ -219,11 +230,8 @@ margin-top : 20px;
 <div class="wrapper">
 	<div class="header" id="header">
 		<div class="box">
-			<div class="left logo">
-			<!-- 左上角空白处用来画logo，我画的不好，可以让美工试试 -->
-			</div>
 			<div class="search right">
-				<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区问问看!</a>
+				<a href="@{SeekHelp.seek_home()}?page=1">找不到资源？去资源区问问看!</a>
 			</div>
 		</div>
 		
@@ -235,22 +243,22 @@ margin-top : 20px;
 		#{form @Login.LoginCheck(),id:'loginForms',method:'POST'}
 			<div class="lineRow"><input type="text" class="span" name="username" placeholder="学号/工号"/></div>
 			<div class="lineRow"><input type="password" class="span" name="password" placeholder="密码"/></div>
-			<div class="lineRow"><input type="submit" class="btn left" name="login" value="登陆"/><span class="tips left">忘记密码</span></div>
+			<div class="lineRow"><input type="submit" class="btn left" name="login" value="登陆"/><a href="http://user.zjut.com" target="_blank"><span class="tips left">忘记密码</span></a></div>
 		#{/form}
 		</div>
 		</div>
 	</div>
 	
 	<div class="contain">
-		<h1>热门资源</h1>
+		<h4>热门资源</h4>
 		<!-- 资源列表 -->
-		<ul class="resources right" id="hot_resource">
+		<ul class="resources" id="hot_resource">
 		</ul>
 	</div>
 	
 	<div id="footer">
 		<p class="left">Copyright © 2013 <a href="http://www.zjut.com">浙江工业大学-精弘网络</a></p>
-		<p class="right">Design by <a href="http://www.hellohjk.com">HJK</a></p>
+		<p class="right">Powered by <a href="#">Play And Bootstrap</a> written in <a target="_blank" href="http://java.sun.com">Java</a></p>
 	</div>
 </div>
 
@@ -314,7 +322,7 @@ margin-top : 20px;
     </div>
   <div class="modal-footer">
   <textarea rows='2' name='share_content' id="share_content"></textarea>
-  <input type="submit" value="提交">
+  <input class="btn btn-primary"type="submit" value="提交">
   </div>
   #{/form}
 </div>
@@ -369,7 +377,7 @@ margin-top : 20px;
 </div>
 </div>
 </div>
-/*第一次登陆时候修改昵称和激活邮箱*/
+<!-- 第一次登陆时候修改昵称和激活邮箱 -->
 <div class="modal hide fade" id="modifynnandmail">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -390,7 +398,7 @@ margin-top : 20px;
   #{/form}
 </div>
 
-/*邮箱已经激活，修改昵称*/
+<!-- 邮箱已经激活，修改昵称 -->
 <div class="modal hide fade" id="modifynn">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -465,8 +473,7 @@ function share_begin(){
 		    $.each(data[0], function(commentIndex, comment) {
 			html += "<div class='resource_name'><a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
 			+ comment.realName 
-			+ "</a></div>" 
-			+"<br>";
+			+ "</a></div>" ;
 		});
 	}
 		  search_pageNav.go(parseInt($('#sure_page').val()),data[1]);/*$('#sure_page').val()蛋疼的传到后方是String类型导致+法计算的时候它直接按照String来连接了*/
@@ -536,8 +543,7 @@ $(document).ready(function() {
    			$.each(data[0], function(commentIndex, comment) {
    				html += "<div class='resource_name'><a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
    				+ comment.realName 
-   				+ "</a></div>" 
-   				+"<br>";
+   				+ "</a></div>" ;
    				$('#resource').html(html);
    				$('#resource_html').val(html);
    			});
@@ -547,7 +553,6 @@ $(document).ready(function() {
 		getRes(1);
 		$('#sure_subject').val($('#hiddenvalsub').val());
 		$('#sure_institute').val($('#hiddenval').val());
-		
 		$('#back_home').html("<ul class='breadcrumb'>"+
 				   "<li><a href='#' onclick='back_home();'>首页</a> <span class='divider'>/</span></li>"+
 				    "<li class='active'>资源</li></ul>");
@@ -631,7 +636,8 @@ $(document).ready(function() {
     		$("i").removeClass(" icon-chevron-right").addClass("icon-chevron-left");
     		}
     	});
-     /*学生登录异步提交，并且显示该学生所在学院的热门资源*/
+     
+     /*学生登录异步提交，并且显示该学生对应这个学期的课程的热门资源*/
  	$(document).ready(function() {
  		$('#loginForms').ajaxForm({
  			success : showResponse,
@@ -665,7 +671,7 @@ $(document).ready(function() {
  			/*推荐资源,这里的css在want.css,index.htm or page.css里面*/
  			if(commentIndex%2 == 0) 
  				html+= '<ul class="suggestColumn suggestCommon">';
- 			html+='<li class="suggestItem suggestItemCommon"><div class="wantItemHeader"><a href="@{ViewResource.viewDownloadsDetails()}?hashName='+ comment.hashName +'"><h3 class="left">'+comment.realName+'</h3></a></div><br><br><div class="suggestItemBody">简介:'+comment.intro+'</div>'
+ 			html+='<li class="suggestItem suggestItemCommon"><div class="suggestItemHeader"><a href="@{ViewResource.viewDownloadsDetails()}?hashName='+ comment.hashName +'"><h3>'+comment.realName+'</h3></a></div><div class="suggestItemBody">简介:'+comment.intro+'</div>'
  			html+='<div class="right operation"><span class="tips">'+comment.uploaddate+'</span><span class="tips">'+comment.uploadname+'</span></div></li>';
  			if(commentIndex%2 != 0)
  				html+='</ul>';
@@ -693,15 +699,14 @@ $(document).ready(function() {
 		if(username != ""){
 			$('#login').hide();
 			$("#header").animate({
-				height: '420px'
+				height: '340px'
 			});
 			$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
 				showResponse(data);
 			});
 		}else if(tipinfo == "请登录"){
-			$("#header").animate({
-				height: '420px'
-			});
+			alert("请先登录");
+			$(".signin").click();
 		}else{
 		}
 	});
@@ -724,7 +729,7 @@ $(document).ready(function() {
 		$('#modifynn').modal('hide');
 		$('#login').hide();
 		$("#header").animate({
-			height: '420px'
+			height: '340px'
 		});
 		$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
 			showResponse(data);
@@ -749,7 +754,7 @@ $(document).ready(function() {
 			$('#modifynnandmail').modal('hide');
 			$('#login').hide();
 			$("#header").animate({
-				height: '420px'
+				height: '340px'
 			});
 			$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
 				showResponse(data);
@@ -764,7 +769,7 @@ $(document).ready(function() {
 				$('#modifynnandmail').modal('hide');
 				$('#login').hide();
 				$("#header").animate({
-					height: '420px'
+					height: '340px'
 				});
 				$.getJSON('@{ViewResource.viewInsMostDown}',function(data){
 					showResponse(data);

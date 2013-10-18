@@ -38,8 +38,8 @@ width:300px;
 	</ol>
 	<ol class="right">
 	    <li class='navTag'><a href=@{Application.index()}>首页</a></li>
-		<li class='navTag'><a href=@{Personal.view_personalinfo}?iframe_info=/Personal/view_message>你有${size}条消息</a></li>
-		<li class='navTag'><a href=@{Personal.view_personalinfo}>个人中心</a></li>
+		<li class='navTag'><a href=@{Personal.view_personalinfo()}?iframe_info=@{Personal.view_message()}>你有${size}条消息</a></li>
+		<li class='navTag'><a href=@{Personal.view_personalinfo()}>个人中心</a></li>
 		<li class='navTag'><a href=@{Login.exitLogin}>退出</a></li>
 	</ol>
 </div>
@@ -50,11 +50,11 @@ width:300px;
 			<!-- 左上角空白处用来画logo，我画的不好，可以让美工试试 -->
 			</div>
 				<div class="search right">
-				<a href='SeekHelp/seek_home?page=1'>找不到资源？去资源区问问看!</a>
+				<a href='@{SeekHelp.seek_home()}?page=1'>找不到资源？去资源区问问看!</a>
 			</div>
 		</div>
 		<div class="login">
-			<div class="lineRow"><input type="num" class="span" name="num" placeholder="学号/工号"/></div>
+			<div class="lineRow"><input type="text" class="span" name="num" placeholder="学号/工号"/></div>
 			<div class="lineRow"><input type="password" class="span" name="pwd" placeholder="密码"/></div>
 			<div class="lineRow"><input type="button" class="btn left" name="login" value="登陆"/><span class="tips left"><a href="http://user.zjut.com/index.php?app=passport&action=applyResetPwd">忘记密码</a></span></div>
 		</div>

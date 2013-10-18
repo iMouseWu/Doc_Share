@@ -106,9 +106,6 @@ box-shadow: 0px 2px 10px rgb(51, 51, 51), 0px 2px 2px rgb(170, 170, 170);
 .name_td{
  color:blue;
  }
- #star{
- display: none;
- }
  </style>
  <div id="header">
 <!-- 返回首页 -->
@@ -129,7 +126,7 @@ box-shadow: 0px 2px 10px rgb(51, 51, 51), 0px 2px 2px rgb(170, 170, 170);
 <tr><td class="td_name">上传者:</td><td> ${filename.uploadname}</td></tr>
 <tr><td class="td_name">下载次数:</td><td> ${filename.downcount}</td></tr>
 <tr><td class="td_name">评分:</td><td> ${filename.avescore}</td></tr>
-<tr><td colspan=2 class="table_bottom"><a href="@{DownLoads.addCount}${downLoadRoute}" onclick="doit();">下载</a></td></tr>
+<tr><td colspan=2 class="table_bottom"><a onclick="doit();">下载</a></td></tr>
 </table>
 <div id="resource_intro">
 <h5>资源简介</h5>
@@ -137,11 +134,6 @@ box-shadow: 0px 2px 10px rgb(51, 51, 51), 0px 2px 2px rgb(170, 170, 170);
 </div>
 </div>
 <div id="comment">
-<div id='star'><img src="@{'/public/images/unchoose.png'}">
-		<img src="@{'/public/images/unchoose.png'}">
-		<img src="@{'/public/images/unchoose.png'}">
-		<img src="@{'/public/images/unchoose.png'}">
-		<img src="@{'/public/images/unchoose.png'}"></div>
 </div>
 <div id="comment_view">
 <h5>资源评论</h5>
@@ -156,20 +148,25 @@ box-shadow: 0px 2px 10px rgb(51, 51, 51), 0px 2px 2px rgb(170, 170, 170);
 </div>
 </div>
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="@{'/public/javascripts/jquery-1.6.4.min.js'}"></script>
-<script src="@{'/public/javascripts/jquery.form.min.js'}"></script>
+<script src="/public/javascripts/jquery-1.6.4.min.js"></script>
+<script src="/public/javascripts/jquery.form.min.js"></script>
 <script type="text/javascript">
 	function doit() {
-		$("#star").css({"display": "block"});
-		 var html = '<form action="@{Evaluate.addScore()}" id="scoreForm" method="POST">'
-				+ '<input type="hidden" name="score" id="score">'
-				+ '<textarea rows="3" name="res_comment" id="res_comment"></textarea>'
-				+ '<input type="hidden" value="${filename.hashName}" name="hashName"><br>'
-				+ '<input type="submit" class="btn btn-warning" value="提交">'
-				+ '</form>';
-		$('#comment').append(html);
-		ajaxform();
-		bindevent();
+// 	var html = "<div id='star'><img src=\"@{'/public/images/unchoose.png'}\">"+
+// 		"<img src=\"@{'/public/images/unchoose.png'}\">"+
+// 		"<img src=\"@{'/public/images/unchoose.png'}\">"+
+// 		"<img src=\"@{'/public/images/unchoose.png'}\">"+
+// 		"<img src=\"@{'/public/images/unchoose.png'}\"></div>";
+// 			 html += '<form action="@{Evaluate.addScore()}" id="scoreForm" method="POST">'
+// 				+ '<input type="hidden" name="score" id="score">'
+// 				+ '<textarea rows="3" name="res_comment" id="res_comment"></textarea>'
+// 				+ '<input type="hidden" value="${filename.hashName}" name="hashName"><br>'
+// 				+ '<input type="submit" class="btn btn-warning" value="提交">'
+// 				+ '</form>';
+// 		$('#comment').html(html);
+// 		ajaxform();
+// 		bindevent();
+alert(1);
 	}
 	 function ajaxform() {
 		$('#scoreForm').ajaxForm({

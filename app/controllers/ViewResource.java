@@ -19,8 +19,8 @@ import tools.GetClass;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import models.AllClass;
 import models.Filename;
+import models.Institute;
 import models.Instituteinfo;
 import models.LinkMan;
 import models.Linkgroup;
@@ -54,7 +54,7 @@ public class ViewResource extends BaseCore {
 		List<Instituteinfo> list = Instituteinfo
 				.find("institute= ?", institute).fetch();
 		response.contentType = "application/json";
-		//response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		response.setHeader("Cache-Control","no-cache");
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(list);
@@ -66,13 +66,12 @@ public class ViewResource extends BaseCore {
 		int pageCount;
 		List filenameCountList = new ArrayList();
 		List<List> reJsonList =new ArrayList<List>();
-		List<Filename>  refilelist = Filename.find("institute = ? And subject = ?",fileroute,subject).from((page-1)*3).fetch(3);
+		List<Filename>  refilelist = Filename.find("institute = ? And subject = ?",fileroute,subject).from((page-1)*10).fetch(10);
 		int userFilenameCount =(int)Filename.count("institute = ? And subject = ?",fileroute,subject);
-		/**************************需要增加当刚好整除的时候的判断**************************/
-		if(userFilenameCount % 3 == 0){
-			pageCount = userFilenameCount / 3 ;
+		if(userFilenameCount % 10 == 0){
+			pageCount = userFilenameCount / 10 ;
 		}else{
-			pageCount = userFilenameCount / 3 + 1 ;
+			pageCount = userFilenameCount / 10 + 1 ;
 		}
 		filenameCountList.add(pageCount);
 		reJsonList.add(refilelist);
@@ -97,16 +96,14 @@ public class ViewResource extends BaseCore {
 	public static void viewInsMostDown(String username,String password) throws HttpException, IOException {
 		List re_list = new ArrayList();
 		Gson gson = new Gson();
-//		String info = "[{'classname':'高等数学'},{'classname':'会计学'}]";
-//		List<AllClass> list = gson.fromJson(info,
-//				new TypeToken<List<AllClass>>() {
-//				}.getType());
 		TreeSet<String> treeset = GetClass.getUserClass(username,password);
 		List<String> list = new ArrayList(Arrays.asList(treeset.toArray()));
+//		List<String> list = new ArrayList<String>();
+//		list.add("会计学");
 		List<Filename> alllistname = new ArrayList<Filename>();
 		for (String  allClass : list) {
-			List<Filename> listname = Filename.find("subject = ?",
-					allClass).fetch();
+			List<Filename> listname = Filename.find("bysubjectLike",
+					"%" + allClass + "%").fetch();
 			for (Filename a : listname) {
 				alllistname.add(a);
 			}
@@ -155,8 +152,7 @@ public class ViewResource extends BaseCore {
 	}
 	/*返回学校学院目录*/
 	public static void viewInstitute(){
-		List instituteinfos = Instituteinfo.find("select p.institute from Instituteinfo p " +
-			    "GROUP BY p.institute").fetch();
+		List instituteinfos = Institute.find("select p.institute from Institute p order BY p.institute").fetch();
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(instituteinfos);
 		response.contentType = "application/json";

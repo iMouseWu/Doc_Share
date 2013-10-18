@@ -314,6 +314,10 @@ public class Personal extends BaseCore {
 	}
 	public static void addLinkMan(long user_id,long group_id){
 		Users users = Users.findById(user_id);
+		if(users.username.equals(session.get("user"))){
+			/*如果加的是自己的话，返回2*/
+			renderText(2);
+		}else{
 		List<LinkMan> list = LinkMan.find("friend_no = ? And linkgroup.host_name = ?", users.username,session.get("user")).fetch();
 		if(list.size() == 1){
 			/*如果联系人已经存在的话就返回0*/
@@ -329,8 +333,17 @@ public class Personal extends BaseCore {
 		/*成功就返回1*/
 		renderText(1);
 		}
+		}
 	}
 	public static void deleteFriend(Long[] move_linkname_id) {
+		if(move_linkname_id == null ||move_linkname_id.length == 0){
+			response.contentType = "application/json";
+			response.setHeader("Content-Type", "application/json;charset=UTF-8");
+			Gson gson = new Gson();
+			String stringToJson = gson.toJson("a");
+			renderText(stringToJson);
+			
+		}else{
 		for(long linkname_id : move_linkname_id){
 			LinkMan linkMan = LinkMan.findById(linkname_id);
 			linkMan.delete();
@@ -341,6 +354,7 @@ public class Personal extends BaseCore {
 		String stringToJson = gson.toJson(move_linkname_id);
 		renderText(stringToJson);
 	}
+		}
 	public static void deleteGroup(long id){
 		List<Linkgroup> list = Linkgroup.find("firend_group = ? And host_name = ?","friend",session.get("user")).fetch();
 		Long friend_id = list.get(0).id;

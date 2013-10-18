@@ -140,21 +140,36 @@ public class Admin extends BaseCore {
 	}
 
 	/* 资源搜索 */
-	public static void searchResource(int page, String serach_name) {
+	public static void searchResource(int page, String serach_name,int sort) {
 		int allpage;
+		List<Filename> filelist;
 		if (page == 0) {
 			page = 1;
 		}
+		if(sort == 0){
+			List<Filename> filelist_number = Filename.find("uploadno = ?",
+					serach_name).fetch();
+			int count = filelist_number.size();
+			filelist = Filename.find("uploadno = ?", serach_name)
+					.from((page - 1) * 10).fetch(10);
+
+			if (count % 10 == 0) {
+				allpage = count / 10;
+			} else {
+				allpage = count / 10 + 1;
+			}
+		}else{
 		List<Filename> filelist_number = Filename.find("realName = ?",
 				serach_name).fetch();
 		int count = filelist_number.size();
-		List<Filename> filelist = Filename.find("realName = ?", serach_name)
+		filelist = Filename.find("realName = ?", serach_name)
 				.from((page - 1) * 10).fetch(10);
 
 		if (count % 10 == 0) {
 			allpage = count / 10;
 		} else {
 			allpage = count / 10 + 1;
+		}
 		}
 		renderTemplate("Admin/admin_resource.html", allpage, filelist, page);
 	}
@@ -264,37 +279,57 @@ public class Admin extends BaseCore {
 		}
 	}
 
-	/* 删除用户 */
-	/* 删除用户的同时，需要把相应的好友也删除 */
-	public static void deleteUser(int page, long id) {
-		Users users = Users.findById(id);
-		users.delete();
-		/* 删除好友 */
-		List<LinkMan> list = LinkMan.find("friend_name = ?", users.nickname)
-				.fetch();
-		for (LinkMan linkMan : list) {
-			linkMan.delete();
-		}
-		admin_user(page,0);
-	}
+//	/* 删除用户 */
+//	/* 删除用户的同时，需要把相应的好友也删除 */
+//	public static void deleteUser(int page, long id) {
+//		Users users = Users.findById(id);
+//		Users nowUsers = (Users)Users.find("username", session.get("user")).fetch().get(0);
+//		if(Integer.parseInt(users.authority) > Integer.parseInt(nowUsers.authority)){
+//			admin_user(page,1);
+//		}else{
+//		users.delete();
+//		/* 删除好友 */
+//		List<LinkMan> list = LinkMan.find("friend_name = ?", users.nickname)
+//				.fetch();
+//		for (LinkMan linkMan : list) {
+//			linkMan.delete();
+//		}
+//		admin_user(page,0);
+//		}
+//	}
 
 	/* 查找用户 */
-	public static void searchUser(String serach_username, int page) {
+	public static void searchUser(String serach_username, int page,int sort) {
 		int allpage;
+		int backnum = 0;
+		List<Users> filelist;
 		if (page == 0) {
 			page = 1;
 		}
+		if(sort == 0){
+			List<Users> filelist_number = Users.find("nickname = ?",
+					serach_username).fetch();
+			int count = filelist_number.size();
+			filelist = Users.find("nickname = ?", serach_username)
+					.from((page - 1) * 10).fetch(10);
+			if (count % 10 == 0) {
+				allpage = count / 10;
+			} else {
+				allpage = count / 10 + 1;
+			}
+		}else{
 		List<Users> filelist_number = Users.find("username = ?",
 				serach_username).fetch();
 		int count = filelist_number.size();
-		List<Users> filelist = Users.find("username = ?", serach_username)
+		filelist = Users.find("username = ?", serach_username)
 				.from((page - 1) * 10).fetch(10);
 		if (count % 10 == 0) {
 			allpage = count / 10;
 		} else {
 			allpage = count / 10 + 1;
 		}
-		renderTemplate("Admin/admin_user.html", filelist, page, allpage);
+		}
+		renderTemplate("Admin/admin_user.html", filelist, page, allpage,backnum);
 	}
 
 	/**

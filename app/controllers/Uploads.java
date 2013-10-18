@@ -52,7 +52,7 @@ public class Uploads extends BaseCore{
 		
 		/* 获取当前日期 */
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		 Date date = new Date();
+		Date date = new Date();
 		/* 获取上传者的姓名 */
 		String user = ((Users)Users.find("username = ?", session.get("user")).fetch().get(0)).nickname;
 		if(intro_sel.equals("")){
