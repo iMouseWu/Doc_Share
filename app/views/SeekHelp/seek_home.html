@@ -25,6 +25,15 @@ textarea{
  resize:none;
 width:300px;
 }
+.wantItemFoot{
+height:30px;
+}
+form{
+margin:0;
+} 
+.seekdetail{
+ height:30px
+ } */
 </style>
 <div id="topBar">
 	<ol class="left">
@@ -46,9 +55,6 @@ width:300px;
 <div class="wrapper">
 	<div class="header" id="header">
 		<div class="box">
-			<div class="left logo">
-			<!-- 左上角空白处用来画logo，我画的不好，可以让美工试试 -->
-			</div>
 				<div class="search right">
 				<a href='@{SeekHelp.seek_home()}?page=1'>找不到资源？去资源区问问看!</a>
 			</div>
@@ -78,7 +84,7 @@ if(i % 3 == 0){
 				</div>
 			<div class="wantItemBody">&nbsp;&nbsp;&nbsp;&nbsp;${Seek_Help.seek_content}</div>
 			<div class="wantItemFoot">
-				<div class="left">
+				<div class="left seekdetail">
 					<a class="aNoLine">
 						<span class="name left" title="作者">${Seek_Help.seek_user}</span>
 					</a>
@@ -90,10 +96,13 @@ if(i % 3 == 0){
 				</div>
 				<div id="div_${Seek_Help.id}" class="reply">
 				#{form @ReSeek.AddReSeek(),method:'POST'}
-                        <input type="text" name="re_seek_content" class="input-medium">
-                        <input type="hidden" value="${page}" name="nowpage">
+                       私信:<input type="text" name="re_seek_content" id="inputEmail" style="width:100px">
+                        <input type="hidden" value="${page}" name="nowpage"><br>
                         <input type="hidden" name="seek_id" value="${Seek_Help.id}">
-                         <button type="submit" class="btn">发送</button>
+                        验证码:<input type="text" name="code" style="width:50px">
+                        <img src="@{SeekHelp.backValidate(Seek_Help.id)}"><br>
+                        <button type="submit" class="btn">发送</button>
+                         请输入验证码，不区分大小写<br>
                          #{/form}
                     </div>
 		</li>
@@ -121,6 +130,9 @@ i++;
 #{form @SeekHelp.addhelp(), method:'GET', id:'helpForm'}
 主题:<input type="text" name="seek_title"><br>
 内容:<textarea name="comment_help" rows="4"></textarea><br>
+<input type="hidden" value=${randomID} name="validateid">
+
+验证码:<input type="text" name="code" style="width:50px"><img src="@{SeekHelp.backValidate(randomID)}"><br>请输入验证码，不区分大小写<br>
   <input type="submit" value="提交" class="btn" >
 #{/form}
 </div>
@@ -134,8 +146,9 @@ $(function(){
 	var b = $('#text').val();
 	var a = parseInt($('#gotext').val());
 	seek_pageNav.go(a,b);
-// 	var c = $("#div_id").val();
-// 	$("#div_" + c).
+	if(${imgstatue} == 1){
+		alert("验证码错误 ");
+	}
 });
 function reply(id){
 $("#div_"+id).toggle();	
