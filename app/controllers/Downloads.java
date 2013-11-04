@@ -20,6 +20,7 @@ public class Downloads extends BaseCore{
 	}
 	public static void addCount(String institute, String hashName,
 			String subject) throws UnsupportedEncodingException {
+		System.out.println(subject);
 		List<Filename> list = Filename.find("hashName", hashName).fetch();
 		Filename filename = list.get(0);
 		filename.downcount = filename.downcount + 1;
@@ -27,8 +28,7 @@ public class Downloads extends BaseCore{
 //		String msg = URLEncoder.encode(institute, "UTF-8");
 //		String sub = URLEncoder.encode(subject, "UTF-8");
 		String path = "/public/resourse/" + institute + "/" + subject + "/" + hashName;
-		File file = Play.getFile(path);
-		
+		File file = Play.getFile(subject);
 	//	String path = StaticPath.path + institute_sel + "/" + subject_sel + "/"
 //				+ hash + fileext;
 		renderBinary(file);

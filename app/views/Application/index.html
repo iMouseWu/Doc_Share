@@ -287,6 +287,7 @@ margin: 10px 0px 10px;
           <div id="add_success">请添加文件</div>
           <br>
           <br>
+          （ 目前该系统只能上传一个文件，如果你需要上传多个文件的话，请打包或者多次上传）
           <div id="mes"> </div>
           <!-- 上传按钮 -->
           <div id="submit"></div>
@@ -539,7 +540,11 @@ $(document).ready(function() {
    			subject : $("#hiddenvalsub").val(),
    			page : page
    		   }, function(data, textStatus) {
-   			pageNav.go(page,data[1]);
+   			if(data[1] == 0){
+   				$('#resource').html(html);
+   				$('#resource_html').val(html);
+   			}else{
+   				pageNav.go(page,data[1]);
    			$.each(data[0], function(commentIndex, comment) {
    				html += "<div class='resource_name'><a href=ViewResource/viewDownloadsDetails?hashName="+comment.hashName + ">" 
    				+ comment.realName 
@@ -547,6 +552,7 @@ $(document).ready(function() {
    				$('#resource').html(html);
    				$('#resource_html').val(html);
    			});
+   			}
    		  }, "json");
 	   }
 	function viewRes() {

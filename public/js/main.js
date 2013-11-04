@@ -55,7 +55,7 @@ $(function () {
         add: function (e, data) {
         	 $('#share_button').fadeOut(1);
         	var uploadFile = data.files[0];
-        	if (!(/(zip)|(rar)$/i).test(uploadFile.name)) {
+        	if (!(/(zip)|(rar)|(doc)|(pdf)|(ppt)|(wps)$/i).test(uploadFile.name)) {
         		alert("文件类型错误");
         		$('#upfile').val("");
             }else{

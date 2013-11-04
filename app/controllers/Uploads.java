@@ -98,6 +98,7 @@ public class Uploads extends BaseCore{
 	      list.get(0).realName = filename;
 	      list.get(0).save();
 	}
+	
 	/*对应jquery-file-uploads插件的get方法需要处理文件上传后的删除等功能*/
 	public static void editFile(){
 		String editway=params.get("editway");

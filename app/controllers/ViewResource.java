@@ -79,6 +79,7 @@ public class ViewResource extends BaseCore {
 		response.contentType = "application/json";
 		Gson gson = new Gson();
 		String listToJson = gson.toJson(reJsonList);
+		System.out.println(listToJson);
 		response.setHeader("Content-Type", "application/json;charset=UTF-8");
 		renderText(listToJson);
 	}

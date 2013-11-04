@@ -88,15 +88,6 @@ public class Admin extends BaseCore {
 	public static void editResource(String realname, String institute,
 			String subject, long id, int page) {
 		Filename filename = Filename.findById(id);
-		// String oldpath = StaticPath.path + filename.institute + "/" +
-		// filename.subject + "/"
-		// + filename.hashName;
-		// String newpath = StaticPath.path + institute + "/" + subject + "/"
-		// + filename.hashName;
-		// File oldFile = new File(oldpath);
-		// File newFile = new File(newpath);
-		// Files.copy(oldFile,newFile);
-		// oldFile.delete();
 		String oldpath = "/public/resourse/" + filename.institute + "/"
 				+ filename.subject + "/" + filename.hashName;
 		String newpath = "/public/resourse/" + institute + "/" + subject + "/"
@@ -364,7 +355,7 @@ public class Admin extends BaseCore {
 
 	/* 修改学科信息 */
 	public static void editSubject(long id, int page, String subject) {
-		if (subject.equals("")) {
+		if (subject.trim().equals("")) {
 			int statue = 3;
 			admin_subject(statue, page);
 		} else {
@@ -375,15 +366,6 @@ public class Admin extends BaseCore {
 				filename.subject = subject;
 				dao.AddResources.addFile(filename);
 			}
-			/* 学科信息修改以后，需要修改原来数据库的文件的信息，还要修改文件夹的名字 */
-			// String oldpath = StaticPath.path + filename.institute + "/" +
-			// filename.subject + "/"
-			// + filename.hashName;
-			// String newpath = StaticPath.path + institute + "/" + subject +
-			// "/"
-			// + filename.hashName;
-			// File oldFile = new File(oldpath);
-			// File newFile = new File(newpath);
 			String oldpath = "/public/resourse/" + instituteinfo.institute
 					+ "/" + instituteinfo.subject;
 			String newpath = "/public/resourse/" + instituteinfo.institute
@@ -495,26 +477,11 @@ public class Admin extends BaseCore {
 
 	/* 修改学院信息 */
 	public static void editInstitute(long id, int page, String institute) {
-		if (institute.equals("")) {
+		if (institute.trim().equals("")) {
 			int statue = 3;
 			admin_institute(statue, page);
 		} else {
 			Institute _institute = Institute.findById(id);
-			List<Filename> list = Filename.find("institute = ?",
-					_institute.institute).fetch();
-			for (Filename filename : list) {
-				filename.institute = institute;
-				dao.AddResources.addFile(filename);
-			}
-			/* 学科信息修改以后，需要修改原来数据库的文件的信息，还要修改文件夹的名字 */
-			// String oldpath = StaticPath.path + filename.institute + "/" +
-			// filename.subject + "/"
-			// + filename.hashName;
-			// String newpath = StaticPath.path + institute + "/" + subject +
-			// "/"
-			// + filename.hashName;
-			// File oldFile = new File(oldpath);
-			// File newFile = new File(newpath);
 			String oldpath = "/public/resourse/" + _institute.institute;
 			String newpath = "/public/resourse/" + institute;
 			File oldFile = Play.getFile(oldpath);
@@ -526,6 +493,17 @@ public class Admin extends BaseCore {
 				admin_institute(statue, page);
 			} else {
 				int statue = 1;
+				List<Filename> list = Filename.find("institute = ?",
+						_institute.institute).fetch();
+				for (Filename filename : list) {
+					filename.institute = institute;
+					dao.AddResources.addFile(filename);
+				}
+				List<Instituteinfo> infoList = Instituteinfo.find("institute = ?", _institute.institute).fetch();
+				for(Instituteinfo instituteinfo : infoList){
+					instituteinfo.institute = institute;
+					instituteinfo.save();
+				}
 				_institute.institute = institute;
 				_institute.save();
 				admin_institute(statue, page);

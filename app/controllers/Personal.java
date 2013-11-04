@@ -224,18 +224,18 @@ public class Personal extends BaseCore {
 			share_Tips.tip_date = formatter.format(date);
 			dao.AddResources.addShare_Tips(share_Tips);
 			/* 发送email */
-			if(users.mailaddress != null){
-			HtmlEmail email = new HtmlEmail();
-			email.setHostName("smtp.stu.zjut.edu.cn");
-			email.setSmtpPort(25);
-			email.setAuthenticator(new DefaultAuthenticator(
-					hostuser.mailaddress, session.get("password")));
-			email.setFrom(hostuser.mailaddress);
-			/*防止乱码*/
-			email.setHtmlMsg(new String(content.getBytes("utf-8"), "iso-8859-1"));
-			email.addTo(users.mailaddress);
-			email.send();
-		}
+//			if(users.mailaddress != null){
+//			HtmlEmail email = new HtmlEmail();
+//			email.setHostName("smtp.stu.zjut.edu.cn");
+//			email.setSmtpPort(25);
+//			email.setAuthenticator(new DefaultAuthenticator(
+//					hostuser.mailaddress, session.get("password")));
+//			email.setFrom(hostuser.mailaddress);
+//			/*防止乱码*/
+//			email.setHtmlMsg(new String(content.getBytes("utf-8"), "iso-8859-1"));
+//			email.addTo(users.mailaddress);
+//			email.send();
+//		}
 		}
 	}
 	}
@@ -255,7 +255,7 @@ public class Personal extends BaseCore {
 			re_list.add(map);
 		}
 		List<Linkgroup> group_list = Linkgroup
-				.find("select  u from Linkgroup u where u.id != ?",group_id).fetch();
+				.find("select  u from Linkgroup u where u.id != ? and u.host_name = ?",group_id,session.get("user")).fetch();
 		render(re_list, group_list,sign);
 	}else{
 		List<LinkMan> list = LinkMan.findAll();
